@@ -1,0 +1,2911 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Construction Management Process — 5D BIM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700&family=Source+Serif+4:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:        oklch(0.22 0.02 240);
+    --ink-2:      oklch(0.38 0.02 240);
+    --muted:      oklch(0.55 0.02 240);
+    --faint:      oklch(0.72 0.02 240);
+    --line:       oklch(0.92 0.01 240);
+    --line-2:     oklch(0.95 0.01 240);
+    --surface:    oklch(1.00 0 0);
+    --surface-2:  oklch(0.985 0.005 240);
+    --bg:         oklch(0.99 0.005 240);
+
+    --blue:       oklch(0.55 0.13 248);
+    --blue-soft:  oklch(0.945 0.04 248);
+    --blue-ink:   oklch(0.42 0.13 248);
+    --teal:       oklch(0.6  0.10 195);
+    --teal-soft:  oklch(0.955 0.03 195);
+    --teal-ink:   oklch(0.42 0.10 195);
+    --amber:      oklch(0.72 0.13 70);
+    --amber-soft: oklch(0.975 0.045 70);
+    --amber-ink:  oklch(0.48 0.12 60);
+    --rose:       oklch(0.62 0.15 25);
+    --rose-soft:  oklch(0.965 0.035 25);
+    --rose-ink:   oklch(0.45 0.14 25);
+    --green:      oklch(0.6 0.13 145);
+    --green-soft: oklch(0.955 0.045 145);
+    --green-ink:  oklch(0.42 0.12 145);
+    --violet:     oklch(0.58 0.14 290);
+    --violet-soft:oklch(0.955 0.04 290);
+    --violet-ink: oklch(0.42 0.13 290);
+
+    --sans: "Inter", system-ui, sans-serif;
+    --mono: "Source Serif 4", "Times New Roman", Georgia, serif;
+    --serif-svg: "Source Serif 4, Times New Roman, Georgia, serif";
+    --r: 14px;
+    --shadow-sm: 0 1px 3px oklch(0 0 0 / 0.04), 0 1px 2px oklch(0 0 0 / 0.03);
+    --shadow-md: 0 4px 16px oklch(0 0 0 / 0.06), 0 2px 6px oklch(0 0 0 / 0.04);
+    --shadow-lg: 0 10px 32px oklch(0 0 0 / 0.08), 0 4px 12px oklch(0 0 0 / 0.05);
+
+    --nav-h: 56px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+  body { margin: 0; font-family: var(--sans); color: var(--ink); background: var(--bg);
+         -webkit-font-smoothing: antialiased; line-height: 1.55; }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  /* ──── site nav ──────────────────────────────────────────────────── */
+  .site-nav {
+    position: sticky; top: 0; z-index: 100;
+    height: var(--nav-h); padding: 0 24px;
+    display: flex; align-items: center; gap: 18px;
+    background: oklch(1 0 0 / 0.85); backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 9px;
+    font-weight: 700; font-size: 14px; letter-spacing: -0.2px;
+  }
+  .nav-brand-mark {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: linear-gradient(135deg, var(--blue), var(--teal));
+    color: white; display: grid; place-items: center;
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+  }
+  .nav-pages { display: flex; gap: 4px; margin-left: 14px; padding: 3px;
+               background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; }
+  .nav-page {
+    appearance: none; border: none; background: none; cursor: pointer;
+    font-family: var(--sans); font-size: 12.5px; font-weight: 500; color: var(--muted);
+    padding: 6px 13px; border-radius: 6px;
+    transition: color .15s, background .15s;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .nav-page:hover { color: var(--ink); }
+  .nav-page.active {
+    background: var(--surface); color: var(--ink);
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.06);
+    font-weight: 600;
+  }
+  .nav-spacer { flex: 1; }
+  .nav-lang { display: inline-flex; padding: 3px; background: var(--surface-2);
+              border: 1px solid var(--line); border-radius: 9px; }
+  .nav-lang-btn {
+    appearance: none; border: none; background: none; cursor: pointer;
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--muted); padding: 5px 10px; border-radius: 6px;
+    transition: color .15s, background .15s;
+  }
+  .nav-lang-btn:hover { color: var(--ink); }
+
+  /* nav icon buttons (back-to-splash + fullscreen) */
+  .nav-iconbtn {
+    appearance: none; cursor: pointer;
+    width: 32px; height: 32px; padding: 0;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: var(--surface);
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--ink-2);
+    transition: color .15s, border-color .15s, background .15s, transform .15s;
+    margin-left: 6px;
+  }
+  .nav-iconbtn:hover {
+    color: var(--ink); border-color: var(--ink-2);
+    background: var(--surface-2); transform: scale(1.05);
+  }
+  .nav-iconbtn:active { transform: scale(0.96); }
+  .nav-iconbtn svg { width: 16px; height: 16px; }
+  .nav-iconbtn.is-active {
+    background: var(--ink); color: white; border-color: var(--ink);
+  }
+  .nav-lang-btn.active {
+    background: var(--surface); color: var(--ink);
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.06);
+  }
+
+  /* ──── stage nav (tabs for 6 jendela) ──────────────────────────── */
+  .stage-nav {
+    position: sticky; top: var(--nav-h); z-index: 90;
+    display: flex; gap: 6px; padding: 12px 24px;
+    background: oklch(1 0 0 / 0.92);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto; scrollbar-width: thin;
+  }
+  .stage-btn {
+    appearance: none; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 9px; padding: 8px 14px;
+    font-family: var(--sans); font-size: 12.5px; font-weight: 500;
+    color: var(--muted); white-space: nowrap;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform .15s ease, color .15s, border-color .15s, background .15s;
+  }
+  .stage-btn:hover { color: var(--ink); border-color: var(--faint); transform: translateY(-1px); }
+  .stage-btn.active {
+    background: var(--ink); color: white; border-color: transparent;
+    box-shadow: 0 4px 12px oklch(0 0 0 / 0.12);
+  }
+  .stage-btn-num {
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    padding: 2px 6px; border-radius: 4px;
+    background: var(--surface-2); color: var(--muted);
+  }
+  .stage-btn.active .stage-btn-num { background: oklch(1 0 0 / 0.2); color: white; }
+
+  .stage { display: block; }
+  .stage[hidden] { display: none; }
+
+  /* ──── slide shell — natural height, no full-viewport ─────────── */
+  .slide {
+    padding: 36px 56px 24px;
+    display: grid; grid-template-rows: auto auto auto; gap: 10px;
+    position: relative; background: var(--bg);
+  }
+  .slide + .slide { border-top: 1px solid var(--line); }
+
+  .slide-head { display: flex; align-items: center; gap: 14px; }
+  .slide-num {
+    font-family: var(--mono); font-size: 12.5px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--cat-ink, var(--blue-ink));
+    background: var(--cat-soft, var(--blue-soft));
+    padding: 5px 11px; border-radius: 6px;
+  }
+  .slide-eyebrow {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.4px;
+    text-transform: uppercase; color: var(--cat, var(--blue));
+  }
+  .slide-rule { flex: 1; height: 1px; background: var(--line); }
+  .slide-progress { font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.5px; }
+  .slide-title {
+    font-size: 38px; font-weight: 600; letter-spacing: -0.7px; line-height: 1.16;
+    margin: 22px 0 0; max-width: 1020px;
+  }
+  .slide-sub {
+    font-size: 15px; color: var(--muted); margin: 13px 0 0; max-width: 780px; line-height: 1.65;
+  }
+
+  .slide-body { display: grid; place-items: start center; padding: 14px 0 8px; min-height: 0; }
+  .canvas { width: 100%; max-width: 1160px; }
+
+  .slide-foot {
+    display: flex; align-items: flex-start; gap: 18px; padding-top: 18px;
+    border-top: 1px dashed var(--line);
+  }
+  .slide-caption {
+    font-size: 14px; color: var(--ink-2); line-height: 1.65; max-width: 920px;
+    margin: 3px 0 0;
+  }
+  .slide-caption strong { color: var(--ink); font-weight: 600; }
+  .slide-tag {
+    flex: none; font-family: var(--mono); font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.9px;
+    padding: 5px 10px; border-radius: 5px;
+    background: var(--cat-soft); color: var(--cat-ink);
+  }
+
+  /* per-section accents */
+  [data-cat="cover"]  { --cat: var(--ink);    --cat-soft: var(--surface-2); --cat-ink: var(--ink); }
+  [data-cat="intro"]  { --cat: var(--violet); --cat-soft: var(--violet-soft); --cat-ink: var(--violet-ink); }
+  [data-cat="ahsp"]   { --cat: var(--blue);   --cat-soft: var(--blue-soft);   --cat-ink: var(--blue-ink); }
+  [data-cat="rab"]    { --cat: var(--teal);   --cat-soft: var(--teal-soft);   --cat-ink: var(--teal-ink); }
+  [data-cat="sched"]  { --cat: var(--amber);  --cat-soft: var(--amber-soft);  --cat-ink: var(--amber-ink); }
+  [data-cat="scurve"] { --cat: var(--rose);   --cat-soft: var(--rose-soft);   --cat-ink: var(--rose-ink); }
+  [data-cat="recap"]  { --cat: var(--green);  --cat-soft: var(--green-soft);  --cat-ink: var(--green-ink); }
+
+  /* side dot navigator */
+  .dotnav {
+    position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 10px; z-index: 50;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--line);
+    cursor: pointer; transition: transform .2s, background .2s;
+    border: none; padding: 0;
+  }
+  .dot:hover { background: var(--muted); transform: scale(1.4); }
+  .dot.active { background: var(--ink); transform: scale(1.5); }
+
+  /* ──── cover ───────────────────────────────────────────────────── */
+  .cover {
+    display: flex; flex-direction: column; align-items: center; gap: 22px;
+    text-align: center; padding: 28px 0;
+  }
+  .cover-kicker {
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+    text-transform: uppercase; color: var(--muted);
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .cover-kicker::before, .cover-kicker::after { content: ""; width: 32px; height: 1px; background: var(--line); }
+  .cover-title {
+    font-size: 72px; font-weight: 700; letter-spacing: -2.4px; line-height: 1.04;
+    max-width: 900px;
+  }
+  .cover-title em { font-style: normal;
+    background: linear-gradient(120deg, var(--blue), var(--teal));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .cover-sub { font-size: 17px; color: var(--muted); max-width: 640px; line-height: 1.65; margin-top: 4px; }
+  .cover-meta {
+    display: flex; gap: 28px; margin-top: 22px;
+    font-family: var(--mono); font-size: 11px; color: var(--faint); letter-spacing: 0.5px;
+  }
+  .cover-meta b { color: var(--ink); font-family: var(--sans); font-weight: 600; font-size: 12.5px; margin-right: 4px; }
+
+  /* ──── reusable equation typography ───────────────────────────── */
+  /* big inline equation, math-paper feel */
+  .eq {
+    display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+    margin: 8px 0;
+  }
+  .eq-term {
+    display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 14px 22px; border-radius: 13px;
+    background: var(--surface); border: 1.5px solid var(--cat);
+    box-shadow: var(--shadow-sm); min-width: 120px;
+  }
+  .eq-term-eyebrow {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--cat-ink);
+  }
+  .eq-term-main { font-size: 18px; font-weight: 600; color: var(--ink); }
+  .eq-term-sub { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+
+  .eq-term.is-filled {
+    background: var(--cat); border-color: transparent; color: white;
+  }
+  .eq-term.is-filled .eq-term-eyebrow { color: oklch(1 0 0 / 0.85); }
+  .eq-term.is-filled .eq-term-main { color: white; font-weight: 700; }
+  .eq-term.is-filled .eq-term-sub { color: oklch(1 0 0 / 0.85); }
+
+  .eq-op {
+    font-family: var(--mono); font-size: 28px; font-weight: 700; color: var(--muted);
+    user-select: none;
+  }
+  .eq-paren-l, .eq-paren-r {
+    font-family: var(--mono); font-size: 36px; color: var(--muted); font-weight: 300;
+  }
+
+  /* fraction: numerator over denominator with bar */
+  .frac {
+    display: inline-flex; flex-direction: column; align-items: stretch;
+    vertical-align: middle; gap: 4px;
+  }
+  .frac-num, .frac-den {
+    text-align: center; padding: 6px 16px;
+    font-size: 16px; font-weight: 500;
+  }
+  .frac-num { color: var(--ink); }
+  .frac-den { color: var(--ink); }
+  .frac-bar { height: 2px; background: var(--ink); border-radius: 1px; }
+  .frac-unit {
+    font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: -3px;
+  }
+
+  /* big equation block */
+  .big-eq {
+    display: flex; align-items: center; justify-content: center; gap: 22px;
+    padding: 28px 24px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .big-eq-lhs { font-size: 26px; font-weight: 600; color: var(--ink); }
+  .big-eq-rhs { display: flex; align-items: center; gap: 14px; }
+
+  /* ──── 3-row stacked compound (e.g. Material + Labour + Equipment) ─ */
+  .stack-add {
+    display: inline-flex; flex-direction: column; gap: 8px; min-width: 280px;
+  }
+  .stack-row {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--surface); border: 1.5px solid var(--cat-acc, var(--cat));
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .stack-row[data-acc="b"]  { --cat-acc: var(--blue);  background: var(--blue-soft); }
+  .stack-row[data-acc="t"]  { --cat-acc: var(--teal);  background: var(--teal-soft); }
+  .stack-row[data-acc="a"]  { --cat-acc: var(--amber); background: var(--amber-soft); }
+  .stack-badge {
+    width: 36px; height: 36px; border-radius: 9px; flex: none;
+    display: grid; place-items: center; color: white;
+    font-family: var(--sans); font-weight: 700; font-size: 16px;
+    background: var(--cat-acc);
+  }
+  .stack-body { display: flex; flex-direction: column; }
+  .stack-name { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .stack-sub  { font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  .stack-plus {
+    align-self: center; color: var(--muted);
+    font-family: var(--mono); font-size: 18px; font-weight: 700; height: 0;
+    margin: -4px 0;
+  }
+
+  /* ──── flow chains (used in pipeline + WBS chain) ───────────────── */
+  .chain { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .chain-node {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 14px 14px; border-radius: 12px; min-width: 150px;
+    background: var(--node-bg, var(--surface));
+    border: 1.5px solid var(--node-line, var(--cat));
+  }
+  .chain-node[data-fill="solid"] {
+    background: var(--cat); border-color: transparent; color: white;
+  }
+  .chain-eyebrow {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--cat-ink);
+  }
+  .chain-node[data-fill="solid"] .chain-eyebrow { color: oklch(1 0 0 / 0.85); }
+  .chain-title { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .chain-node[data-fill="solid"] .chain-title { color: white; }
+  .chain-sub { font-family: var(--mono); font-size: 10px; color: var(--muted); }
+  .chain-node[data-fill="solid"] .chain-sub { color: oklch(1 0 0 / 0.85); }
+  .chain-arr {
+    width: 36px; height: 22px; flex: none;
+    display: grid; place-items: center; color: var(--muted);
+  }
+
+  /* ──── card / table ────────────────────────────────────────────── */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: var(--shadow-sm); }
+
+  .breakdown { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .breakdown th, .breakdown td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--line-2); }
+  .breakdown th { font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+                  letter-spacing: 0.9px; color: var(--muted); background: var(--surface-2); }
+  .breakdown td.num { font-family: var(--mono); text-align: right; color: var(--ink); }
+  .breakdown tr.sub td { font-weight: 600; border-top: 2px solid var(--ink); background: var(--surface-2); }
+  .breakdown tr.group-head td {
+    background: var(--blue-soft); color: var(--blue-ink);
+    font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    padding: 8px 16px;
+  }
+  .breakdown tr.group-head.is-labour td { background: var(--teal-soft); color: var(--teal-ink); }
+  .breakdown tr.total td {
+    background: var(--blue); color: white; font-weight: 700;
+    padding: 14px 16px; font-size: 14px;
+  }
+
+  /* ──── RAB step display ──────────────────────────────────────── */
+  .rab-step-row {
+    display: grid; grid-template-columns: minmax(0, 1fr) 130px 22px 150px 22px minmax(0, 200px);
+    gap: 0; align-items: center; padding: 9px 18px;
+    background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px;
+    margin-bottom: 6px; font-size: 12.5px;
+  }
+  .rab-step-row .lbl { font-weight: 500; color: var(--ink); }
+  .rab-step-row .vol, .rab-step-row .hs { font-family: var(--mono); text-align: right; color: var(--ink-2); }
+  .rab-step-row .tot { font-family: var(--mono); text-align: right; font-weight: 600; color: var(--ink); }
+  .rab-step-row .op { text-align: center; font-family: var(--mono); color: var(--muted); }
+
+  .rab-sum {
+    margin-top: 14px; padding: 14px 22px; background: var(--teal);
+    border-radius: 10px; color: white;
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; align-items: center;
+  }
+  .rab-sum-lbl { font-size: 13px; font-weight: 600; }
+  .rab-sum-val { font-family: var(--mono); font-size: 17px; font-weight: 700; }
+
+  /* ──── stair markup ──────────────────────────────────────────── */
+  .stair { display: flex; align-items: flex-end; gap: 14px; justify-content: center; padding: 28px 0; }
+  .stair-step {
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 16px 22px; border-radius: 12px;
+    background: var(--cat-soft); border: 1.5px solid var(--cat);
+    min-width: 230px;
+  }
+  .stair-step[data-fill="solid"] {
+    background: var(--cat); border-color: transparent; color: white;
+  }
+  .stair-eyebrow {
+    font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--cat-ink);
+  }
+  .stair-step[data-fill="solid"] .stair-eyebrow { color: oklch(1 0 0 / 0.85); }
+  .stair-name { font-size: 17px; font-weight: 600; color: var(--ink); }
+  .stair-step[data-fill="solid"] .stair-name { color: white; }
+  .stair-sub { font-size: 11.5px; color: var(--muted); }
+  .stair-step[data-fill="solid"] .stair-sub { color: oklch(1 0 0 / 0.85); }
+  .stair-val { font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--cat-ink); margin-top: 4px; }
+  .stair-step[data-fill="solid"] .stair-val { color: white; }
+  .stair-op {
+    align-self: center; padding: 0 4px;
+    font-family: var(--mono); font-size: 16px; font-weight: 700; color: var(--cat); white-space: nowrap;
+  }
+
+  /* ──── gantt ─────────────────────────────────────────────────── */
+  .gantt { width: 100%; }
+
+  /* ──── donut + legend ───────────────────────────────────────── */
+  .donut-row { display: grid; grid-template-columns: 320px 1fr; gap: 36px; align-items: center; }
+  .legend-grid { display: grid; gap: 8px; }
+  .legend-row {
+    display: grid; grid-template-columns: 16px 1fr auto auto;
+    gap: 10px; align-items: center; font-size: 13px;
+  }
+  .legend-sw { width: 14px; height: 14px; border-radius: 3px; }
+  .legend-pct { font-family: var(--mono); font-weight: 700; color: var(--ink); }
+  .legend-money { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .legend-row.is-hi .legend-pct { color: var(--rose-ink); }
+  .legend-row.is-hi-2 .legend-pct { color: var(--green-ink); }
+
+  /* ──── heatmap ──────────────────────────────────────────────── */
+  .heatmap { width: 100%; border-collapse: collapse; font-size: 10px; }
+  .heatmap th { font-family: var(--mono); font-weight: 600; color: var(--muted);
+                padding: 4px 0; text-align: center; }
+  .heatmap th.row-label, .heatmap td.row-label { font-family: var(--sans); font-weight: 600; color: var(--ink);
+                                                  font-size: 11px; text-align: right; padding-right: 12px; width: 130px; }
+  .heatmap td { padding: 0; }
+  .heatmap-cell {
+    width: 100%; aspect-ratio: 1 / 0.7;
+    display: grid; place-items: center;
+    border: 1px solid var(--line);
+    font-family: var(--mono); font-size: 9px; color: var(--faint);
+    background: var(--surface);
+  }
+  .heatmap-cell.on { color: white; font-weight: 700; }
+  .heatmap-cell.peak { font-size: 10px; }
+  .heatmap-row-sum {
+    font-family: var(--mono); font-weight: 700; font-size: 11px; color: var(--rose-ink);
+    background: var(--surface-2); border-top: 1.5px solid var(--ink);
+  }
+
+  /* ──── WBS table (Paket Pekerjaan) ──────────────────────────── */
+  .wbs-card {
+    background: var(--surface); border: 1px solid var(--line);
+    border-radius: 14px; box-shadow: var(--shadow-sm);
+    padding: 22px 26px; max-width: 760px; margin: 0 auto;
+  }
+  .wbs-card-head {
+    font-family: var(--sans); font-size: 14px; font-weight: 700;
+    color: var(--ink); margin-bottom: 14px; letter-spacing: -0.1px;
+  }
+  .wbs-table { width: 100%; border-collapse: collapse; }
+  .wbs-table thead th {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 1.4px; color: var(--muted); text-transform: uppercase;
+    text-align: left; padding: 6px 10px 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .wbs-table thead th:not(:first-child) { text-align: left; }
+  .wbs-table tbody td {
+    padding: 11px 10px; font-size: 13.5px; color: var(--ink-2);
+    border-bottom: 1px solid var(--line-2); vertical-align: middle;
+  }
+  .wbs-table tbody tr:last-child td { border-bottom: none; }
+  .wbs-table .wbs-dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--c, var(--muted)); margin-right: 12px; vertical-align: middle;
+  }
+  .wbs-table .wbs-id {
+    display: inline-block; min-width: 18px; padding: 2px 6px;
+    border-radius: 4px; background: var(--blue-soft); color: var(--blue-ink);
+    font-family: var(--sans); font-size: 11px; font-weight: 700;
+    text-align: center; margin-right: 10px; vertical-align: middle;
+  }
+  .wbs-table .wbs-num {
+    font-family: var(--mono); font-variant-numeric: tabular-nums;
+    color: var(--ink-2); font-weight: 600;
+  }
+  .wbs-table .wbs-unit {
+    font-family: var(--mono); color: var(--faint); margin-left: 4px; font-size: 12px;
+  }
+  .wbs-table .wbs-pred {
+    font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted);
+  }
+  .wbs-table tr.wbs-total td {
+    background: var(--surface-2); font-weight: 700; color: var(--ink);
+    border-top: 1.5px solid var(--ink); border-bottom: none;
+  }
+  .wbs-table tr.wbs-total .wbs-num { color: var(--teal-ink); }
+  .wbs-table tr.wbs-total .wbs-pred { color: var(--muted); font-weight: 500; }
+
+  /* ──── CPM network diagram ──────────────────────────────────── */
+  .cpm-wrap { width: 100%; max-width: 1180px; margin: 0 auto; }
+  .cpm-legend {
+    display: flex; flex-wrap: wrap; gap: 14px 22px; justify-content: center;
+    margin-top: 18px; font-size: 12.5px; color: var(--muted);
+  }
+  .cpm-legend-item { display: inline-flex; align-items: center; gap: 7px; }
+  .cpm-legend-sw {
+    width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid var(--cat);
+    background: var(--surface);
+  }
+  .cpm-legend-sw.crit { border-color: var(--rose); background: var(--rose-soft); }
+  .cpm-legend-key {
+    font-family: var(--mono); font-weight: 700; color: var(--ink);
+  }
+
+  /* ──── recap radial ─────────────────────────────────────────── */
+  .recap-wrap { position: relative; width: 100%; max-width: 1040px; aspect-ratio: 2.4; }
+
+  /* ──── mobile ───────────────────────────────────────────────── */
+  @media (max-width: 980px) {
+    .slide { padding: 36px 22px 28px; }
+    .slide-title { font-size: 26px; }
+    .cover-title { font-size: 44px; }
+    .dotnav { display: none; }
+    .donut-row { grid-template-columns: 1fr; }
+    .nav-pages { display: none; }
+  }
+  @media (max-width: 700px) {
+    .slide-num { font-size: 11px; }
+    .slide-title { font-size: 22px; }
+    .cover-title { font-size: 32px; }
+    .big-eq { flex-direction: column; }
+    .stair { flex-wrap: wrap; }
+  }
+
+  @media print {
+    .site-nav, .dotnav { display: none; }
+    .slide { min-height: auto; page-break-after: always; border: none; padding: 20px; }
+  }
+
+  /* ──── SPLASH (cinematic blue cover with photo) ─────────────── */
+  #splash {
+    position: fixed; inset: 0; z-index: 9999;
+    cursor: pointer; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(ellipse at 50% 20%,
+      #1A60FF 0%,
+      #003FCC 35%,
+      #001A99 70%,
+      #000F6B 100%
+    );
+    transition: opacity .55s ease-out;
+  }
+  #splash.is-leaving { opacity: 0; pointer-events: none; }
+  /* `hidden` attribute must win over `display: flex` above */
+  #splash[hidden] { display: none !important; }
+  #splash-bg {
+    position: absolute; inset: 0;
+    background: url('mukti.jpeg') center 38% / auto 100% no-repeat;
+    -webkit-mask-image:
+      linear-gradient(to right,  transparent 0%, black 18%, black 82%, transparent 100%),
+      linear-gradient(to bottom, black 70%, transparent 100%);
+    mask-image:
+      linear-gradient(to right,  transparent 0%, black 18%, black 82%, transparent 100%),
+      linear-gradient(to bottom, black 70%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  #splash-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top,
+      rgba(0,0,0,0.88) 0%,
+      rgba(0,0,0,0.38) 45%,
+      rgba(0,0,0,0.15) 100%
+    );
+  }
+  #splash-content {
+    position: relative; text-align: center; user-select: none;
+    padding: 0 24px;
+  }
+  #splash-eyebrow {
+    display: block;
+    font-family: "Montserrat", sans-serif; font-weight: 700;
+    font-size: clamp(0.62rem, 1.6vw, 0.78rem);
+    letter-spacing: 0.45em; text-transform: uppercase;
+    color: #7DD3FC; margin-bottom: 1.4rem;
+    opacity: 0; animation: splashFadeUp .8s .15s ease both;
+  }
+  #splash-name {
+    display: block;
+    font-family: "Montserrat", sans-serif; font-weight: 700;
+    font-size: clamp(0.7rem, 2vw, 0.92rem);
+    letter-spacing: 0.4em; text-transform: uppercase;
+    color: rgba(255,255,255,0.85); margin-bottom: 1.6rem;
+    opacity: 0; animation: splashFadeUp .8s .3s ease both;
+  }
+  #splash-welcome {
+    display: block;
+    font-family: "Bebas Neue", "Oswald", sans-serif; font-weight: 400;
+    font-size: clamp(5.5rem, 20vw, 15rem); line-height: 0.88;
+    color: #fff; letter-spacing: -0.005em;
+    text-shadow: 0 8px 60px rgba(0,0,0,0.55);
+    opacity: 0; animation: splashFadeUp .9s .55s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+    transition: transform .35s ease, text-shadow .35s ease;
+  }
+  #splash:hover #splash-welcome {
+    transform: scale(1.025);
+    text-shadow: 0 12px 80px rgba(0,0,0,0.65), 0 0 60px rgba(96,165,250,0.35);
+  }
+  #splash-sub {
+    display: block; margin-top: 1.2rem;
+    font-family: "Source Serif 4", "Times New Roman", Georgia, serif;
+    font-size: clamp(0.95rem, 2vw, 1.2rem);
+    color: rgba(255,255,255,0.75); font-style: italic;
+    opacity: 0; animation: splashFadeUp .8s .85s ease both;
+  }
+  #splash-hint {
+    display: block; margin-top: 2rem;
+    font-family: "Montserrat", sans-serif;
+    font-size: 0.7rem; letter-spacing: 0.35em; text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    opacity: 0; animation: splashFadeUp .7s 1.1s ease both, splashPulse 2.5s 1.8s ease infinite;
+  }
+  @keyframes splashFadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes splashPulse {
+    0%, 100% { opacity: 0.45; }
+    50%       { opacity: 0.85; }
+  }
+  /* lock body scroll while splash is up */
+  body.splash-open { overflow: hidden; }
+
+  @media (max-width: 540px) {
+    #splash-bg { background-position: center 35%; }
+    #splash-eyebrow, #splash-name { letter-spacing: 0.32em; }
+  }
+</style>
+</head>
+<body class="splash-open">
+
+<!-- ════════════════════ SPLASH (cinematic opening) ════════════════════ -->
+<div id="splash" role="button" tabindex="0" aria-label="Enter presentation">
+  <div id="splash-bg" aria-hidden="true"></div>
+  <div id="splash-overlay" aria-hidden="true"></div>
+  <div id="splash-content">
+    <span id="splash-eyebrow" data-i18n="splash_eyebrow">5D BIM · Construction Management</span>
+    <span id="splash-name">Mukti Hadi Trinanda &nbsp;·&nbsp; 木安豪 &nbsp;·&nbsp; W1435407</span>
+    <span id="splash-welcome" data-i18n="splash_welcome">WELCOME</span>
+    <span id="splash-sub" data-i18n="splash_sub">Dari Model 3D ke Kurva S — empat tahap, satu kebenaran.</span>
+    <span id="splash-hint" data-i18n="splash_hint">Click anywhere to enter</span>
+  </div>
+</div>
+
+<header class="site-nav">
+  <div class="nav-brand">
+    <div class="nav-brand-mark">5D</div>
+    <span data-i18n="brand">5D BIM</span>
+  </div>
+  <nav class="nav-pages">
+    <a class="nav-page" id="nav-link-dashboard" href="Dashboard 5D BIM.html"><span aria-hidden>◇</span><span data-i18n="nav_dashboard">Dashboard</span></a>
+    <a class="nav-page active" href="cons-mgmt-process.html"><span aria-hidden>◈</span><span data-i18n="nav_process">Panduan Proses</span></a>
+  </nav>
+  <div class="nav-spacer"></div>
+  <div class="nav-lang" role="tablist" aria-label="Language">
+    <button class="nav-lang-btn" data-lang="id" type="button">ID</button>
+    <button class="nav-lang-btn" data-lang="en" type="button">EN</button>
+    <button class="nav-lang-btn" data-lang="zh" type="button">ZH</button>
+  </div>
+  <button id="back-to-splash" class="nav-iconbtn" type="button"
+          data-i18n-title="nav_back_splash" title="Kembali ke opening">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/>
+    </svg>
+  </button>
+  <button id="fs-toggle" class="nav-iconbtn" type="button"
+          data-i18n-title="nav_fullscreen" title="Layar penuh">
+    <svg id="fs-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/>
+    </svg>
+    <svg id="fs-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display:none;">
+      <path d="M9 4v5H4"/><path d="M15 4v5h5"/><path d="M9 20v-5H4"/><path d="M15 20v-5h5"/>
+    </svg>
+  </button>
+</header>
+
+<nav class="stage-nav" id="stageNav" role="tablist" aria-label="Sections">
+  <button class="stage-btn active" data-stage="intro" type="button">
+    <span class="stage-btn-num">00</span>
+    <span data-i18n="stage_intro">Pendahuluan</span>
+  </button>
+  <button class="stage-btn" data-stage="ahsp" type="button">
+    <span class="stage-btn-num">01</span>
+    <span data-i18n="stage_ahsp">Tahap 1 · Harga Satuan</span>
+  </button>
+  <button class="stage-btn" data-stage="rab" type="button">
+    <span class="stage-btn-num">02</span>
+    <span data-i18n="stage_rab">Tahap 2 · RAB</span>
+  </button>
+  <button class="stage-btn" data-stage="sched" type="button">
+    <span class="stage-btn-num">03</span>
+    <span data-i18n="stage_sched">Tahap 3 · Jadwal</span>
+  </button>
+  <button class="stage-btn" data-stage="scurve" type="button">
+    <span class="stage-btn-num">04</span>
+    <span data-i18n="stage_scurve">Tahap 4 · Kurva S</span>
+  </button>
+  <button class="stage-btn" data-stage="recap" type="button">
+    <span class="stage-btn-num">05</span>
+    <span data-i18n="stage_recap">Recap</span>
+  </button>
+</nav>
+
+<nav class="dotnav" id="dotnav"></nav>
+
+<main>
+
+<div class="stage" data-stage="intro">
+
+<!-- ════════════════════ 01 · COVER ════════════════════ -->
+<section class="slide" data-cat="cover" id="s1">
+  <div class="slide-head">
+    <span class="slide-num">01</span>
+    <span class="slide-eyebrow" data-i18n="s1_eyebrow">Pengantar</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">01 · 14</span>
+  </div>
+  <div class="slide-body">
+    <div class="canvas cover">
+      <div class="cover-kicker" data-i18n="s1_kicker">5D BIM · Construction Management Process</div>
+      <h1 class="cover-title">
+        <span data-i18n="s1_t1">Dari</span>
+        <em data-i18n="s1_t2">Model 3D</em>
+        <span data-i18n="s1_t3">ke</span>
+        <em data-i18n="s1_t4">Kurva S</em>
+      </h1>
+      <p class="cover-sub" data-i18n="s1_sub">Empat tahap utama membuat estimasi proyek konstruksi: Harga Satuan → RAB → Jadwal → Kurva S.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════ 02 · PIPELINE ════════════════════ -->
+<section class="slide" data-cat="intro" id="s2">
+  <div class="slide-head">
+    <span class="slide-num">02</span>
+    <span class="slide-eyebrow" data-i18n="s2_eyebrow">Big Picture</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">02 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s2_title">5 Tahapan dari Gambar 3D Menjadi Estimasi Lengkap</h2>
+    <p class="slide-sub" data-i18n="s2_sub">Setiap tahap memakai output dari tahap sebelumnya. Inilah peta besar yang akan kita pelajari satu per satu.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas">
+      <div class="chain">
+        <div class="chain-node" style="--cat: var(--blue); --cat-ink: var(--blue-ink); background: var(--blue-soft); border-color: var(--blue);">
+          <span class="chain-eyebrow" data-i18n="s2_n0_eb">3D BIM · Revit</span>
+          <span class="chain-title" data-i18n="s2_n0_t">Volume</span>
+          <span class="chain-sub" data-i18n="s2_n0_s">m³ · kg · m²</span>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-node" style="--cat: var(--blue); --cat-ink: var(--blue-ink); background: var(--blue-soft); border-color: var(--blue);">
+          <span class="chain-eyebrow" data-i18n="s2_n1_eb">Tahap 1 · AHSP</span>
+          <span class="chain-title" data-i18n="s2_n1_t">Harga Satuan</span>
+          <span class="chain-sub" data-i18n="s2_n1_s">Rp / m³</span>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-node" style="--cat: var(--teal); --cat-ink: var(--teal-ink); background: var(--teal-soft); border-color: var(--teal);">
+          <span class="chain-eyebrow" data-i18n="s2_n2_eb">Tahap 2 · RAB</span>
+          <span class="chain-title" data-i18n="s2_n2_t">Total Biaya</span>
+          <span class="chain-sub" data-i18n="s2_n2_s">Rp total</span>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-node" style="--cat: var(--amber); --cat-ink: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber);">
+          <span class="chain-eyebrow" data-i18n="s2_n3_eb">Tahap 3 · Jadwal</span>
+          <span class="chain-title" data-i18n="s2_n3_t">Gantt</span>
+          <span class="chain-sub" data-i18n="s2_n3_s">minggu × WBS</span>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-node" style="--cat: var(--rose); --cat-ink: var(--rose-ink); background: var(--rose-soft); border-color: var(--rose);">
+          <span class="chain-eyebrow" data-i18n="s2_n4_eb">Tahap 4 · Kurva S</span>
+          <span class="chain-title" data-i18n="s2_n4_t">Progres %</span>
+          <span class="chain-sub" data-i18n="s2_n4_s">akumulasi/minggu</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; max-width: 1040px; margin: 36px auto 0; padding: 0 12px;">
+        <div style="font-family: var(--mono); font-size: 10.5px; text-align: center; color: var(--muted); letter-spacing: 0.4px;" data-i18n="s2_d0">Hasil QTO</div>
+        <div style="font-family: var(--mono); font-size: 10.5px; text-align: center; color: var(--muted); letter-spacing: 0.4px;" data-i18n="s2_d1">Σ koef × harga</div>
+        <div style="font-family: var(--mono); font-size: 10.5px; text-align: center; color: var(--muted); letter-spacing: 0.4px;" data-i18n="s2_d2">Vol × Harga</div>
+        <div style="font-family: var(--mono); font-size: 10.5px; text-align: center; color: var(--muted); letter-spacing: 0.4px;" data-i18n="s2_d3">Vol ÷ produktivitas</div>
+        <div style="font-family: var(--mono); font-size: 10.5px; text-align: center; color: var(--muted); letter-spacing: 0.4px;" data-i18n="s2_d4">Σ bobot/minggu</div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s2_tag">Roadmap</span>
+    <p class="slide-caption" data-i18n="s2_cap">Volume dari <strong>Revit BIM</strong> adalah modal awal. Mengubah satu tahap = semua hilirnya ikut berubah otomatis.</p>
+  </div>
+</section>
+
+</div><!-- /stage intro -->
+
+<div class="stage" data-stage="ahsp" hidden>
+
+<!-- ════════════════════ 03 · AHSP SOURCES ════════════════════ -->
+<section class="slide" data-cat="ahsp" id="s3">
+  <div class="slide-head">
+    <span class="slide-num">03</span>
+    <span class="slide-eyebrow" data-i18n="s3_eyebrow">Tahap 1 · Harga Satuan</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">03 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s3_title">Dari Mana Harga Bahan & Upah Diambil?</h2>
+    <p class="slide-sub" data-i18n="s3_sub">Tiga sumber resmi yang dipakai estimator untuk menyusun Analisa Harga Satuan Pekerjaan (AHSP).</p>
+  </div>
+  <div class="slide-body">
+    <svg class="canvas" viewBox="0 0 1180 370" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arr-blue-s3" viewBox="0 -5 10 10" refX="9" refY="0" markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,-5L10,0L0,5" fill="oklch(0.55 0.13 248)"/>
+        </marker>
+      </defs>
+
+      <g font-family="Inter, sans-serif">
+        <!-- 3 source boxes (LEFT) — wider and taller for breathing room -->
+        <g transform="translate(40,40)">
+          <rect width="380" height="90" rx="13" fill="oklch(0.945 0.04 248)" stroke="oklch(0.55 0.13 248)" stroke-width="1.5"/>
+          <text x="24" y="29" font-size="11" font-weight="700" letter-spacing="1.4" fill="oklch(0.42 0.13 248)" data-i18n="s3_src1_eb">SUMBER 1</text>
+          <text x="24" y="54" font-size="15" font-weight="600" fill="oklch(0.22 0.02 240)" data-i18n="s3_src1_t">HSPK Pemerintah Daerah</text>
+          <text x="24" y="75" font-size="11.5" fill="oklch(0.55 0.02 240)" data-i18n="s3_src1_d">Harga Satuan Pokok Kegiatan — dirilis tiap awal tahun</text>
+        </g>
+        <g transform="translate(40,145)">
+          <rect width="380" height="90" rx="13" fill="oklch(0.945 0.04 248)" stroke="oklch(0.55 0.13 248)" stroke-width="1.5"/>
+          <text x="24" y="29" font-size="11" font-weight="700" letter-spacing="1.4" fill="oklch(0.42 0.13 248)" data-i18n="s3_src2_eb">SUMBER 2</text>
+          <text x="24" y="54" font-size="15" font-weight="600" fill="oklch(0.22 0.02 240)" data-i18n="s3_src2_t">Survei Pasar (min. 3 toko)</text>
+          <text x="24" y="75" font-size="11.5" fill="oklch(0.55 0.02 240)" data-i18n="s3_src2_d">Harga aktual + ongkos angkut ke lokasi</text>
+        </g>
+        <g transform="translate(40,250)">
+          <rect width="380" height="90" rx="13" fill="oklch(0.945 0.04 248)" stroke="oklch(0.55 0.13 248)" stroke-width="1.5"/>
+          <text x="24" y="29" font-size="11" font-weight="700" letter-spacing="1.4" fill="oklch(0.42 0.13 248)" data-i18n="s3_src3_eb">SUMBER 3</text>
+          <text x="24" y="54" font-size="15" font-weight="600" fill="oklch(0.22 0.02 240)" data-i18n="s3_src3_t">SNI 7394 / 6897 / 2837</text>
+          <text x="24" y="75" font-size="11.5" fill="oklch(0.55 0.02 240)" data-i18n="s3_src3_d">Koefisien resmi: bahan & upah per 1 satuan</text>
+        </g>
+
+        <!-- Arrows converging to AHSP -->
+        <path d="M 420,85  C 540,85  580,185 690,185" stroke="oklch(0.55 0.13 248)" stroke-width="2" fill="none" marker-end="url(#arr-blue-s3)"/>
+        <path d="M 420,190 L 690,190" stroke="oklch(0.55 0.13 248)" stroke-width="2" fill="none" marker-end="url(#arr-blue-s3)"/>
+        <path d="M 420,295 C 540,295 580,195 690,195" stroke="oklch(0.55 0.13 248)" stroke-width="2" fill="none" marker-end="url(#arr-blue-s3)"/>
+
+        <!-- AHSP center node -->
+        <g transform="translate(710,115)">
+          <rect width="260" height="150" rx="14" fill="oklch(0.55 0.13 248)"/>
+          <text x="130" y="44" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1.5" fill="oklch(0.95 0.04 248)" data-i18n="s3_proc">DIPROSES MENJADI</text>
+          <text x="130" y="88" text-anchor="middle" font-size="34" font-weight="700" fill="white">AHSP</text>
+          <text x="130" y="118" text-anchor="middle" font-size="12.5" fill="oklch(0.95 0.04 248)" data-i18n="s3_proc_sub">Analisa Harga Satuan Pekerjaan</text>
+        </g>
+
+        <!-- Output arrow + label (more breathing room) -->
+        <path d="M 970,190 L 1030,190" stroke="oklch(0.55 0.13 248)" stroke-width="2.5" fill="none" marker-end="url(#arr-blue-s3)"/>
+        <g transform="translate(1045,160)">
+          <text x="0" y="14" font-size="11" font-weight="700" letter-spacing="1.2" fill="oklch(0.42 0.13 248)" data-i18n="s3_out_eb">HASIL</text>
+          <text x="0" y="40" font-size="22" font-weight="700" fill="oklch(0.22 0.02 240)">Rp / m³</text>
+          <text x="0" y="60" font-size="11" fill="oklch(0.55 0.02 240)" data-i18n="s3_out_sub">per 1 satuan</text>
+        </g>
+      </g>
+    </svg>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s3_tag">Sumber Data</span>
+    <p class="slide-caption" data-i18n="s3_cap">Proyek <strong>pemerintah</strong> wajib pakai HSPK. <strong>Swasta</strong> sering menggabungkan HSPK + survei + margin negosiasi sendiri.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 04 · AHSP FORMULA ════════════════════ -->
+<section class="slide" data-cat="ahsp" id="s4">
+  <div class="slide-head">
+    <span class="slide-num">04</span>
+    <span class="slide-eyebrow" data-i18n="s4_eyebrow">Tahap 1 · Harga Satuan</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">04 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s4_title">Rumus Harga Satuan: Resep yang Kuantitatif</h2>
+    <p class="slide-sub" data-i18n="s4_sub">Bayangkan resep masakan: bahan + cara + upah juru masak. AHSP adalah versi terstruktur dari resep ini.</p>
+  </div>
+  <div class="slide-body">
+    <svg class="canvas" viewBox="0 0 1100 390" xmlns="http://www.w3.org/2000/svg">
+      <g font-family="Inter, sans-serif">
+        <!-- 3 stacked component boxes (LEFT) -->
+        <g transform="translate(60,30)">
+          <rect width="320" height="68" rx="10" fill="oklch(0.945 0.04 248)" stroke="oklch(0.55 0.13 248)" stroke-width="1.2"/>
+          <circle cx="34" cy="34" r="18" fill="oklch(0.55 0.13 248)"/>
+          <text x="34" y="40" text-anchor="middle" font-size="18" font-weight="700" fill="white">A</text>
+          <text x="68" y="29" font-size="14" font-weight="600" data-i18n="s4_a_t">Bahan (Material)</text>
+          <text x="68" y="50" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" fill="oklch(0.55 0.02 240)" data-i18n="s4_a_s">Σ koefisien × harga bahan</text>
+        </g>
+
+        <g transform="translate(60,116)">
+          <rect width="320" height="68" rx="10" fill="oklch(0.955 0.03 195)" stroke="oklch(0.6 0.10 195)" stroke-width="1.2"/>
+          <circle cx="34" cy="34" r="18" fill="oklch(0.6 0.10 195)"/>
+          <text x="34" y="40" text-anchor="middle" font-size="18" font-weight="700" fill="white">B</text>
+          <text x="68" y="29" font-size="14" font-weight="600" data-i18n="s4_b_t">Upah (Labour)</text>
+          <text x="68" y="50" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" fill="oklch(0.55 0.02 240)" data-i18n="s4_b_s">Σ koefisien OH × tarif/hari</text>
+        </g>
+
+        <g transform="translate(60,202)">
+          <rect width="320" height="68" rx="10" fill="oklch(0.975 0.045 70)" stroke="oklch(0.72 0.13 70)" stroke-width="1.2"/>
+          <circle cx="34" cy="34" r="18" fill="oklch(0.72 0.13 70)"/>
+          <text x="34" y="40" text-anchor="middle" font-size="18" font-weight="700" fill="white">C</text>
+          <text x="68" y="29" font-size="14" font-weight="600" data-i18n="s4_c_t">Alat (Equipment, opsional)</text>
+          <text x="68" y="50" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" fill="oklch(0.55 0.02 240)" data-i18n="s4_c_s">Σ koefisien × sewa alat/hari</text>
+        </g>
+
+        <!-- Plus signs between -->
+        <text x="220" y="113" text-anchor="middle" font-size="24" font-weight="700" fill="oklch(0.55 0.02 240)" font-family="Source Serif 4, Times New Roman, Georgia, serif">+</text>
+        <text x="220" y="199" text-anchor="middle" font-size="24" font-weight="700" fill="oklch(0.55 0.02 240)" font-family="Source Serif 4, Times New Roman, Georgia, serif">+</text>
+
+        <!-- Brace -->
+        <path d="M 400,55 L 425,55 L 425,150 L 445,150 L 425,150 L 425,245 L 400,245" stroke="oklch(0.42 0.13 248)" stroke-width="1.5" fill="none"/>
+
+        <!-- = Subtotal -->
+        <g transform="translate(465,140)">
+          <text x="0" y="0" font-size="22" font-weight="700" fill="oklch(0.55 0.02 240)" font-family="Source Serif 4, Times New Roman, Georgia, serif">=</text>
+          <text x="30" y="-3" font-size="13" font-weight="600" data-i18n="s4_subtot">Subtotal</text>
+          <text x="30" y="16" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" fill="oklch(0.55 0.02 240)" data-i18n="s4_subtot_s">Harga langsung</text>
+        </g>
+
+        <!-- × markup -->
+        <g transform="translate(630,140)">
+          <text x="0" y="0" font-size="22" font-weight="700" fill="oklch(0.55 0.02 240)" font-family="Source Serif 4, Times New Roman, Georgia, serif">×</text>
+          <text x="30" y="-3" font-size="13" font-weight="600">(1 + 10%)</text>
+          <text x="30" y="16" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" fill="oklch(0.55 0.02 240)" data-i18n="s4_ohp_sub">Overhead & Profit</text>
+        </g>
+
+        <!-- Final result -->
+        <g transform="translate(820,80)">
+          <rect width="220" height="170" rx="14" fill="oklch(0.55 0.13 248)"/>
+          <text x="110" y="38" text-anchor="middle" font-size="11" font-weight="700" letter-spacing="1.2" fill="oklch(0.95 0.04 248)" data-i18n="s4_hs_eb">HARGA SATUAN</text>
+          <text x="110" y="86" text-anchor="middle" font-size="28" font-weight="700" fill="white" font-family="Source Serif 4, Times New Roman, Georgia, serif">Rp / m³</text>
+          <text x="110" y="118" text-anchor="middle" font-size="13" fill="oklch(0.95 0.04 248)" data-i18n="s4_hs_for">untuk 1 m³ beton K-225</text>
+          <text x="110" y="144" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="600" fill="white">≈ Rp 1.320.259</text>
+        </g>
+
+        <!-- Bottom: koefisien explainer -->
+        <text x="60" y="320" font-size="13" font-weight="600" fill="oklch(0.42 0.13 248)" data-i18n="s4_what_eb">Apa itu "koefisien"?</text>
+        <text x="60" y="344" font-size="12.5" fill="oklch(0.38 0.02 240)" data-i18n="s4_what_short">Jumlah bahan/upah yang dibutuhkan untuk membuat 1 unit output.</text>
+        <text x="60" y="364" font-size="12.5" fill="oklch(0.38 0.02 240)" data-i18n="s4_what_ex">Contoh: 371 kg semen + 0,499 m³ pasir + 0,776 m³ kerikil + 215 L air per 1 m³ beton K-225.</text>
+      </g>
+    </svg>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s4_tag">Rumus AHSP</span>
+    <p class="slide-caption" data-i18n="s4_cap">OHP 10% menutup biaya tak langsung kontraktor + laba (kantor, staf, asuransi). Harga satuan inilah yang dipakai di RAB tahap berikutnya.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 05 · AHSP EXAMPLE ════════════════════ -->
+<section class="slide" data-cat="ahsp" id="s5">
+  <div class="slide-head">
+    <span class="slide-num">05</span>
+    <span class="slide-eyebrow" data-i18n="s5_eyebrow">Tahap 1 · Harga Satuan</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">05 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s5_title">Contoh Nyata: 1 m³ Beton Struktur K-225</h2>
+    <p class="slide-sub" data-i18n="s5_sub">Pecahkan resep menjadi angka — koefisien dari SNI 7394, harga dari HSPK rata-rata Jawa.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas card" style="padding: 0; overflow: hidden; max-width: 980px;">
+      <table class="breakdown">
+        <thead>
+          <tr>
+            <th data-i18n="th_comp">Komponen</th>
+            <th class="num" data-i18n="th_coef">Koefisien</th>
+            <th data-i18n="th_unit">Sat.</th>
+            <th class="num" data-i18n="th_base">Harga Dasar</th>
+            <th class="num" data-i18n="th_amt">Jumlah</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="group-head"><td colspan="5" data-i18n="s5_g_mat">A · Bahan (Material)</td></tr>
+          <tr><td data-i18n="s5_mat1">Semen Portland</td><td class="num">371</td><td>kg</td><td class="num">Rp 1.500</td><td class="num">Rp 556.500</td></tr>
+          <tr><td data-i18n="s5_mat2">Pasir beton</td><td class="num">0,499</td><td>m³</td><td class="num">Rp 285.000</td><td class="num">Rp 142.215</td></tr>
+          <tr><td data-i18n="s5_mat3">Kerikil / split</td><td class="num">0,776</td><td>m³</td><td class="num">Rp 320.000</td><td class="num">Rp 248.320</td></tr>
+          <tr><td data-i18n="s5_mat4">Air</td><td class="num">215</td><td>L</td><td class="num">Rp 50</td><td class="num">Rp 10.750</td></tr>
+          <tr class="group-head is-labour"><td colspan="5" data-i18n="s5_g_lab">B · Upah (Labour)</td></tr>
+          <tr><td data-i18n="s5_lab1">Pekerja</td><td class="num">1,650</td><td>OH</td><td class="num">Rp 110.000</td><td class="num">Rp 181.500</td></tr>
+          <tr><td data-i18n="s5_lab2">Tukang batu</td><td class="num">0,275</td><td>OH</td><td class="num">Rp 150.000</td><td class="num">Rp 41.250</td></tr>
+          <tr><td data-i18n="s5_lab3">Kepala tukang</td><td class="num">0,028</td><td>OH</td><td class="num">Rp 170.000</td><td class="num">Rp 4.760</td></tr>
+          <tr><td data-i18n="s5_lab4">Mandor</td><td class="num">0,083</td><td>OH</td><td class="num">Rp 180.000</td><td class="num">Rp 14.940</td></tr>
+          <tr class="sub"><td colspan="4" data-i18n="s5_sub">Subtotal langsung</td><td class="num">Rp 1.200.235</td></tr>
+          <tr><td colspan="4" data-i18n="s5_ohp">Overhead & Profit (10%)</td><td class="num" style="color: var(--blue-ink); font-family: var(--mono);">+ Rp 120.024</td></tr>
+          <tr class="total"><td colspan="4" data-i18n="s5_total">HARGA SATUAN per m³</td><td class="num">Rp 1.320.259</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s5_tag">Studi Kasus</span>
+    <p class="slide-caption" data-i18n="s5_cap">Angka ini dipakai di seluruh RAB. Volume 32 m³ dari Revit × Rp 1.320.259 = <strong>Rp 42,2 juta</strong> untuk beton struktur.</p>
+  </div>
+</section>
+
+</div><!-- /stage ahsp -->
+
+<div class="stage" data-stage="rab" hidden>
+
+<!-- ════════════════════ 06 · RAB FORMULA ════════════════════ -->
+<section class="slide" data-cat="rab" id="s6">
+  <div class="slide-head">
+    <span class="slide-num">06</span>
+    <span class="slide-eyebrow" data-i18n="s6_eyebrow">Tahap 2 · RAB</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">06 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s6_title">Cara Membuat RAB: Kalikan, lalu Jumlahkan</h2>
+    <p class="slide-sub" data-i18n="s6_sub">RAB = Rencana Anggaran Biaya. Untuk setiap item: Volume × Harga Satuan, lalu jumlahkan.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas" style="display: flex; flex-direction: column; gap: 28px;">
+      <!-- Equation -->
+      <div class="big-eq">
+        <div class="eq-term" style="--cat: var(--teal); --cat-ink: var(--teal-ink);">
+          <div class="eq-term-eyebrow" data-i18n="s6_v_eb">Dari Revit BIM</div>
+          <div class="eq-term-main" data-i18n="s6_v_t">Volume</div>
+          <div class="eq-term-sub">m³ · m² · kg</div>
+        </div>
+        <div class="eq-op">×</div>
+        <div class="eq-term" style="--cat: var(--blue); --cat-ink: var(--blue-ink);">
+          <div class="eq-term-eyebrow" data-i18n="s6_hs_eb">Dari AHSP</div>
+          <div class="eq-term-main" data-i18n="s6_hs_t">Harga Satuan</div>
+          <div class="eq-term-sub" data-i18n="s6_hs_sub">Rp / unit</div>
+        </div>
+        <div class="eq-op">=</div>
+        <div class="eq-term is-filled" style="--cat: var(--teal); --cat-ink: var(--teal-ink);">
+          <div class="eq-term-eyebrow" data-i18n="s6_t_eb">Hasil per Item</div>
+          <div class="eq-term-main" data-i18n="s6_t_t">Total Item</div>
+          <div class="eq-term-sub">Rp</div>
+        </div>
+      </div>
+
+      <!-- Sample 3 rows -->
+      <div>
+        <div style="font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--teal-ink); margin-bottom: 10px; text-align: center;" data-i18n="s6_samples">Contoh 3 Item dari Proyek Ini</div>
+        <div class="rab-step-row">
+          <div class="lbl" data-i18n="s6_r1">D.1 Beton struktur K-225</div>
+          <div class="vol">32,40 m³</div>
+          <div class="op">×</div>
+          <div class="hs">Rp 1.320.259</div>
+          <div class="op">=</div>
+          <div class="tot">Rp 42.776.392</div>
+        </div>
+        <div class="rab-step-row">
+          <div class="lbl" data-i18n="s6_r2">E.1 Dinding bata merah ½ bata</div>
+          <div class="vol">218,00 m²</div>
+          <div class="op">×</div>
+          <div class="hs">Rp 160.000</div>
+          <div class="op">=</div>
+          <div class="tot">Rp 34.880.000</div>
+        </div>
+        <div class="rab-step-row">
+          <div class="lbl" data-i18n="s6_r3">H.1 Pengecatan dinding interior</div>
+          <div class="vol">434,00 m²</div>
+          <div class="op">×</div>
+          <div class="hs">Rp 45.000</div>
+          <div class="op">=</div>
+          <div class="tot">Rp 19.530.000</div>
+        </div>
+
+        <div class="rab-sum">
+          <div class="rab-sum-lbl" data-i18n="s6_grand">Σ semua item + PPN 11% → Total Anggaran Proyek</div>
+          <div class="rab-sum-val">Rp 532.755.000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s6_tag">Rumus RAB</span>
+    <p class="slide-caption" data-i18n="s6_cap">Setiap baris = satu item WBS. Volume dari Revit, harga dari AHSP, total dari perkalian keduanya, lalu seluruhnya dijumlahkan + PPN.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 07 · RAB MARKUP ════════════════════ -->
+<section class="slide" data-cat="rab" id="s7">
+  <div class="slide-head">
+    <span class="slide-num">07</span>
+    <span class="slide-eyebrow" data-i18n="s7_eyebrow">Tahap 2 · RAB</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">07 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s7_title">Setelah Dijumlahkan: Naikkan ke Total Proyek</h2>
+    <p class="slide-sub" data-i18n="s7_sub">Subtotal "biaya langsung" belum termasuk pajak. Tambahkan markup tingkat proyek.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas">
+      <div class="stair">
+        <div class="stair-step" style="--cat: var(--teal); --cat-soft: var(--teal-soft); --cat-ink: var(--teal-ink);">
+          <div class="stair-eyebrow" data-i18n="s7_s1_eb">Langkah 1</div>
+          <div class="stair-name" data-i18n="s7_s1_t">Jumlah Biaya Langsung</div>
+          <div class="stair-sub" data-i18n="s7_s1_s">Σ (Volume × Harga Satuan)</div>
+          <div class="stair-val">Rp 480.000.000</div>
+        </div>
+
+        <div class="stair-op" style="--cat: var(--teal);">+ 11%</div>
+
+        <div class="stair-step" style="--cat: var(--teal); --cat-soft: var(--teal-soft); --cat-ink: var(--teal-ink);">
+          <div class="stair-eyebrow" data-i18n="s7_s2_eb">Langkah 2</div>
+          <div class="stair-name" data-i18n="s7_s2_t">+ PPN 11%</div>
+          <div class="stair-sub" data-i18n="s7_s2_s">Pajak Pertambahan Nilai</div>
+          <div class="stair-val">+ Rp 52.800.000</div>
+        </div>
+
+        <div class="stair-op" style="--cat: var(--teal);">=</div>
+
+        <div class="stair-step" data-fill="solid" style="--cat: var(--teal); --cat-soft: var(--teal-soft); --cat-ink: var(--teal-ink);">
+          <div class="stair-eyebrow" data-i18n="s7_s3_eb">Total Proyek</div>
+          <div class="stair-name" data-i18n="s7_s3_t">Rp 532,8 jt</div>
+          <div class="stair-sub" data-i18n="s7_s3_s">Yang dibayar pemilik ke kontraktor</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding: 16px 20px; max-width: 900px; margin: 26px auto 0;">
+        <div style="font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--teal-ink); margin-bottom: 6px;">📌 <span data-i18n="s7_tw_t">Bagaimana Taiwan?</span></div>
+        <div style="font-size: 13px; color: var(--ink-2); line-height: 1.6;" data-i18n="s7_tw_d">
+          Bukan 1 baris PPN — Taiwan memakai <strong>5 lapis markup</strong> (管理費 7% + 利潤 5% + 品管 1% + 環安衛 1,5% + 營業稅 5%) untuk transparansi penuh ke pemilik proyek.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s7_tag">Markup Proyek</span>
+    <p class="slide-caption" data-i18n="s7_cap">Indonesia menyisipkan OHP <strong>10% di setiap harga satuan</strong> via AHSP, jadi di tingkat proyek hanya kena PPN 11%.</p>
+  </div>
+</section>
+
+</div><!-- /stage rab -->
+
+<div class="stage" data-stage="sched" hidden>
+
+<!-- ════════════════════ 08 · DURATION ════════════════════ -->
+<section class="slide" data-cat="sched" id="s8">
+  <div class="slide-head">
+    <span class="slide-num">08</span>
+    <span class="slide-eyebrow" data-i18n="s8_eyebrow">Tahap 3 · Jadwal</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">08 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s8_title">Cara Menghitung Durasi: Volume Dibagi Kecepatan</h2>
+    <p class="slide-sub" data-i18n="s8_sub">Bukan tebakan. Setiap pekerjaan punya angka produktivitas baku per hari per regu.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas" style="display: flex; flex-direction: column; gap: 28px;">
+      <!-- Big fraction -->
+      <div class="big-eq">
+        <div class="big-eq-lhs" data-i18n="s8_lhs">Durasi (hari) =</div>
+        <div class="frac" style="font-family: var(--sans);">
+          <div class="frac-num" data-i18n="s8_num">Volume Pekerjaan</div>
+          <div class="frac-unit" style="text-align: center;">(m³ · m² · kg)</div>
+          <div class="frac-bar"></div>
+          <div class="frac-den" data-i18n="s8_den">Produktivitas × Jumlah Regu</div>
+          <div class="frac-unit" style="text-align: center;" data-i18n="s8_frac_unit">(unit/hari/regu)</div>
+        </div>
+      </div>
+
+      <!-- worked example -->
+      <div>
+        <div style="font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 1.2px; color: var(--amber-ink); margin-bottom: 10px; text-align: center;" data-i18n="s8_ex_t">Contoh Nyata — D.1 Beton Struktur</div>
+        <div style="display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 14px; align-items: center;">
+          <div class="card" style="padding: 16px 18px; text-align: center; background: var(--amber-soft); border-color: var(--amber);">
+            <div style="font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1px; color: var(--amber-ink);" data-i18n="s8_ex_v">Volume (Revit)</div>
+            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 6px;">32 m³</div>
+          </div>
+          <div style="font-family: var(--mono); font-size: 22px; color: var(--muted);">÷</div>
+          <div class="card" style="padding: 16px 18px; text-align: center; background: var(--amber-soft); border-color: var(--amber);">
+            <div style="font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1px; color: var(--amber-ink);" data-i18n="s8_ex_p">Produktivitas</div>
+            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 6px;" data-i18n="s8_ex_p_val">1,2 m³/hari</div>
+          </div>
+          <div style="font-family: var(--mono); font-size: 22px; color: var(--muted);">=</div>
+          <div class="card" style="padding: 16px 18px; text-align: center; background: var(--amber); border-color: transparent; color: white; box-shadow: var(--shadow-md);">
+            <div style="font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1px; color: oklch(1 0 0 / 0.85);" data-i18n="s8_ex_d">Durasi</div>
+            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 6px;" data-i18n="s8_ex_d_val">≈ 27 hari = 6 mg</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- productivity table -->
+      <div class="card" style="padding: 16px 22px;">
+        <div style="font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--amber-ink); margin-bottom: 10px;" data-i18n="s8_prod_t">Produktivitas Baku Tiap Pekerjaan</div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; font-size: 13px;">
+          <div><span style="color: var(--ink);" data-i18n="s8_p1">Cor beton:</span> <b style="font-family: var(--mono); color: var(--amber-ink);" data-i18n="s8_p1_v">1,2 m³/hari</b></div>
+          <div><span style="color: var(--ink);" data-i18n="s8_p2">Pasang bata:</span> <b style="font-family: var(--mono); color: var(--amber-ink);" data-i18n="s8_p2_v">10 m²/hari</b></div>
+          <div><span style="color: var(--ink);" data-i18n="s8_p3">Plester:</span> <b style="font-family: var(--mono); color: var(--amber-ink);" data-i18n="s8_p3_v">12 m²/hari</b></div>
+          <div><span style="color: var(--ink);" data-i18n="s8_p4">Pengecatan:</span> <b style="font-family: var(--mono); color: var(--amber-ink);" data-i18n="s8_p4_v">25 m²/hari</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s8_tag">Rumus Durasi</span>
+    <p class="slide-caption" data-i18n="s8_cap">Curing beton menambah waktu kalender meski bukan "kerja". 27 hari dibulatkan ke <strong>6 minggu</strong> untuk cadangan curing + cuaca.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 09 · PREDECESSOR ════════════════════ -->
+<section class="slide" data-cat="sched" id="s9">
+  <div class="slide-head">
+    <span class="slide-num">09</span>
+    <span class="slide-eyebrow" data-i18n="s9_eyebrow">Tahap 3 · Jadwal</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">09 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s9_title">Urutan Pekerjaan: Apa Harus Selesai Dulu?</h2>
+    <p class="slide-sub" data-i18n="s9_sub">Predecessor adalah ketergantungan fisik-logis (kolom butuh pondasi dulu, plester butuh dinding dulu).</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas" style="display: flex; flex-direction: column; gap: 32px;">
+      <!-- chain -->
+      <div class="chain">
+        <div class="chain-node" style="--cat: var(--amber); --cat-ink: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber); min-width: 110px;">
+          <span class="chain-title">A</span>
+          <span class="chain-sub" data-i18n="s9_a">Persiapan</span>
+        </div>
+        <div class="chain-arr">→<sub style="font-family: var(--mono); font-size: 9px; color: var(--amber-ink); margin-left: -2px;">FS</sub></div>
+        <div class="chain-node" style="--cat: var(--amber); --cat-ink: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber); min-width: 110px;">
+          <span class="chain-title">B</span>
+          <span class="chain-sub" data-i18n="s9_b">Galian</span>
+        </div>
+        <div class="chain-arr">→<sub style="font-family: var(--mono); font-size: 9px; color: var(--amber-ink); margin-left: -2px;">FS</sub></div>
+        <div class="chain-node" style="--cat: var(--amber); --cat-ink: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber); min-width: 110px;">
+          <span class="chain-title">C</span>
+          <span class="chain-sub" data-i18n="s9_c">Pondasi</span>
+        </div>
+        <div class="chain-arr">→<sub style="font-family: var(--mono); font-size: 9px; color: var(--amber-ink); margin-left: -2px;">FS</sub></div>
+        <div class="chain-node" data-fill="solid" style="--cat: var(--amber); --cat-ink: var(--amber-ink); min-width: 110px; position: relative;">
+          <span class="chain-title">D</span>
+          <span class="chain-sub" data-i18n="s9_d">Struktur</span>
+          <div style="position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-family: var(--mono); font-size: 10px; font-weight: 700; color: var(--rose-ink); white-space: nowrap;" data-i18n="s9_crit">⚡ Lintasan Kritis</div>
+        </div>
+        <div class="chain-arr">→<sub style="font-family: var(--mono); font-size: 9px; color: var(--amber-ink); margin-left: -2px;">FS</sub></div>
+        <div class="chain-node" style="--cat: var(--amber); --cat-ink: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber); min-width: 110px;">
+          <span class="chain-title">E</span>
+          <span class="chain-sub" data-i18n="s9_e">Arsitektur</span>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-node" style="--cat: var(--amber); --cat-ink: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber); min-width: 110px;">
+          <span class="chain-title">F · G</span>
+          <span class="chain-sub" data-i18n="s9_fg">Atap & MEP</span>
+        </div>
+        <div class="chain-arr">→</div>
+        <div class="chain-node" style="--cat: var(--amber); --cat-ink: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber); min-width: 110px;">
+          <span class="chain-title">H</span>
+          <span class="chain-sub" data-i18n="s9_h">Finishing</span>
+        </div>
+      </div>
+
+      <!-- legend -->
+      <div class="card" style="padding: 18px 22px;">
+        <div style="font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--amber-ink); margin-bottom: 12px;" data-i18n="s9_l_t">Empat Tipe Hubungan</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px 28px; font-size: 13px;">
+          <div><b style="font-family: var(--mono); color: var(--amber-ink);">FS</b> <span data-i18n="s9_fs">Finish-to-Start — paling umum, A selesai → B mulai</span></div>
+          <div><b style="font-family: var(--mono); color: var(--amber-ink);">SS</b> <span data-i18n="s9_ss">Start-to-Start — A & B mulai bersamaan</span></div>
+          <div><b style="font-family: var(--mono); color: var(--amber-ink);">FF</b> <span data-i18n="s9_ff">Finish-to-Finish — A & B selesai bersamaan</span></div>
+          <div><b style="font-family: var(--mono); color: var(--amber-ink);">SF</b> <span data-i18n="s9_sf">Start-to-Finish — jarang dipakai</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s9_tag">Predecessor</span>
+    <p class="slide-caption" data-i18n="s9_cap">Lintasan kritis menentukan total durasi proyek. Bila satu pekerjaan di lintasan kritis mundur, <strong>seluruh proyek mundur</strong> sebanyak itu juga.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 9b · WBS TABLE ════════════════════ -->
+<section class="slide" data-cat="sched" id="s9b">
+  <div class="slide-head">
+    <span class="slide-num"></span>
+    <span class="slide-eyebrow" data-i18n="s9b_eyebrow">Tahap 3 · Jadwal</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress"></span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s9b_title">Paket Pekerjaan (WBS): Tabel Lengkap</h2>
+    <p class="slide-sub" data-i18n="s9b_sub">Delapan paket pekerjaan beserta durasi, kapan mulai, kapan selesai, dan pekerjaan yang harus selesai dulu (predecessor).</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas">
+      <div class="wbs-card">
+        <div class="wbs-card-head" data-i18n="s9b_card_t">Paket Pekerjaan (WBS)</div>
+        <table class="wbs-table">
+          <thead>
+            <tr>
+              <th data-i18n="s9b_col_uraian">URAIAN</th>
+              <th data-i18n="s9b_col_dur">DURASI</th>
+              <th data-i18n="s9b_col_start">MULAI</th>
+              <th data-i18n="s9b_col_end">SELESAI</th>
+              <th data-i18n="s9b_col_pred">PREDECESSOR</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.55 0.13 248);"></span><span class="wbs-id">A</span><span data-i18n="s9b_r1">Pekerjaan Persiapan</span></td>
+              <td><span class="wbs-num">2</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M1</span></td>
+              <td><span class="wbs-num">M2</span></td>
+              <td class="wbs-pred">—</td>
+            </tr>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.6 0.10 195);"></span><span class="wbs-id">B</span><span data-i18n="s9b_r2">Pekerjaan Tanah & Galian</span></td>
+              <td><span class="wbs-num">3</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M2</span></td>
+              <td><span class="wbs-num">M4</span></td>
+              <td class="wbs-pred">A</td>
+            </tr>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.5 0.10 195);"></span><span class="wbs-id">C</span><span data-i18n="s9b_r3">Pekerjaan Pondasi</span></td>
+              <td><span class="wbs-num">2</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M3</span></td>
+              <td><span class="wbs-num">M4</span></td>
+              <td class="wbs-pred">B</td>
+            </tr>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.55 0.13 145);"></span><span class="wbs-id">D</span><span data-i18n="s9b_r4">Struktur Beton & Tulangan</span></td>
+              <td><span class="wbs-num">5</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M4</span></td>
+              <td><span class="wbs-num">M8</span></td>
+              <td class="wbs-pred">C</td>
+            </tr>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.6 0.13 145);"></span><span class="wbs-id">E</span><span data-i18n="s9b_r5">Pekerjaan Arsitektur</span></td>
+              <td><span class="wbs-num">7</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M7</span></td>
+              <td><span class="wbs-num">M13</span></td>
+              <td class="wbs-pred">D</td>
+            </tr>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.72 0.13 70);"></span><span class="wbs-id">F</span><span data-i18n="s9b_r6">Pekerjaan Atap</span></td>
+              <td><span class="wbs-num">4</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M8</span></td>
+              <td><span class="wbs-num">M11</span></td>
+              <td class="wbs-pred">D</td>
+            </tr>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.65 0.13 70);"></span><span class="wbs-id">G</span><span data-i18n="s9b_r7">Pekerjaan MEP</span></td>
+              <td><span class="wbs-num">6</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M9</span></td>
+              <td><span class="wbs-num">M14</span></td>
+              <td class="wbs-pred">E, F</td>
+            </tr>
+            <tr>
+              <td><span class="wbs-dot" style="--c: oklch(0.62 0.15 25);"></span><span class="wbs-id">H</span><span data-i18n="s9b_r8">Finishing & Pengecatan</span></td>
+              <td><span class="wbs-num">4</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M13</span></td>
+              <td><span class="wbs-num">M16</span></td>
+              <td class="wbs-pred">E, G</td>
+            </tr>
+            <tr class="wbs-total">
+              <td><span data-i18n="s9b_total">Total Durasi Proyek</span></td>
+              <td><span class="wbs-num">16</span><span class="wbs-unit" data-i18n="u_wk">mg</span></td>
+              <td><span class="wbs-num">M1</span></td>
+              <td><span class="wbs-num">M16</span></td>
+              <td class="wbs-pred"><span class="wbs-num">112</span> <span data-i18n="u_day">hari</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s9b_tag">WBS Lengkap</span>
+    <p class="slide-caption" data-i18n="s9b_cap">"M" = minggu kalender. Beberapa pekerjaan <strong>mulai sebelum predecessor selesai</strong> (start-to-start) — itu sebabnya total proyek 16 mg, bukan jumlah semua durasi (33 mg).</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 9c · CPM NETWORK ════════════════════ -->
+<section class="slide" data-cat="sched" id="s9c">
+  <div class="slide-head">
+    <span class="slide-num"></span>
+    <span class="slide-eyebrow" data-i18n="s9c_eyebrow">Tahap 3 · Jadwal</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress"></span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s9c_title">Jaringan Predesesor (CPM): Mana yang Dikerjakan Duluan?</h2>
+    <p class="slide-sub" data-i18n="s9c_sub">Setiap kotak = satu pekerjaan. Panah = "harus selesai dulu". Lintasan merah = critical path yang menentukan total durasi.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas cpm-wrap">
+      <svg viewBox="0 0 1280 540" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;" data-cat="sched">
+        <defs>
+          <marker id="cpmArr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="oklch(0.55 0.02 240)"/>
+          </marker>
+          <marker id="cpmArrCrit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="oklch(0.62 0.15 25)"/>
+          </marker>
+        </defs>
+
+        <!-- Column headers for box anatomy -->
+        <g font-family="Inter, sans-serif" font-size="11" fill="oklch(0.55 0.02 240)">
+          <text x="40" y="40" font-weight="700" letter-spacing="1.2" data-i18n="s9c_anatomy">ANATOMI KOTAK</text>
+        </g>
+        <!-- Legend box -->
+        <g transform="translate(30, 55)">
+          <rect width="160" height="92" rx="8" fill="white" stroke="oklch(0.55 0.02 240)" stroke-width="1.5"/>
+          <line x1="0" y1="30" x2="160" y2="30" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="0" y1="62" x2="160" y2="62" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="53" y1="0" x2="53" y2="30" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="107" y1="0" x2="107" y2="30" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="53" y1="62" x2="53" y2="92" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="107" y1="62" x2="107" y2="92" stroke="oklch(0.92 0.01 240)"/>
+          <text x="26" y="20" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="700" fill="oklch(0.48 0.12 60)" data-i18n="s9c_es">ES</text>
+          <text x="80" y="20" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="700" fill="oklch(0.55 0.02 240)" data-i18n="s9c_dur">Dur</text>
+          <text x="134" y="20" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="700" fill="oklch(0.48 0.12 60)" data-i18n="s9c_ef">EF</text>
+          <text x="80" y="50" text-anchor="middle" font-family="Inter" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)" data-i18n="s9c_id">ID</text>
+          <text x="26" y="80" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="700" fill="oklch(0.45 0.14 25)" data-i18n="s9c_ls">LS</text>
+          <text x="80" y="80" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="700" fill="oklch(0.55 0.02 240)" data-i18n="s9c_tf">TF</text>
+          <text x="134" y="80" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="700" fill="oklch(0.45 0.14 25)" data-i18n="s9c_lf">LF</text>
+        </g>
+
+        <!-- Critical path label -->
+        <g transform="translate(1080, 40)">
+          <rect x="0" y="0" width="180" height="36" rx="8" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="1.5"/>
+          <text x="14" y="23" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="12" font-weight="700" fill="oklch(0.45 0.14 25)">⚡ <tspan data-i18n="s9c_crit_path">A → B → D → E → G → H</tspan></text>
+        </g>
+
+        <!-- Activity boxes
+             Box anatomy: 130w × 102h, split into 3 horizontal bands
+             Row Y centers: 180 (top), 360 (bottom)
+             Col X lefts: 200, 400, 600, 800, 1000
+        -->
+        <!-- A: ES=0 EF=2 dur=2 LS=0 LF=2 TF=0 (critical) -->
+        <g transform="translate(60, 220)">
+          <rect width="130" height="102" rx="7" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="2"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">2</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">2</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.45 0.14 25)">A</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">2</text>
+        </g>
+
+        <!-- B: ES=2 EF=5 dur=3 LS=2 LF=5 TF=0 (critical) -->
+        <g transform="translate(260, 120)">
+          <rect width="130" height="102" rx="7" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="2"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">2</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">3</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">5</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.45 0.14 25)">B</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">2</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">5</text>
+        </g>
+
+        <!-- C: ES=2 EF=4 dur=2 LS=3 LF=5 TF=1 (slack) -->
+        <g transform="translate(260, 320)">
+          <rect width="130" height="102" rx="7" fill="white" stroke="oklch(0.48 0.12 60)" stroke-width="1.5"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.92 0.01 240)"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.48 0.12 60)">2</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">2</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.48 0.12 60)">4</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.22 0.02 240)">C</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">3</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">1</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">5</text>
+        </g>
+
+        <!-- D: ES=5 EF=10 dur=5 LS=5 LF=10 TF=0 (critical) -->
+        <g transform="translate(460, 220)">
+          <rect width="130" height="102" rx="7" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="2"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">5</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">5</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">10</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.45 0.14 25)">D</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">5</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">10</text>
+        </g>
+
+        <!-- E: ES=10 EF=14 dur=4 LS=10 LF=14 TF=0 (critical) -->
+        <g transform="translate(660, 120)">
+          <rect width="130" height="102" rx="7" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="2"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">10</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">4</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">14</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.45 0.14 25)">E</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">10</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">14</text>
+        </g>
+
+        <!-- F: ES=10 EF=13 dur=3 LS=13 LF=16 TF=3 (slack) -->
+        <g transform="translate(660, 320)">
+          <rect width="130" height="102" rx="7" fill="white" stroke="oklch(0.48 0.12 60)" stroke-width="1.5"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.92 0.01 240)"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.92 0.01 240)"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.48 0.12 60)">10</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">3</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.48 0.12 60)">13</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.22 0.02 240)">F</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">13</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">3</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">16</text>
+        </g>
+
+        <!-- G: ES=14 EF=16 dur=2 LS=14 LF=16 TF=0 (critical) -->
+        <g transform="translate(860, 120)">
+          <rect width="130" height="102" rx="7" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="2"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">14</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">2</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">16</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.45 0.14 25)">G</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">14</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">16</text>
+        </g>
+
+        <!-- H: ES=16 EF=18 dur=2 LS=16 LF=18 TF=0 (critical) -->
+        <g transform="translate(1060, 220)">
+          <rect width="130" height="102" rx="7" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="2"/>
+          <line x1="0" y1="34" x2="130" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="0" y1="68" x2="130" y2="68" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="0" x2="43" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="0" x2="87" y2="34" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="43" y1="68" x2="43" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <line x1="87" y1="68" x2="87" y2="102" stroke="oklch(0.62 0.15 25)" stroke-width="1"/>
+          <text x="22" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">16</text>
+          <text x="65" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.22 0.02 240)">2</text>
+          <text x="108" y="23" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">18</text>
+          <text x="65" y="58" text-anchor="middle" font-family="Inter" font-size="22" font-weight="700" fill="oklch(0.45 0.14 25)">H</text>
+          <text x="22" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">16</text>
+          <text x="65" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">0</text>
+          <text x="108" y="90" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="700" fill="oklch(0.45 0.14 25)">18</text>
+        </g>
+
+        <!-- Arrows: critical path in rose (thicker), slack path in gray -->
+        <!-- A → B (critical) -->
+        <path d="M 190,250 C 220,250 220,180 260,180" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+        <!-- A → C (slack) -->
+        <path d="M 190,290 C 220,290 220,360 260,360" stroke="oklch(0.55 0.02 240)" stroke-width="1.5" fill="none" marker-end="url(#cpmArr)" stroke-dasharray="4,3"/>
+        <!-- B → D (critical) -->
+        <path d="M 390,180 C 420,180 420,250 460,250" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+        <!-- C → D (slack converge) -->
+        <path d="M 390,360 C 420,360 420,275 460,275" stroke="oklch(0.55 0.02 240)" stroke-width="1.5" fill="none" marker-end="url(#cpmArr)" stroke-dasharray="4,3"/>
+        <!-- D → E (critical) -->
+        <path d="M 590,250 C 620,250 620,180 660,180" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+        <!-- D → F (slack) -->
+        <path d="M 590,290 C 620,290 620,360 660,360" stroke="oklch(0.55 0.02 240)" stroke-width="1.5" fill="none" marker-end="url(#cpmArr)" stroke-dasharray="4,3"/>
+        <!-- E → G (critical) -->
+        <path d="M 790,180 L 860,180" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+        <!-- F → H (slack) -->
+        <path d="M 790,360 C 920,360 980,290 1060,260" stroke="oklch(0.55 0.02 240)" stroke-width="1.5" fill="none" marker-end="url(#cpmArr)" stroke-dasharray="4,3"/>
+        <!-- G → H (critical) -->
+        <path d="M 990,180 C 1020,180 1020,240 1060,240" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+      </svg>
+
+      <!-- legend below -->
+      <div class="cpm-legend">
+        <div class="cpm-legend-item">
+          <span class="cpm-legend-sw crit"></span><span data-i18n="s9c_leg_crit">Lintasan Kritis (TF = 0)</span>
+        </div>
+        <div class="cpm-legend-item">
+          <span class="cpm-legend-sw"></span><span data-i18n="s9c_leg_slack">Pekerjaan dengan Slack (TF > 0)</span>
+        </div>
+        <div class="cpm-legend-item">
+          <span class="cpm-legend-key" data-i18n="s9c_es_full">ES</span> <span data-i18n="s9c_es_desc">Early Start</span>
+        </div>
+        <div class="cpm-legend-item">
+          <span class="cpm-legend-key" data-i18n="s9c_ef_full">EF</span> <span data-i18n="s9c_ef_desc">Early Finish</span>
+        </div>
+        <div class="cpm-legend-item">
+          <span class="cpm-legend-key" data-i18n="s9c_ls_full">LS</span> <span data-i18n="s9c_ls_desc">Late Start</span>
+        </div>
+        <div class="cpm-legend-item">
+          <span class="cpm-legend-key" data-i18n="s9c_lf_full">LF</span> <span data-i18n="s9c_lf_desc">Late Finish</span>
+        </div>
+        <div class="cpm-legend-item">
+          <span class="cpm-legend-key" data-i18n="s9c_tf_full">TF</span> <span data-i18n="s9c_tf_desc">Total Float (slack)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s9c_tag">CPM Network</span>
+    <p class="slide-caption" data-i18n="s9c_cap">Pekerjaan kritis (kotak merah) <strong>tidak boleh terlambat</strong> — kalau mundur 1 minggu, proyek mundur 1 minggu. Pekerjaan slack (kotak putih) punya cadangan waktu.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 10 · GANTT ════════════════════ -->
+<section class="slide" data-cat="sched" id="s10">
+  <div class="slide-head">
+    <span class="slide-num">10</span>
+    <span class="slide-eyebrow" data-i18n="s10_eyebrow">Tahap 3 · Jadwal</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">10 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s10_title">Hasil Akhir: Bagan Gantt</h2>
+    <p class="slide-sub" data-i18n="s10_sub">Sumbu X = minggu. Sumbu Y = pekerjaan. Panjang bar = durasi. Posisi bar = kapan dikerjakan.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas">
+      <svg viewBox="0 0 1100 400" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: auto;">
+        <!-- Week labels -->
+        <g font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" fill="oklch(0.55 0.02 240)" text-anchor="middle">
+          <text x="180" y="30">W1</text>
+          <text x="225" y="30">W2</text>
+          <text x="270" y="30">W3</text>
+          <text x="315" y="30">W4</text>
+          <text x="360" y="30">W5</text>
+          <text x="405" y="30">W6</text>
+          <text x="450" y="30">W7</text>
+          <text x="495" y="30">W8</text>
+          <text x="540" y="30">W9</text>
+          <text x="585" y="30">W10</text>
+          <text x="630" y="30">W11</text>
+          <text x="675" y="30">W12</text>
+          <text x="720" y="30">W13</text>
+          <text x="765" y="30">W14</text>
+          <text x="810" y="30">W15</text>
+          <text x="855" y="30">W16</text>
+          <text x="900" y="30">W17</text>
+          <text x="945" y="30">W18</text>
+        </g>
+
+        <!-- Grid -->
+        <g stroke="oklch(0.95 0.01 240)" stroke-width="1">
+          <line x1="158" y1="40" x2="158" y2="370"/>
+          <line x1="203" y1="40" x2="203" y2="370"/>
+          <line x1="248" y1="40" x2="248" y2="370"/>
+          <line x1="293" y1="40" x2="293" y2="370"/>
+          <line x1="338" y1="40" x2="338" y2="370"/>
+          <line x1="383" y1="40" x2="383" y2="370"/>
+          <line x1="428" y1="40" x2="428" y2="370"/>
+          <line x1="473" y1="40" x2="473" y2="370"/>
+          <line x1="518" y1="40" x2="518" y2="370"/>
+          <line x1="563" y1="40" x2="563" y2="370"/>
+          <line x1="608" y1="40" x2="608" y2="370"/>
+          <line x1="653" y1="40" x2="653" y2="370"/>
+          <line x1="698" y1="40" x2="698" y2="370"/>
+          <line x1="743" y1="40" x2="743" y2="370"/>
+          <line x1="788" y1="40" x2="788" y2="370"/>
+          <line x1="833" y1="40" x2="833" y2="370"/>
+          <line x1="878" y1="40" x2="878" y2="370"/>
+          <line x1="923" y1="40" x2="923" y2="370"/>
+          <line x1="968" y1="40" x2="968" y2="370"/>
+        </g>
+
+        <g font-family="Inter, sans-serif">
+          <text x="140" y="65" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_a">A · Persiapan</text>
+          <rect x="158" y="52" width="90" height="22" rx="5" fill="oklch(0.55 0.13 248)"/>
+
+          <text x="140" y="98" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_b">B · Tanah</text>
+          <rect x="203" y="85" width="135" height="22" rx="5" fill="oklch(0.6 0.10 195)"/>
+
+          <text x="140" y="131" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_c">C · Pondasi</text>
+          <rect x="248" y="118" width="90" height="22" rx="5" fill="oklch(0.72 0.13 70)"/>
+
+          <text x="140" y="164" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_d">D · Struktur</text>
+          <rect x="293" y="151" width="270" height="22" rx="5" fill="oklch(0.62 0.15 25)"/>
+
+          <text x="140" y="197" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_e">E · Arsitektur</text>
+          <rect x="473" y="184" width="360" height="22" rx="5" fill="oklch(0.6 0.13 145)"/>
+
+          <text x="140" y="230" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_f">F · Atap</text>
+          <rect x="518" y="217" width="180" height="22" rx="5" fill="oklch(0.58 0.14 290)"/>
+
+          <text x="140" y="263" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_g">G · MEP</text>
+          <rect x="563" y="250" width="315" height="22" rx="5" fill="oklch(0.55 0.13 248)"/>
+
+          <text x="140" y="296" text-anchor="end" font-size="11" font-weight="600" data-i18n="g_h">H · Finishing</text>
+          <rect x="743" y="283" width="225" height="22" rx="5" fill="oklch(0.72 0.13 70)"/>
+        </g>
+
+        <line x1="158" y1="320" x2="968" y2="320" stroke="oklch(0.22 0.02 240)" stroke-width="1"/>
+        <text x="140" y="342" text-anchor="end" font-size="11" font-weight="700" font-family="Inter" data-i18n="g_total">TOTAL</text>
+        <rect x="158" y="330" width="810" height="22" rx="5" fill="oklch(0.22 0.02 240)"/>
+        <text x="563" y="345" text-anchor="middle" font-size="11" font-weight="700" fill="white" font-family="Inter" data-i18n="g_total_v">18 minggu (≈ 126 hari kalender)</text>
+      </svg>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s10_tag">Gantt Chart</span>
+    <p class="slide-caption" data-i18n="s10_cap">Warna bar = grup WBS. Bar yang tumpang tindih = <strong>pekerjaan paralel</strong> oleh regu berbeda. Bar berurutan rapat = critical path.</p>
+  </div>
+</section>
+
+</div><!-- /stage sched -->
+
+<div class="stage" data-stage="scurve" hidden>
+
+<!-- ════════════════════ 11 · WEIGHT ════════════════════ -->
+<section class="slide" data-cat="scurve" id="s11">
+  <div class="slide-head">
+    <span class="slide-num">11</span>
+    <span class="slide-eyebrow" data-i18n="s11_eyebrow">Tahap 4 · Kurva S</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">11 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s11_title">Langkah 1 — Hitung "Bobot" Tiap Pekerjaan</h2>
+    <p class="slide-sub" data-i18n="s11_sub">Bobot = porsi biaya item terhadap total proyek. Total semua bobot = 100%.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas">
+      <!-- Formula -->
+      <div class="big-eq" style="margin-bottom: 32px;">
+        <div class="big-eq-lhs" data-i18n="s11_lhs">Bobot% =</div>
+        <div class="frac" style="font-family: var(--sans);">
+          <div class="frac-num" data-i18n="s11_num">Total item</div>
+          <div class="frac-bar"></div>
+          <div class="frac-den" data-i18n="s11_den">Total proyek</div>
+        </div>
+        <div class="eq-op">×</div>
+        <div style="font-size: 22px; font-weight: 600;">100</div>
+      </div>
+
+      <!-- Donut + Legend -->
+      <div class="donut-row">
+        <!-- Donut -->
+        <svg viewBox="-130 -130 260 260" style="width: 100%; max-width: 300px;">
+          <!-- A 4%, B 6%, C 14%, D 28%, E 22%, F 8%, G 10%, H 8% -->
+          <path d="M 0,-110 A 110,110 0 0,1 27.6,-106.5 L 0,0 Z" fill="oklch(0.55 0.13 248)"/>
+          <path d="M 27.6,-106.5 A 110,110 0 0,1 64.7,-89.0 L 0,0 Z" fill="oklch(0.6 0.10 195)"/>
+          <path d="M 64.7,-89.0 A 110,110 0 0,1 109.4,11.1 L 0,0 Z" fill="oklch(0.72 0.13 70)"/>
+          <path d="M 109.4,11.1 A 110,110 0 0,1 -16.3,108.8 L 0,0 Z" fill="oklch(0.62 0.15 25)"/>
+          <path d="M -16.3,108.8 A 110,110 0 0,1 -103.6,-37.0 L 0,0 Z" fill="oklch(0.6 0.13 145)"/>
+          <path d="M -103.6,-37.0 A 110,110 0 0,1 -85.0,-69.9 L 0,0 Z" fill="oklch(0.58 0.14 290)"/>
+          <path d="M -85.0,-69.9 A 110,110 0 0,1 -34.0,-104.7 L 0,0 Z" fill="oklch(0.45 0.08 240)"/>
+          <path d="M -34.0,-104.7 A 110,110 0 0,1 0,-110 L 0,0 Z" fill="oklch(0.65 0.08 50)"/>
+          <circle r="58" fill="white"/>
+          <text y="-6" text-anchor="middle" font-size="10" font-weight="700" letter-spacing="1.2" fill="oklch(0.55 0.02 240)" font-family="Source Serif 4, Times New Roman, Georgia, serif" data-i18n="s11_donut_total">TOTAL</text>
+          <text y="22" text-anchor="middle" font-size="26" font-weight="700" font-family="Inter">100%</text>
+        </svg>
+
+        <!-- Legend -->
+        <div class="legend-grid">
+          <div class="legend-row">
+            <span class="legend-sw" style="background: oklch(0.55 0.13 248);"></span>
+            <span data-i18n="s11_l_a">A · Persiapan</span>
+            <span class="legend-pct">4%</span>
+            <span class="legend-money" data-i18n="s11_m_a">≈ Rp 21 jt</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-sw" style="background: oklch(0.6 0.10 195);"></span>
+            <span data-i18n="s11_l_b">B · Tanah</span>
+            <span class="legend-pct">6%</span>
+            <span class="legend-money" data-i18n="s11_m_b">≈ Rp 32 jt</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-sw" style="background: oklch(0.72 0.13 70);"></span>
+            <span data-i18n="s11_l_c">C · Pondasi</span>
+            <span class="legend-pct">14%</span>
+            <span class="legend-money" data-i18n="s11_m_c">≈ Rp 75 jt</span>
+          </div>
+          <div class="legend-row is-hi">
+            <span class="legend-sw" style="background: oklch(0.62 0.15 25);"></span>
+            <span style="font-weight: 700;" data-i18n="s11_l_d">D · Struktur Beton</span>
+            <span class="legend-pct">28%</span>
+            <span class="legend-money" style="color: var(--rose-ink); font-weight: 600;" data-i18n="s11_m_d">≈ Rp 149 jt</span>
+          </div>
+          <div class="legend-row is-hi-2">
+            <span class="legend-sw" style="background: oklch(0.6 0.13 145);"></span>
+            <span style="font-weight: 700;" data-i18n="s11_l_e">E · Arsitektur</span>
+            <span class="legend-pct">22%</span>
+            <span class="legend-money" style="color: var(--green-ink); font-weight: 600;" data-i18n="s11_m_e">≈ Rp 117 jt</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-sw" style="background: oklch(0.58 0.14 290);"></span>
+            <span data-i18n="s11_l_f">F · Atap</span>
+            <span class="legend-pct">8%</span>
+            <span class="legend-money" data-i18n="s11_m_f">≈ Rp 43 jt</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-sw" style="background: oklch(0.45 0.08 240);"></span>
+            <span data-i18n="s11_l_g">G · MEP</span>
+            <span class="legend-pct">10%</span>
+            <span class="legend-money" data-i18n="s11_m_g">≈ Rp 53 jt</span>
+          </div>
+          <div class="legend-row">
+            <span class="legend-sw" style="background: oklch(0.65 0.08 50);"></span>
+            <span data-i18n="s11_l_h">H · Finishing</span>
+            <span class="legend-pct">8%</span>
+            <span class="legend-money" data-i18n="s11_m_h">≈ Rp 43 jt</span>
+          </div>
+          <div class="legend-row" style="border-top: 1.5px solid var(--ink); padding-top: 8px; margin-top: 4px;">
+            <span></span>
+            <span style="font-weight: 700;" data-i18n="s11_l_total">Total</span>
+            <span class="legend-pct">100%</span>
+            <span class="legend-money" style="font-weight: 700; color: var(--ink);" data-i18n="s11_m_total">Rp 532 jt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s11_tag">Bobot</span>
+    <p class="slide-caption" data-i18n="s11_cap">Struktur (D) + Arsitektur (E) memakan <strong>50% biaya proyek</strong>. Itu sebabnya keduanya menjadi inti kurva S — fase paling "curam" nantinya.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 12 · DISTRIBUTION ════════════════════ -->
+<section class="slide" data-cat="scurve" id="s12">
+  <div class="slide-head">
+    <span class="slide-num">12</span>
+    <span class="slide-eyebrow" data-i18n="s12_eyebrow">Tahap 4 · Kurva S</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">12 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s12_title">Langkah 2 — Sebarkan Bobot Sepanjang Durasi</h2>
+    <p class="slide-sub" data-i18n="s12_sub">Bobot item dibagi rata ke setiap minggu di mana item itu aktif.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas" style="display: flex; flex-direction: column; gap: 26px;">
+      <!-- Formula -->
+      <div class="big-eq">
+        <div class="big-eq-lhs" data-i18n="s12_lhs">Bobot per minggu =</div>
+        <div class="frac" style="font-family: var(--sans);">
+          <div class="frac-num" data-i18n="s12_num">Bobot item</div>
+          <div class="frac-bar"></div>
+          <div class="frac-den" data-i18n="s12_den">Durasi (minggu)</div>
+        </div>
+      </div>
+
+      <!-- Worked example for D.1 -->
+      <div style="text-align: center;">
+        <div style="font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--rose-ink); margin-bottom: 14px;" data-i18n="s12_ex_t">Contoh untuk D.1 Beton Struktur</div>
+        <div style="display: inline-flex; gap: 16px; align-items: center;">
+          <div class="card" style="padding: 14px 22px; background: var(--rose-soft); border-color: var(--rose);">
+            <div style="font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--rose-ink);" data-i18n="s12_ex_w">Bobot D</div>
+            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 4px;">28%</div>
+          </div>
+          <div style="font-family: var(--mono); font-size: 22px; color: var(--muted);">÷</div>
+          <div class="card" style="padding: 14px 22px; background: var(--rose-soft); border-color: var(--rose);">
+            <div style="font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--rose-ink);" data-i18n="s12_ex_dur">Durasi</div>
+            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 4px;" data-i18n="s12_ex_dur_val">6 mg</div>
+          </div>
+          <div style="font-family: var(--mono); font-size: 22px; color: var(--muted);">=</div>
+          <div class="card" style="padding: 14px 22px; background: var(--rose); border-color: transparent; color: white; box-shadow: var(--shadow-md);">
+            <div style="font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 1px; color: oklch(1 0 0 / 0.85);" data-i18n="s12_ex_pw">Per minggu</div>
+            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 4px;">≈ 4,7%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- mini heatmap visualisation -->
+      <div>
+        <div style="font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px; color: var(--rose-ink); margin-bottom: 10px; text-align: center;" data-i18n="s12_heat_t">Hasil: Minggu 4–9 Tiap-Tiap Dapat 4,7%</div>
+        <div style="display: grid; grid-template-columns: 130px repeat(18, 1fr); gap: 4px; align-items: center;">
+          <div style="font-size: 11px; font-weight: 600; text-align: right; padding-right: 8px;" data-i18n="s12_row">D.1 Beton:</div>
+          <!-- 18 cells, weeks 4-9 active -->
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; background: var(--rose); border-radius: 4px; display: grid; place-items: center; color: white; font-family: var(--mono); font-size: 10px; font-weight: 700;">4,7</div>
+          <div style="aspect-ratio: 1 / 0.6; background: var(--rose); border-radius: 4px; display: grid; place-items: center; color: white; font-family: var(--mono); font-size: 10px; font-weight: 700;">4,7</div>
+          <div style="aspect-ratio: 1 / 0.6; background: var(--rose); border-radius: 4px; display: grid; place-items: center; color: white; font-family: var(--mono); font-size: 10px; font-weight: 700;">4,7</div>
+          <div style="aspect-ratio: 1 / 0.6; background: var(--rose); border-radius: 4px; display: grid; place-items: center; color: white; font-family: var(--mono); font-size: 10px; font-weight: 700;">4,7</div>
+          <div style="aspect-ratio: 1 / 0.6; background: var(--rose); border-radius: 4px; display: grid; place-items: center; color: white; font-family: var(--mono); font-size: 10px; font-weight: 700;">4,7</div>
+          <div style="aspect-ratio: 1 / 0.6; background: var(--rose); border-radius: 4px; display: grid; place-items: center; color: white; font-family: var(--mono); font-size: 10px; font-weight: 700;">4,7</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+          <div style="aspect-ratio: 1 / 0.6; border: 1px solid var(--line); border-radius: 4px; display: grid; place-items: center; color: var(--faint); font-family: var(--mono); font-size: 9px;">·</div>
+        </div>
+        <div style="display: grid; grid-template-columns: 130px repeat(18, 1fr); gap: 4px; margin-top: 6px; font-family: var(--mono); font-size: 9px; color: var(--faint); text-align: center;">
+          <div></div>
+          <div>W1</div><div>W2</div><div>W3</div><div>W4</div><div>W5</div><div>W6</div><div>W7</div><div>W8</div><div>W9</div>
+          <div>W10</div><div>W11</div><div>W12</div><div>W13</div><div>W14</div><div>W15</div><div>W16</div><div>W17</div><div>W18</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s12_tag">Distribusi</span>
+    <p class="slide-caption" data-i18n="s12_cap">Ulangi untuk semua item. Jumlah satu kolom (semua item aktif di minggu itu) = <strong>"Rencana / Minggu"</strong> — input untuk akumulasi Kurva S.</p>
+  </div>
+</section>
+
+<!-- ════════════════════ 13 · S-CURVE ════════════════════ -->
+<section class="slide" data-cat="scurve" id="s13">
+  <div class="slide-head">
+    <span class="slide-num">13</span>
+    <span class="slide-eyebrow" data-i18n="s13_eyebrow">Tahap 4 · Kurva S</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">13 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s13_title">Langkah 3 — Akumulasi: Inilah Kurva S</h2>
+    <p class="slide-sub" data-i18n="s13_sub">Jumlahkan "Rencana per Minggu" secara kumulatif dari minggu 1 → seterusnya.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas">
+      <svg viewBox="0 0 1100 380" style="width: 100%; height: auto;">
+        <defs>
+          <linearGradient id="sFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="oklch(0.62 0.15 25)" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="oklch(0.62 0.15 25)" stop-opacity="0.02"/>
+          </linearGradient>
+        </defs>
+
+        <g transform="translate(80,40)">
+          <!-- Y grid -->
+          <g font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" fill="oklch(0.72 0.02 240)">
+            <line x1="0" y1="0" x2="900" y2="0" stroke="oklch(0.95 0.01 240)" stroke-dasharray="3 4"/>
+            <text x="-8" y="4" text-anchor="end">100</text>
+            <line x1="0" y1="50" x2="900" y2="50" stroke="oklch(0.95 0.01 240)" stroke-dasharray="3 4"/>
+            <text x="-8" y="54" text-anchor="end">75</text>
+            <line x1="0" y1="100" x2="900" y2="100" stroke="oklch(0.95 0.01 240)" stroke-dasharray="3 4"/>
+            <text x="-8" y="104" text-anchor="end">50</text>
+            <line x1="0" y1="150" x2="900" y2="150" stroke="oklch(0.95 0.01 240)" stroke-dasharray="3 4"/>
+            <text x="-8" y="154" text-anchor="end">25</text>
+            <line x1="0" y1="200" x2="900" y2="200" stroke="oklch(0.22 0.02 240)" stroke-width="1.5"/>
+            <text x="-8" y="204" text-anchor="end">0</text>
+          </g>
+
+          <!-- X labels -->
+          <g font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" fill="oklch(0.72 0.02 240)" text-anchor="middle">
+            <text x="25" y="220">1</text>
+            <text x="75" y="220">2</text>
+            <text x="125" y="220">3</text>
+            <text x="175" y="220">4</text>
+            <text x="225" y="220">5</text>
+            <text x="275" y="220">6</text>
+            <text x="325" y="220">7</text>
+            <text x="375" y="220">8</text>
+            <text x="425" y="220">9</text>
+            <text x="475" y="220">10</text>
+            <text x="525" y="220">11</text>
+            <text x="575" y="220">12</text>
+            <text x="625" y="220">13</text>
+            <text x="675" y="220">14</text>
+            <text x="725" y="220">15</text>
+            <text x="775" y="220">16</text>
+            <text x="825" y="220">17</text>
+            <text x="875" y="220">18</text>
+          </g>
+
+          <!-- Weekly bars -->
+          <g fill="oklch(0.62 0.15 25)" opacity="0.28">
+            <rect x="15" y="184" width="20" height="16"/>
+            <rect x="65" y="168" width="20" height="32"/>
+            <rect x="115" y="128" width="20" height="72"/>
+            <rect x="165" y="91"  width="20" height="109"/>
+            <rect x="215" y="162" width="20" height="38"/>
+            <rect x="265" y="162" width="20" height="38"/>
+            <rect x="315" y="162" width="20" height="38"/>
+            <rect x="365" y="140" width="20" height="60"/>
+            <rect x="415" y="124" width="20" height="76"/>
+            <rect x="465" y="162" width="20" height="38"/>
+            <rect x="515" y="162" width="20" height="38"/>
+            <rect x="565" y="162" width="20" height="38"/>
+            <rect x="615" y="178" width="20" height="22"/>
+            <rect x="665" y="165" width="20" height="35"/>
+            <rect x="715" y="165" width="20" height="35"/>
+            <rect x="765" y="187" width="20" height="13"/>
+            <rect x="815" y="187" width="20" height="13"/>
+            <rect x="865" y="187" width="20" height="13"/>
+          </g>
+
+          <!-- S-curve area + line -->
+          <path d="M 25,196 L 75,188 L 125,170 L 175,142.6 L 225,133.2 L 275,123.8 L 325,114.4 L 375,99.4 L 425,80.4 L 475,70.8 L 525,61.2 L 575,51.6 L 625,46 L 675,37.2 L 725,28.4 L 775,25.2 L 825,22 L 875,0 L 875,200 L 25,200 Z"
+                fill="url(#sFill)"/>
+          <path d="M 25,196 L 75,188 L 125,170 L 175,142.6 L 225,133.2 L 275,123.8 L 325,114.4 L 375,99.4 L 425,80.4 L 475,70.8 L 525,61.2 L 575,51.6 L 625,46 L 675,37.2 L 725,28.4 L 775,25.2 L 825,22 L 875,0"
+                stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- dots -->
+          <g fill="white" stroke="oklch(0.62 0.15 25)" stroke-width="2">
+            <circle cx="25" cy="196" r="3"/>
+            <circle cx="175" cy="142.6" r="3"/>
+            <circle cx="425" cy="80.4" r="3"/>
+            <circle cx="725" cy="28.4" r="3"/>
+            <circle cx="875" cy="0" r="3.5" fill="oklch(0.62 0.15 25)"/>
+          </g>
+
+          <!-- Phase annotations -->
+          <g font-family="Inter, sans-serif" font-size="11" font-weight="700">
+            <text x="80" y="285" fill="oklch(0.55 0.02 240)" text-anchor="middle" data-i18n="s13_p1">FASE 1 (landai)</text>
+            <text x="80" y="298" fill="oklch(0.72 0.02 240)" text-anchor="middle" font-size="10" font-weight="500" data-i18n="s13_p1_d">Persiapan + Galian</text>
+
+            <text x="450" y="285" fill="oklch(0.45 0.14 25)" text-anchor="middle" data-i18n="s13_p2">FASE 2 (curam — kurva S!)</text>
+            <text x="450" y="298" fill="oklch(0.72 0.02 240)" text-anchor="middle" font-size="10" font-weight="500" data-i18n="s13_p2_d">Pondasi + Struktur + Arsitektur</text>
+
+            <text x="800" y="285" fill="oklch(0.55 0.02 240)" text-anchor="middle" data-i18n="s13_p3">FASE 3 (landai)</text>
+            <text x="800" y="298" fill="oklch(0.72 0.02 240)" text-anchor="middle" font-size="10" font-weight="500" data-i18n="s13_p3_d">Finishing + Cleanup</text>
+          </g>
+
+          <text x="-50" y="100" text-anchor="middle" font-size="11" font-weight="600" fill="oklch(0.45 0.14 25)" transform="rotate(-90 -50 100)" data-i18n="s13_yaxis">PROGRES KUMULATIF (%)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s13_tag">Kurva S</span>
+    <p class="slide-caption" data-i18n="s13_cap">Tiga fase (landai → curam → landai) memberi bentuk huruf S. Kurva ini menjadi <strong>baseline</strong> — tiap minggu progres aktual dibandingkan untuk deteksi keterlambatan.</p>
+  </div>
+</section>
+
+</div><!-- /stage scurve -->
+
+<div class="stage" data-stage="recap" hidden>
+
+<!-- ════════════════════ 14 · RECAP ════════════════════ -->
+<section class="slide" data-cat="recap" id="s14">
+  <div class="slide-head">
+    <span class="slide-num">14</span>
+    <span class="slide-eyebrow" data-i18n="s14_eyebrow">Recap</span>
+    <span class="slide-rule"></span>
+    <span class="slide-progress">14 · 14</span>
+  </div>
+  <div>
+    <h2 class="slide-title" data-i18n="s14_title">Semua Saling Berkaitan</h2>
+    <p class="slide-sub" data-i18n="s14_sub">Ubah satu tahap, semua hilirnya ikut berubah. Itulah kekuatan 5D BIM.</p>
+  </div>
+  <div class="slide-body">
+    <div class="canvas">
+      <svg viewBox="0 0 1100 360" style="width: 100%; height: auto;">
+        <defs>
+          <marker id="arrRec" viewBox="0 -5 10 10" refX="9" refY="0" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M0,-5L10,0L0,5" fill="oklch(0.6 0.13 145)"/>
+          </marker>
+        </defs>
+
+        <!-- Center -->
+        <g transform="translate(440,135)">
+          <rect width="220" height="90" rx="14" fill="oklch(0.6 0.13 145)"/>
+          <text x="110" y="38" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="700" letter-spacing="1.4" fill="oklch(0.95 0.045 145)" data-i18n="s14_c_eb">Model 3D</text>
+          <text x="110" y="66" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="white">Revit BIM</text>
+        </g>
+
+        <!-- 4 corners -->
+        <g transform="translate(50,30)">
+          <rect width="220" height="70" rx="12" fill="oklch(0.945 0.04 248)" stroke="oklch(0.55 0.13 248)" stroke-width="1.5"/>
+          <text x="20" y="26" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" font-weight="700" letter-spacing="1.2" fill="oklch(0.42 0.13 248)" data-i18n="s14_n1_eb">Tahap 1</text>
+          <text x="20" y="46" font-family="Inter, sans-serif" font-size="14" font-weight="600" data-i18n="s14_n1_t">Harga Satuan</text>
+          <text x="20" y="60" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" fill="oklch(0.55 0.02 240)" data-i18n="s14_n1_s">Σ koef × harga + OHP</text>
+        </g>
+        <path d="M 270,65 Q 360,90 440,160" stroke="oklch(0.6 0.13 145)" stroke-width="2" fill="none" marker-end="url(#arrRec)"/>
+
+        <g transform="translate(830,30)">
+          <rect width="220" height="70" rx="12" fill="oklch(0.955 0.03 195)" stroke="oklch(0.6 0.10 195)" stroke-width="1.5"/>
+          <text x="20" y="26" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" font-weight="700" letter-spacing="1.2" fill="oklch(0.42 0.10 195)" data-i18n="s14_n2_eb">Tahap 2</text>
+          <text x="20" y="46" font-family="Inter, sans-serif" font-size="14" font-weight="600" data-i18n="s14_n2_t">RAB</text>
+          <text x="20" y="60" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" fill="oklch(0.55 0.02 240)" data-i18n="s14_n2_s">Vol × Harga + Markup</text>
+        </g>
+        <path d="M 830,65 Q 740,90 660,160" stroke="oklch(0.6 0.13 145)" stroke-width="2" fill="none" marker-end="url(#arrRec)"/>
+
+        <g transform="translate(50,280)">
+          <rect width="220" height="70" rx="12" fill="oklch(0.975 0.045 70)" stroke="oklch(0.72 0.13 70)" stroke-width="1.5"/>
+          <text x="20" y="26" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" font-weight="700" letter-spacing="1.2" fill="oklch(0.48 0.12 60)" data-i18n="s14_n3_eb">Tahap 3</text>
+          <text x="20" y="46" font-family="Inter, sans-serif" font-size="14" font-weight="600" data-i18n="s14_n3_t">Jadwal · Gantt</text>
+          <text x="20" y="60" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" fill="oklch(0.55 0.02 240)" data-i18n="s14_n3_s">Vol ÷ Produktivitas</text>
+        </g>
+        <path d="M 270,315 Q 360,280 440,220" stroke="oklch(0.6 0.13 145)" stroke-width="2" fill="none" marker-end="url(#arrRec)"/>
+
+        <g transform="translate(830,280)">
+          <rect width="220" height="70" rx="12" fill="oklch(0.965 0.035 25)" stroke="oklch(0.62 0.15 25)" stroke-width="1.5"/>
+          <text x="20" y="26" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" font-weight="700" letter-spacing="1.2" fill="oklch(0.45 0.14 25)" data-i18n="s14_n4_eb">Tahap 4</text>
+          <text x="20" y="46" font-family="Inter, sans-serif" font-size="14" font-weight="600" data-i18n="s14_n4_t">Kurva S</text>
+          <text x="20" y="60" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="10" fill="oklch(0.55 0.02 240)" data-i18n="s14_n4_s">Σ bobot/minggu kumulatif</text>
+        </g>
+        <path d="M 830,315 Q 740,280 660,220" stroke="oklch(0.6 0.13 145)" stroke-width="2" fill="none" marker-end="url(#arrRec)"/>
+
+        <text x="550" y="250" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="oklch(0.55 0.02 240)" font-style="italic" data-i18n="s14_quote">satu model, empat output, satu kebenaran</text>
+      </svg>
+
+      <!-- CTA back to dashboard -->
+      <div style="margin-top: 32px; text-align: center;">
+        <a href="Dashboard 5D BIM.html" class="js-link-dashboard" style="display: inline-flex; align-items: center; gap: 9px; padding: 12px 22px; background: var(--green); color: white; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 14px; box-shadow: var(--shadow-md); transition: transform .15s;">
+          <span data-i18n="s14_cta">Buka Dashboard 5D BIM</span> <span style="font-size: 18px;">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="slide-foot">
+    <span class="slide-tag" data-i18n="s14_tag">Penutup</span>
+    <p class="slide-caption" data-i18n="s14_cap">Itulah inti <strong>5D BIM Construction Management</strong>: model 3D adalah jantung; setiap perubahan menjalar ke harga, jadwal, dan kurva progres secara otomatis. Terima kasih.</p>
+  </div>
+</section>
+
+</div><!-- /stage recap -->
+
+</main>
+
+<script>
+/* ═══════════ i18n dictionary (ID · EN · ZH) ═══════════ */
+const T = {
+  brand:        { id: "5D BIM",         en: "5D BIM",        zh: "5D BIM" },
+  nav_dashboard:{ id: "Dashboard",      en: "Dashboard",     zh: "儀表板" },
+  nav_process:  { id: "Panduan Proses", en: "Process Guide", zh: "流程指南" },
+
+  stage_intro: { id: "Pendahuluan",          en: "Introduction",        zh: "前言" },
+  stage_ahsp:  { id: "Tahap 1 · Harga Satuan", en: "Stage 1 · Unit Price", zh: "階段 1 · 單價分析" },
+  stage_rab:   { id: "Tahap 2 · RAB",        en: "Stage 2 · BoQ",       zh: "階段 2 · 預算書" },
+  stage_sched: { id: "Tahap 3 · Jadwal",     en: "Stage 3 · Schedule",  zh: "階段 3 · 進度表" },
+  stage_scurve:{ id: "Tahap 4 · Kurva S",    en: "Stage 4 · S-Curve",   zh: "階段 4 · 進度曲線" },
+  stage_recap: { id: "Recap",                en: "Recap",               zh: "回顧" },
+
+  // ── slide 1 cover
+  s1_eyebrow: { id: "Pengantar", en: "Introduction", zh: "前言" },
+  s1_kicker:  { id: "5D BIM · Proses Manajemen Konstruksi", en: "5D BIM · Construction Management Process", zh: "5D BIM · 建設管理流程" },
+  s1_t1: { id: "Dari", en: "From", zh: "從" },
+  s1_t2: { id: "Model 3D", en: "the 3D Model", zh: "3D 模型" },
+  s1_t3: { id: "ke", en: "to the", zh: "到" },
+  s1_t4: { id: "Kurva S", en: "S-Curve", zh: "進度曲線" },
+  s1_sub: { id: "Empat tahap utama membuat estimasi proyek konstruksi: Harga Satuan → RAB → Jadwal → Kurva S. Setiap tahap diilustrasikan dari nol.",
+            en: "Four core stages of construction estimation: Unit Price → BoQ → Schedule → S-Curve. Every stage explained from scratch.",
+            zh: "建設估算的四個核心階段:單價 → 預算書 → 進度表 → 進度曲線。每個階段從零開始講解。" },
+  s1_m1a:{ id: "Dari nol", en: "From zero", zh: "從零開始" },
+  s1_m1b:{ id: " — tanpa asumsi pengalaman", en: " — no prior experience assumed", zh: " — 無需先備知識" },
+  s1_m2a:{ id: "Diagram dulu", en: "Visuals first", zh: "視覺優先" },
+  s1_m2b:{ id: " — teks belakangan", en: " — text after", zh: " — 文字其次" },
+  s1_m3a:{ id: "3 bahasa", en: "3 languages", zh: "三語" },
+  s1_m3b:{ id: " — ID · EN · ZH", en: " — ID · EN · ZH", zh: " — 印 · 英 · 中" },
+  s1_tag: { id: "Mulai", en: "Start", zh: "開始" },
+  s1_cap: { id: "Setiap slide menjelaskan <strong>satu tahap</strong> dengan diagram dan contoh konkret. Scroll ke bawah atau tekan ↓ untuk lanjut.",
+            en: "Each slide explains <strong>one stage</strong> with diagrams and a concrete example. Scroll down or press ↓ to continue.",
+            zh: "每張投影片解析<strong>一個階段</strong>,附圖示與實例。向下捲動或按 ↓ 繼續。" },
+
+  // ── slide 2 pipeline
+  s2_eyebrow: { id: "Big Picture", en: "Big Picture", zh: "全貌" },
+  s2_title: { id: "5 Tahapan dari Gambar 3D Menjadi Estimasi Lengkap",
+              en: "5 Stages from 3D Model to Full Estimation",
+              zh: "從 3D 模型到完整估算的 5 個階段" },
+  s2_sub: { id: "Setiap tahap memakai output dari tahap sebelumnya. Inilah peta besar yang akan kita pelajari satu per satu.",
+            en: "Every stage consumes the output of the one before it. This is the big map we will explore step by step.",
+            zh: "每個階段使用前一階段的輸出。這是我們將逐步探索的全景圖。" },
+  s2_n0_eb: { id: "3D BIM · Revit",  en: "3D BIM · Revit",  zh: "3D BIM · Revit" },
+  s2_n0_t:  { id: "Volume",          en: "Quantity",        zh: "工程量" },
+  s2_n0_s:  { id: "m³ · kg · m²",    en: "m³ · kg · m²",    zh: "m³ · kg · m²" },
+  s2_n1_eb: { id: "Tahap 1 · AHSP",  en: "Stage 1 · AHSP",  zh: "階段 1 · 單價分析" },
+  s2_n1_t:  { id: "Harga Satuan",    en: "Unit Price",      zh: "單價" },
+  s2_n1_s:  { id: "Rp / m³",         en: "Rp / m³",         zh: "Rp / m³" },
+  s2_n2_eb: { id: "Tahap 2 · RAB",   en: "Stage 2 · BoQ",   zh: "階段 2 · 預算書" },
+  s2_n2_t:  { id: "Total Biaya",     en: "Total Cost",      zh: "總成本" },
+  s2_n2_s:  { id: "Rp total",        en: "Rp total",        zh: "總額" },
+  s2_n3_eb: { id: "Tahap 3 · Jadwal",en: "Stage 3 · Schedule",zh: "階段 3 · 進度表" },
+  s2_n3_t:  { id: "Gantt",           en: "Gantt",           zh: "甘特圖" },
+  s2_n3_s:  { id: "minggu × WBS",    en: "weeks × WBS",     zh: "週 × WBS" },
+  s2_n4_eb: { id: "Tahap 4 · Kurva S",en: "Stage 4 · S-Curve",zh: "階段 4 · 進度曲線" },
+  s2_n4_t:  { id: "Progres %",       en: "Progress %",      zh: "進度 %" },
+  s2_n4_s:  { id: "akumulasi/minggu",en: "weekly cumulative",zh: "週累積" },
+  s2_d0: { id: "Hasil QTO",        en: "From QTO",          zh: "工程量計算" },
+  s2_d1: { id: "Σ koef × harga",   en: "Σ coef × price",    zh: "Σ 係數 × 單價" },
+  s2_d2: { id: "Vol × Harga",      en: "Vol × Price",       zh: "量 × 單價" },
+  s2_d3: { id: "Vol ÷ produktivitas",en:"Vol ÷ productivity",zh: "量 ÷ 生產率" },
+  s2_d4: { id: "Σ bobot/minggu",   en: "Σ weight/week",     zh: "Σ 週權重" },
+  s2_tag: { id: "Roadmap", en: "Roadmap", zh: "路徑圖" },
+  s2_cap: { id: "Volume dari <strong>Revit BIM</strong> adalah modal awal. Mengubah satu tahap = semua hilirnya ikut berubah otomatis.",
+            en: "Volume from <strong>Revit BIM</strong> is the starting capital. Change one stage and every downstream stage updates automatically.",
+            zh: "工程量來自 <strong>Revit BIM</strong>,是起點。改動任一階段,下游所有階段自動同步。" },
+
+  // ── slide 3 ahsp sources
+  s3_eyebrow: { id: "Tahap 1 · Harga Satuan", en: "Stage 1 · Unit Price", zh: "階段 1 · 單價分析" },
+  s3_title: { id: "Dari Mana Harga Bahan & Upah Diambil?",
+              en: "Where Do Material & Labour Prices Come From?",
+              zh: "材料與人工單價從何而來?" },
+  s3_sub: { id: "Tiga sumber resmi yang dipakai estimator untuk menyusun Analisa Harga Satuan Pekerjaan (AHSP).",
+            en: "Three official sources used to compile the Unit-Price Analysis (AHSP).",
+            zh: "估算師編製單價分析 (AHSP) 時使用的三個官方來源。" },
+  s3_src1_eb: { id: "SUMBER 1", en: "SOURCE 1", zh: "來源 1" },
+  s3_src1_t:  { id: "HSPK Pemerintah Daerah", en: "Regional HSPK", zh: "地方政府 HSPK" },
+  s3_src1_d:  { id: "Harga Satuan Pokok Kegiatan — dirilis tiap awal tahun",
+                en: "Standard Unit-Price List — published yearly", zh: "標準單價手冊 — 每年初發布" },
+  s3_src2_eb: { id: "SUMBER 2", en: "SOURCE 2", zh: "來源 2" },
+  s3_src2_t:  { id: "Survei Pasar (min. 3 toko)", en: "Market Survey (≥ 3 shops)", zh: "市場調查 (至少 3 家)" },
+  s3_src2_d:  { id: "Harga aktual + ongkos angkut ke lokasi",
+                en: "Actual price + delivery to site", zh: "實際單價 + 至工地運費" },
+  s3_src3_eb: { id: "SUMBER 3", en: "SOURCE 3", zh: "來源 3" },
+  s3_src3_t:  { id: "SNI 7394 / 6897 / 2837", en: "SNI 7394 / 6897 / 2837", zh: "SNI 7394 / 6897 / 2837" },
+  s3_src3_d:  { id: "Koefisien resmi: bahan & upah per 1 satuan",
+                en: "Official coefficients: material & labour per unit", zh: "官方係數:每單位之材料與人工" },
+  s3_proc:   { id: "DIPROSES MENJADI", en: "COMPILED INTO", zh: "編製為" },
+  s3_proc_sub:{ id: "Analisa Harga Satuan Pekerjaan", en: "Unit-Price Analysis", zh: "單價分析" },
+  s3_out_eb: { id: "HASIL", en: "OUTPUT", zh: "輸出" },
+  s3_out_sub:{ id: "per 1 satuan pekerjaan", en: "per work unit", zh: "每單位工程" },
+  s3_tag: { id: "Sumber Data", en: "Data Sources", zh: "資料來源" },
+  s3_cap: { id: "Proyek <strong>pemerintah</strong> wajib pakai HSPK. <strong>Swasta</strong> sering menggabungkan HSPK + survei + margin negosiasi sendiri.",
+            en: "<strong>Public</strong> projects must use HSPK. <strong>Private</strong> projects usually combine HSPK + own survey + negotiated margin.",
+            zh: "<strong>公共</strong>工程必須使用 HSPK。<strong>民間</strong>工程多以 HSPK + 自行調查 + 議定毛利。" },
+
+  // ── slide 4 formula
+  s4_eyebrow: { id: "Tahap 1 · Harga Satuan", en: "Stage 1 · Unit Price", zh: "階段 1 · 單價分析" },
+  s4_title: { id: "Rumus Harga Satuan: Resep yang Kuantitatif",
+              en: "Unit-Price Formula: A Quantified Recipe",
+              zh: "單價公式:量化版的食譜" },
+  s4_sub: { id: "Bayangkan resep masakan: bahan + cara + upah juru masak. AHSP adalah versi terstruktur dari resep ini.",
+            en: "Think of a cooking recipe: ingredients + steps + cook's wage. AHSP is a structured version of that recipe.",
+            zh: "想像一份食譜:食材 + 步驟 + 廚師工資。AHSP 就是這份食譜的結構化版本。" },
+  s4_a_t: { id: "Bahan (Material)", en: "Material", zh: "材料" },
+  s4_a_s: { id: "Σ koefisien × harga bahan", en: "Σ coefficient × material price", zh: "Σ 係數 × 材料單價" },
+  s4_b_t: { id: "Upah (Labour)", en: "Labour", zh: "人工" },
+  s4_b_s: { id: "Σ koefisien OH × tarif/hari", en: "Σ OH coef × daily wage", zh: "Σ 工日係數 × 日薪" },
+  s4_c_t: { id: "Alat (Equipment, opsional)", en: "Equipment (optional)", zh: "機具 (選擇性)" },
+  s4_c_s: { id: "Σ koefisien × sewa/hari", en: "Σ coef × daily rental", zh: "Σ 係數 × 日租金" },
+  s4_ohp_eb: { id: "Markup", en: "Markup", zh: "加價" },
+  s4_ohp_sub: { id: "Overhead & Profit", en: "Overhead & Profit", zh: "管理費與利潤" },
+  s4_subtot:   { id: "Subtotal", en: "Subtotal", zh: "小計" },
+  s4_subtot_s: { id: "Harga langsung", en: "Direct cost", zh: "直接成本" },
+  s4_hs_eb: { id: "HARGA SATUAN", en: "UNIT PRICE", zh: "單價" },
+  s4_hs_for:{ id: "untuk 1 m³ beton K-225", en: "for 1 m³ of K-225 concrete", zh: "1 m³ K-225 混凝土" },
+  s4_what_eb: { id: "Apa itu \"koefisien\"?", en: "What is a \"coefficient\"?", zh: "「係數」是什麼?" },
+  s4_what_short: { id: "Jumlah bahan/upah yang dibutuhkan untuk membuat 1 unit output.",
+                   en: "The quantity of material/labour needed to make 1 unit of output.",
+                   zh: "生產 1 單位產出所需的材料/人工數量。" },
+  s4_what_ex: { id: "Contoh: 371 kg semen + 0,499 m³ pasir + 0,776 m³ kerikil + 215 L air per 1 m³ beton K-225.",
+                en: "Example: 371 kg cement + 0.499 m³ sand + 0.776 m³ gravel + 215 L water per 1 m³ of K-225 concrete.",
+                zh: "範例:水泥 371 kg + 砂 0.499 m³ + 碎石 0.776 m³ + 水 215 L,即 1 m³ K-225 混凝土。" },
+  s4_tag: { id: "Rumus AHSP", en: "AHSP Formula", zh: "AHSP 公式" },
+  s4_cap: { id: "OHP 10% menutup biaya tak langsung kontraktor + laba (kantor, staf, asuransi). Harga satuan inilah yang dipakai di RAB tahap berikutnya.",
+            en: "10% OHP covers the contractor's indirect costs + profit (office, staff, insurance). This unit price feeds the next stage's BoQ.",
+            zh: "10% 管理利潤涵蓋承包商間接成本與利潤 (辦公室、人員、保險)。此單價將用於下一階段預算書。" },
+
+  // ── slide 5 example
+  s5_eyebrow: { id: "Tahap 1 · Harga Satuan", en: "Stage 1 · Unit Price", zh: "階段 1 · 單價分析" },
+  s5_title: { id: "Contoh Nyata: 1 m³ Beton Struktur K-225",
+              en: "Worked Example: 1 m³ of K-225 Structural Concrete",
+              zh: "實例:1 m³ K-225 結構混凝土" },
+  s5_sub: { id: "Pecahkan resep menjadi angka — koefisien dari SNI 7394, harga dari HSPK rata-rata Jawa.",
+            en: "Break the recipe into numbers — coefficients from SNI 7394, prices from Java's average HSPK.",
+            zh: "把食譜化為數字 — 係數採用 SNI 7394,單價採用爪哇地區 HSPK 均值。" },
+  th_comp: { id: "Komponen", en: "Component", zh: "項目" },
+  th_coef: { id: "Koefisien", en: "Coefficient", zh: "係數" },
+  th_unit: { id: "Sat.", en: "Unit", zh: "單位" },
+  th_base: { id: "Harga Dasar", en: "Base Price", zh: "基本單價" },
+  th_amt:  { id: "Jumlah", en: "Amount", zh: "金額" },
+  s5_g_mat:{ id: "A · Bahan (Material)", en: "A · Material", zh: "A · 材料" },
+  s5_mat1: { id: "Semen Portland", en: "Portland cement", zh: "波特蘭水泥" },
+  s5_mat2: { id: "Pasir beton", en: "Concrete sand", zh: "混凝土砂" },
+  s5_mat3: { id: "Kerikil / split", en: "Coarse aggregate / gravel", zh: "粗骨材 / 碎石" },
+  s5_mat4: { id: "Air", en: "Water", zh: "水" },
+  s5_g_lab:{ id: "B · Upah (Labour)", en: "B · Labour", zh: "B · 人工" },
+  s5_lab1: { id: "Pekerja", en: "Labourer", zh: "普通工" },
+  s5_lab2: { id: "Tukang batu", en: "Mason", zh: "砌磚工" },
+  s5_lab3: { id: "Kepala tukang", en: "Head mason", zh: "工長" },
+  s5_lab4: { id: "Mandor", en: "Foreman", zh: "監工" },
+  s5_sub:  { id: "Subtotal langsung", en: "Direct subtotal", zh: "直接小計" },
+  s5_ohp:  { id: "Overhead & Profit (10%)", en: "Overhead & Profit (10%)", zh: "管理費與利潤 (10%)" },
+  s5_total:{ id: "HARGA SATUAN per m³", en: "UNIT PRICE per m³", zh: "每立方公尺單價" },
+  s5_tag:  { id: "Studi Kasus", en: "Case Study", zh: "案例" },
+  s5_cap:  { id: "Angka ini dipakai di seluruh RAB. Volume 32 m³ dari Revit × Rp 1.320.259 = <strong>Rp 42,2 juta</strong> untuk beton struktur.",
+             en: "This number is used throughout the BoQ. Volume 32 m³ from Revit × Rp 1,320,259 = <strong>Rp 42.2 m</strong> for structural concrete.",
+             zh: "此數字將用於整個預算書。Revit 工程量 32 m³ × Rp 1,320,259 = 結構混凝土 <strong>Rp 42.2 百萬</strong>。" },
+
+  // ── slide 6 rab formula
+  s6_eyebrow: { id: "Tahap 2 · RAB", en: "Stage 2 · BoQ", zh: "階段 2 · 預算書" },
+  s6_title: { id: "Cara Membuat RAB: Kalikan, lalu Jumlahkan",
+              en: "How to Build a BoQ: Multiply, then Sum",
+              zh: "如何編預算書:相乘再加總" },
+  s6_sub: { id: "RAB = Rencana Anggaran Biaya. Untuk setiap item: Volume × Harga Satuan, lalu jumlahkan.",
+            en: "BoQ = Bill of Quantities. For each item: Volume × Unit Price, then sum.",
+            zh: "預算書 (BoQ) = 工程量 × 單價,各項再加總。" },
+  s6_v_eb: { id: "Dari Revit BIM", en: "From Revit BIM", zh: "來自 Revit BIM" },
+  s6_hs_eb:{ id: "Dari AHSP", en: "From AHSP", zh: "來自單價分析" },
+  s6_hs_t: { id: "Harga Satuan", en: "Unit Price", zh: "單價" },
+  s6_t_eb: { id: "Hasil per Item", en: "Per-Item Result", zh: "各項結果" },
+  s6_t_t:  { id: "Total Item", en: "Item Total", zh: "項目總價" },
+  s6_samples:{ id: "Contoh 3 Item dari Proyek Ini", en: "Three Sample Items from This Project", zh: "本專案三個範例項目" },
+  s6_r1: { id: "D.1 Beton struktur K-225", en: "D.1 Structural concrete K-225", zh: "D.1 結構混凝土 K-225" },
+  s6_r2: { id: "E.1 Dinding bata merah ½ bata", en: "E.1 Half-brick masonry wall", zh: "E.1 ½B 紅磚牆" },
+  s6_r3: { id: "H.1 Pengecatan dinding interior", en: "H.1 Interior wall painting", zh: "H.1 室內牆面油漆" },
+  s6_grand: { id: "Σ semua item + PPN 11% → Total Anggaran Proyek",
+              en: "Σ all items + 11% VAT → Project Total Budget",
+              zh: "Σ 全部項目 + 11% PPN → 專案預算總額" },
+  s6_tag: { id: "Rumus RAB", en: "BoQ Formula", zh: "預算書公式" },
+  s6_cap: { id: "Setiap baris = satu item WBS. Volume dari Revit, harga dari AHSP, total dari perkalian keduanya, lalu seluruhnya dijumlahkan + PPN.",
+            en: "Each row = one WBS item. Volume from Revit, price from AHSP, total from their product. Sum everything + VAT.",
+            zh: "每列 = 一個 WBS 項目。工程量來自 Revit,單價來自 AHSP,兩者相乘為項目總價,再加總並加 PPN。" },
+
+  // ── slide 7 markup
+  s7_eyebrow: { id: "Tahap 2 · RAB", en: "Stage 2 · BoQ", zh: "階段 2 · 預算書" },
+  s7_title: { id: "Setelah Dijumlahkan: Naikkan ke Total Proyek",
+              en: "After Summing: Lift to Project Total",
+              zh: "加總後:推升至專案總額" },
+  s7_sub: { id: "Subtotal \"biaya langsung\" belum termasuk pajak. Tambahkan markup tingkat proyek.",
+            en: "The \"direct cost\" subtotal excludes tax. Add project-level markup.",
+            zh: "「直接費」小計尚未含稅。需於專案層級加計加價。" },
+  s7_s1_eb: { id: "Langkah 1", en: "Step 1", zh: "步驟 1" },
+  s7_s1_t:  { id: "Jumlah Biaya Langsung", en: "Total Direct Cost", zh: "工程直接費小計" },
+  s7_s1_s:  { id: "Σ (Volume × Harga Satuan)", en: "Σ (Volume × Unit Price)", zh: "Σ (工程量 × 單價)" },
+  s7_s2_eb: { id: "Langkah 2", en: "Step 2", zh: "步驟 2" },
+  s7_s2_t:  { id: "+ PPN 11%", en: "+ 11% VAT", zh: "+ 11% PPN" },
+  s7_s2_s:  { id: "Pajak Pertambahan Nilai", en: "Value-Added Tax", zh: "加值型營業稅" },
+  s7_s3_eb: { id: "Total Proyek", en: "Project Total", zh: "專案總額" },
+  s7_s3_t:  { id: "Rp 532,8 jt", en: "Rp 532.8 m", zh: "Rp 532.8 百萬" },
+  s7_s3_s:  { id: "Yang dibayar pemilik ke kontraktor", en: "Paid by owner to contractor", zh: "業主支付給承包商之金額" },
+  s7_tw_t:  { id: "Bagaimana Taiwan?", en: "What About Taiwan?", zh: "臺灣呢?" },
+  s7_tw_d:  { id: "Bukan 1 baris PPN — Taiwan memakai <strong>5 lapis markup</strong> (管理費 7% + 利潤 5% + 品管 1% + 環安衛 1,5% + 營業稅 5%) untuk transparansi penuh ke pemilik proyek.",
+              en: "Not a single VAT line — Taiwan uses <strong>5 markup layers</strong> (管理費 7% + 利潤 5% + 品管 1% + 環安衛 1.5% + 營業稅 5%) for full transparency to the owner.",
+              zh: "不是單一 VAT 列 — 臺灣使用 <strong>5 層加價</strong> (管理費 7% + 利潤 5% + 品管 1% + 環安衛 1.5% + 營業稅 5%),對業主完全透明。" },
+  s7_tag: { id: "Markup Proyek", en: "Project Markup", zh: "專案加價" },
+  s7_cap: { id: "Indonesia menyisipkan OHP <strong>10% di setiap harga satuan</strong> via AHSP, jadi di tingkat proyek hanya kena PPN 11%.",
+            en: "Indonesia embeds <strong>10% OHP into every unit price</strong> via AHSP, so the project level only adds 11% VAT.",
+            zh: "印尼透過 AHSP 將 <strong>10% 管理利潤嵌入每個單價</strong>,專案層級僅加 11% PPN。" },
+
+  // ── slide 8 duration
+  s8_eyebrow: { id: "Tahap 3 · Jadwal", en: "Stage 3 · Schedule", zh: "階段 3 · 進度表" },
+  s8_title: { id: "Cara Menghitung Durasi: Volume Dibagi Kecepatan",
+              en: "Calculating Duration: Volume Divided by Speed",
+              zh: "計算工期:工程量 ÷ 速度" },
+  s8_sub: { id: "Bukan tebakan. Setiap pekerjaan punya angka produktivitas baku per hari per regu.",
+            en: "Not a guess. Every task has a standard per-day per-crew productivity number.",
+            zh: "並非猜測。每項工作都有標準的每日每組生產率。" },
+  s8_lhs:  { id: "Durasi (hari) =", en: "Duration (days) =", zh: "工期 (天) =" },
+  s8_num:  { id: "Volume Pekerjaan", en: "Work Volume", zh: "工程量" },
+  s8_den:  { id: "Produktivitas × Jumlah Regu", en: "Productivity × Number of Crews", zh: "生產率 × 班組數" },
+  s8_ex_t: { id: "Contoh Nyata — D.1 Beton Struktur", en: "Worked Example — D.1 Structural Concrete", zh: "實例 — D.1 結構混凝土" },
+  s8_ex_v: { id: "Volume (Revit)", en: "Volume (Revit)", zh: "工程量 (Revit)" },
+  s8_ex_p: { id: "Produktivitas", en: "Productivity", zh: "生產率" },
+  s8_ex_d: { id: "Durasi", en: "Duration", zh: "工期" },
+  s8_prod_t:{ id: "Produktivitas Baku Tiap Pekerjaan", en: "Standard Productivity per Task", zh: "各工項標準生產率" },
+  s8_p1: { id: "Cor beton:", en: "Concrete pour:", zh: "混凝土澆置:" },
+  s8_p2: { id: "Pasang bata:", en: "Brick laying:", zh: "砌磚:" },
+  s8_p3: { id: "Plester:", en: "Plaster:", zh: "粉刷:" },
+  s8_p4: { id: "Pengecatan:", en: "Painting:", zh: "油漆:" },
+  s8_tag: { id: "Rumus Durasi", en: "Duration Formula", zh: "工期公式" },
+  s8_cap: { id: "Curing beton menambah waktu kalender meski bukan \"kerja\". 27 hari dibulatkan ke <strong>6 minggu</strong> untuk cadangan curing + cuaca.",
+            en: "Concrete curing consumes calendar time even if not \"work\". 27 days rounds up to <strong>6 weeks</strong> for curing + weather buffer.",
+            zh: "混凝土養護占用日曆時間但非「作業」。27 天上修為 <strong>6 週</strong>,作養護與天氣緩衝。" },
+
+  // ── slide 9 predecessor
+  s9_eyebrow: { id: "Tahap 3 · Jadwal", en: "Stage 3 · Schedule", zh: "階段 3 · 進度表" },
+  s9_title: { id: "Urutan Pekerjaan: Apa Harus Selesai Dulu?",
+              en: "Work Order: What Must Finish First?",
+              zh: "工序:誰必須先完成?" },
+  s9_sub: { id: "Predecessor adalah ketergantungan fisik-logis (kolom butuh pondasi dulu, plester butuh dinding dulu).",
+            en: "Predecessors are physical-logical dependencies (columns need foundations first, plaster needs walls first).",
+            zh: "前置作業是物理-邏輯依賴 (柱要先有基礎,粉刷要先有牆)。" },
+  s9_a: { id: "Persiapan", en: "Site Prep", zh: "整地" },
+  s9_b: { id: "Galian", en: "Earthworks", zh: "土方" },
+  s9_c: { id: "Pondasi", en: "Foundation", zh: "基礎" },
+  s9_d: { id: "Struktur", en: "Structure", zh: "結構" },
+  s9_e: { id: "Arsitektur", en: "Architecture", zh: "裝修" },
+  s9_fg:{ id: "Atap & MEP", en: "Roof & MEP", zh: "屋頂與機電" },
+  s9_h: { id: "Finishing", en: "Finishing", zh: "收尾" },
+  s9_crit: { id: "⚡ Lintasan Kritis", en: "⚡ Critical Path", zh: "⚡ 關鍵路徑" },
+  s9_l_t: { id: "Empat Tipe Hubungan", en: "Four Link Types", zh: "四種關係類型" },
+  s9_fs: { id: "Finish-to-Start — paling umum, A selesai → B mulai",
+           en: "Finish-to-Start — most common, A finishes → B starts",
+           zh: "完成-開始 — 最常見,A 完成 → B 開始" },
+  s9_ss: { id: "Start-to-Start — A & B mulai bersamaan",
+           en: "Start-to-Start — A & B start together",
+           zh: "開始-開始 — A 與 B 同時開始" },
+  s9_ff: { id: "Finish-to-Finish — A & B selesai bersamaan",
+           en: "Finish-to-Finish — A & B finish together",
+           zh: "完成-完成 — A 與 B 同時完成" },
+  s9_sf: { id: "Start-to-Finish — jarang dipakai",
+           en: "Start-to-Finish — rarely used",
+           zh: "開始-完成 — 鮮少使用" },
+  s9_tag: { id: "Predecessor", en: "Predecessor", zh: "前置作業" },
+  s9_cap: { id: "Lintasan kritis menentukan total durasi proyek. Bila satu pekerjaan di lintasan kritis mundur, <strong>seluruh proyek mundur</strong> sebanyak itu juga.",
+            en: "The critical path fixes the total project duration. Slip one task on the critical path and <strong>the whole project slips</strong> by the same amount.",
+            zh: "關鍵路徑決定專案總工期。關鍵路徑上任何一項延遲,<strong>整個專案就延遲</strong>同等時間。" },
+
+  // ── slide 10 gantt
+  s10_eyebrow: { id: "Tahap 3 · Jadwal", en: "Stage 3 · Schedule", zh: "階段 3 · 進度表" },
+  s10_title: { id: "Hasil Akhir: Bagan Gantt", en: "Final Output: Gantt Chart", zh: "最終輸出:甘特圖" },
+  s10_sub: { id: "Sumbu X = minggu. Sumbu Y = pekerjaan. Panjang bar = durasi. Posisi bar = kapan dikerjakan.",
+             en: "X axis = weeks. Y axis = tasks. Bar length = duration. Bar position = when it's done.",
+             zh: "橫軸 = 週次。縱軸 = 工項。條長 = 工期。位置 = 何時施作。" },
+  g_a: { id: "A · Persiapan", en: "A · Site Prep", zh: "A · 整地" },
+  g_b: { id: "B · Tanah", en: "B · Earthworks", zh: "B · 土方" },
+  g_c: { id: "C · Pondasi", en: "C · Foundation", zh: "C · 基礎" },
+  g_d: { id: "D · Struktur", en: "D · Structure", zh: "D · 結構" },
+  g_e: { id: "E · Arsitektur", en: "E · Architecture", zh: "E · 裝修" },
+  g_f: { id: "F · Atap", en: "F · Roof", zh: "F · 屋頂" },
+  g_g: { id: "G · MEP", en: "G · MEP", zh: "G · 機電" },
+  g_h: { id: "H · Finishing", en: "H · Finishing", zh: "H · 收尾" },
+  g_total: { id: "TOTAL", en: "TOTAL", zh: "總計" },
+  g_total_v: { id: "18 minggu (≈ 126 hari kalender)", en: "18 weeks (≈ 126 calendar days)", zh: "18 週 (≈ 126 日曆天)" },
+  s10_tag: { id: "Gantt Chart", en: "Gantt Chart", zh: "甘特圖" },
+  s10_cap: { id: "Warna bar = grup WBS. Bar yang tumpang tindih = <strong>pekerjaan paralel</strong> oleh regu berbeda. Bar berurutan rapat = critical path.",
+             en: "Bar colour = WBS group. Overlapping bars = <strong>parallel tasks</strong> by different crews. Adjacent bars = critical path.",
+             zh: "條的顏色 = WBS 群組。重疊條 = 不同班組<strong>並行作業</strong>。連續緊接的條 = 關鍵路徑。" },
+
+  // ── slide 11 weight
+  s11_eyebrow: { id: "Tahap 4 · Kurva S", en: "Stage 4 · S-Curve", zh: "階段 4 · 進度曲線" },
+  s11_title: { id: "Langkah 1 — Hitung \"Bobot\" Tiap Pekerjaan",
+               en: "Step 1 — Compute the \"Weight\" of Each Task",
+               zh: "步驟 1 — 計算各工項的「權重」" },
+  s11_sub: { id: "Bobot = porsi biaya item terhadap total proyek. Total semua bobot = 100%.",
+             en: "Weight = item's cost share of project total. All weights sum to 100%.",
+             zh: "權重 = 項目成本占專案總額之比例。所有權重合計 = 100%。" },
+  s11_lhs: { id: "Bobot% =", en: "Weight% =", zh: "權重% =" },
+  s11_num: { id: "Total item", en: "Item total", zh: "項目總價" },
+  s11_den: { id: "Total proyek", en: "Project total", zh: "專案總額" },
+  s11_l_a: { id: "A · Persiapan", en: "A · Site Prep", zh: "A · 整地" },
+  s11_l_b: { id: "B · Tanah", en: "B · Earthworks", zh: "B · 土方" },
+  s11_l_c: { id: "C · Pondasi", en: "C · Foundation", zh: "C · 基礎" },
+  s11_l_d: { id: "D · Struktur Beton", en: "D · Concrete Structure", zh: "D · 結構混凝土" },
+  s11_l_e: { id: "E · Arsitektur", en: "E · Architecture", zh: "E · 裝修" },
+  s11_l_f: { id: "F · Atap", en: "F · Roof", zh: "F · 屋頂" },
+  s11_l_g: { id: "G · MEP", en: "G · MEP", zh: "G · 機電" },
+  s11_l_h: { id: "H · Finishing", en: "H · Finishing", zh: "H · 收尾" },
+  s11_l_total: { id: "Total", en: "Total", zh: "合計" },
+  s11_tag: { id: "Bobot", en: "Weight", zh: "權重" },
+  s11_cap: { id: "Struktur (D) + Arsitektur (E) memakan <strong>50% biaya proyek</strong>. Itu sebabnya keduanya menjadi inti kurva S — fase paling \"curam\" nantinya.",
+             en: "Structure (D) + Architecture (E) consume <strong>50% of the project cost</strong>. That's why they form the core of the S-curve — its steepest phase later on.",
+             zh: "結構 (D) + 裝修 (E) 占<strong>專案 50% 成本</strong>。這也是它們成為進度曲線核心、最陡峭階段的原因。" },
+
+  // ── slide 12 distribution
+  s12_eyebrow: { id: "Tahap 4 · Kurva S", en: "Stage 4 · S-Curve", zh: "階段 4 · 進度曲線" },
+  s12_title: { id: "Langkah 2 — Sebarkan Bobot Sepanjang Durasi",
+               en: "Step 2 — Spread the Weight Across the Duration",
+               zh: "步驟 2 — 將權重均分於工期" },
+  s12_sub: { id: "Bobot item dibagi rata ke setiap minggu di mana item itu aktif.",
+             en: "Each item's weight is split evenly over the weeks it's active.",
+             zh: "項目權重均分至其活躍的各週。" },
+  s12_lhs: { id: "Bobot per minggu =", en: "Weight per week =", zh: "週權重 =" },
+  s12_num: { id: "Bobot item", en: "Item weight", zh: "項目權重" },
+  s12_den: { id: "Durasi (minggu)", en: "Duration (weeks)", zh: "工期 (週)" },
+  s12_ex_t: { id: "Contoh untuk D.1 Beton Struktur", en: "Example for D.1 Structural Concrete", zh: "D.1 結構混凝土範例" },
+  s12_ex_w: { id: "Bobot D", en: "Weight D", zh: "D 權重" },
+  s12_ex_dur:{ id: "Durasi", en: "Duration", zh: "工期" },
+  s12_ex_pw: { id: "Per minggu", en: "Per week", zh: "每週" },
+  s12_heat_t:{ id: "Hasil: Minggu 4–9 Tiap-Tiap Dapat 4,7%",
+               en: "Result: Weeks 4–9 each receive 4.7%",
+               zh: "結果:第 4–9 週各分配 4.7%" },
+  s12_row: { id: "D.1 Beton:", en: "D.1 Concrete:", zh: "D.1 混凝土:" },
+  s12_tag: { id: "Distribusi", en: "Distribution", zh: "分配" },
+  s12_cap: { id: "Ulangi untuk semua item. Jumlah satu kolom (semua item aktif di minggu itu) = <strong>\"Rencana / Minggu\"</strong> — input untuk akumulasi Kurva S.",
+             en: "Repeat for every item. The sum of one column (all items active that week) = <strong>\"Plan / Week\"</strong> — the input for S-curve accumulation.",
+             zh: "對每項重複。單欄之和 (該週所有活躍項目) = <strong>「週進度」</strong> — 進度曲線累積之輸入。" },
+
+  // ── slide 13 s-curve
+  s13_eyebrow: { id: "Tahap 4 · Kurva S", en: "Stage 4 · S-Curve", zh: "階段 4 · 進度曲線" },
+  s13_title: { id: "Langkah 3 — Akumulasi: Inilah Kurva S",
+               en: "Step 3 — Accumulate: Here's the S-Curve",
+               zh: "步驟 3 — 累積:進度曲線成形" },
+  s13_sub: { id: "Jumlahkan \"Rencana per Minggu\" secara kumulatif dari minggu 1 → seterusnya.",
+             en: "Cumulate \"Plan per Week\" from week 1 onward.",
+             zh: "自第 1 週起逐週累積「週進度」。" },
+  s13_p1: { id: "FASE 1 (landai)", en: "PHASE 1 (flat)", zh: "階段 1 (平緩)" },
+  s13_p1_d: { id: "Persiapan + Galian", en: "Site Prep + Earthworks", zh: "整地 + 土方" },
+  s13_p2: { id: "FASE 2 (curam — kurva S!)", en: "PHASE 2 (steep — the S!)", zh: "階段 2 (陡峭 — S 形!)" },
+  s13_p2_d: { id: "Pondasi + Struktur + Arsitektur", en: "Foundation + Structure + Architecture", zh: "基礎 + 結構 + 裝修" },
+  s13_p3: { id: "FASE 3 (landai)", en: "PHASE 3 (flat)", zh: "階段 3 (平緩)" },
+  s13_p3_d: { id: "Finishing + Cleanup", en: "Finishing + Cleanup", zh: "收尾 + 清潔" },
+  s13_yaxis: { id: "PROGRES KUMULATIF (%)", en: "CUMULATIVE PROGRESS (%)", zh: "累積進度 (%)" },
+  s13_tag: { id: "Kurva S", en: "S-Curve", zh: "進度曲線" },
+  s13_cap: { id: "Tiga fase (landai → curam → landai) memberi bentuk huruf S. Kurva ini menjadi <strong>baseline</strong> — tiap minggu progres aktual dibandingkan untuk deteksi keterlambatan.",
+             en: "Three phases (flat → steep → flat) make the S shape. The curve serves as the <strong>baseline</strong> — actual progress is compared against it weekly to detect slippage.",
+             zh: "三階段 (平緩 → 陡峭 → 平緩) 形成 S 形。此曲線為 <strong>基準線</strong> — 每週將實際進度與其比對,偵測延誤。" },
+
+  // ── slide 14 recap
+  s14_eyebrow: { id: "Recap", en: "Recap", zh: "回顧" },
+  s14_title: { id: "Semua Saling Berkaitan", en: "Everything Connects", zh: "環環相扣" },
+  s14_sub: { id: "Ubah satu tahap, semua hilirnya ikut berubah. Itulah kekuatan 5D BIM.",
+             en: "Change one stage and every downstream stage follows. That's the power of 5D BIM.",
+             zh: "改動任一階段,下游全部跟隨。這就是 5D BIM 的力量。" },
+  s14_c_eb: { id: "Model 3D", en: "3D Model", zh: "3D 模型" },
+  s14_n1_eb: { id: "Tahap 1", en: "Stage 1", zh: "階段 1" },
+  s14_n1_t: { id: "Harga Satuan", en: "Unit Price", zh: "單價" },
+  s14_n1_s: { id: "Σ koef × harga + OHP", en: "Σ coef × price + OHP", zh: "Σ 係數 × 單價 + 管理利潤" },
+  s14_n2_eb: { id: "Tahap 2", en: "Stage 2", zh: "階段 2" },
+  s14_n2_t: { id: "RAB", en: "BoQ", zh: "預算書" },
+  s14_n2_s: { id: "Vol × Harga + Markup", en: "Vol × Price + Markup", zh: "量 × 單價 + 加價" },
+  s14_n3_eb: { id: "Tahap 3", en: "Stage 3", zh: "階段 3" },
+  s14_n3_t: { id: "Jadwal · Gantt", en: "Schedule · Gantt", zh: "進度 · 甘特圖" },
+  s14_n3_s: { id: "Vol ÷ Produktivitas", en: "Vol ÷ Productivity", zh: "量 ÷ 生產率" },
+  s14_n4_eb: { id: "Tahap 4", en: "Stage 4", zh: "階段 4" },
+  s14_n4_t: { id: "Kurva S", en: "S-Curve", zh: "進度曲線" },
+  s14_n4_s: { id: "Σ bobot/minggu kumulatif", en: "Σ weekly cumulative weight", zh: "Σ 週累積權重" },
+  s14_quote: { id: "satu model, empat output, satu kebenaran",
+               en: "one model, four outputs, one source of truth",
+               zh: "一個模型,四個輸出,一個真相" },
+  s14_cta: { id: "Buka Dashboard 5D BIM", en: "Open the 5D BIM Dashboard", zh: "開啟 5D BIM 儀表板" },
+  s14_tag: { id: "Penutup", en: "Closing", zh: "結語" },
+  s14_cap: { id: "Itulah inti <strong>5D BIM Construction Management</strong>: model 3D adalah jantung; setiap perubahan menjalar ke harga, jadwal, dan kurva progres secara otomatis. Terima kasih.",
+             en: "That's the heart of <strong>5D BIM Construction Management</strong>: the 3D model is the engine; every change propagates to price, schedule, and progress curve automatically. Thank you.",
+             zh: "這就是 <strong>5D BIM 建設管理</strong>的精髓:3D 模型是核心,任何變動自動傳遞至單價、進度、與進度曲線。謝謝。" },
+
+  // ── SPLASH (cinematic opening)
+  splash_eyebrow: { id: "5D BIM · Manajemen Konstruksi",
+                    en: "5D BIM · Construction Management",
+                    zh: "5D BIM · 建設管理" },
+  splash_welcome: { id: "SELAMAT DATANG", en: "WELCOME", zh: "歡迎" },
+  splash_sub: { id: "Dari Model 3D ke Kurva S — empat tahap, satu kebenaran.",
+                en: "From 3D Model to S-Curve — four stages, one source of truth.",
+                zh: "從 3D 模型到進度曲線 — 四個階段,一個真相。" },
+  splash_hint: { id: "Klik di mana saja untuk masuk", en: "Click anywhere to enter", zh: "點擊任意處進入" },
+  nav_back_splash: { id: "Kembali ke Opening", en: "Back to Opening", zh: "回到開場頁" },
+  nav_fullscreen:  { id: "Layar Penuh (F)",    en: "Fullscreen (F)",  zh: "全螢幕 (F)" },
+
+  // ── i18n patches for previously hardcoded text
+  s6_v_t:    { id: "Volume",     en: "Quantity",  zh: "工程量" },
+  s6_hs_sub: { id: "Rp / unit",  en: "Rp / unit", zh: "Rp / 單位" },
+  s11_donut_total: { id: "TOTAL", en: "TOTAL",    zh: "總計" },
+
+  // ── slide 8 (Durasi) — hardcoded values now i18n'd
+  s8_frac_unit: { id: "(unit/hari/regu)", en: "(unit/day/crew)", zh: "(單位/天/班組)" },
+  s8_ex_p_val:  { id: "1,2 m³/hari", en: "1.2 m³/day", zh: "1.2 m³/天" },
+  s8_ex_d_val:  { id: "≈ 27 hari = 6 mg", en: "≈ 27 days = 6 wk", zh: "≈ 27 天 = 6 週" },
+  s8_p1_v: { id: "1,2 m³/hari", en: "1.2 m³/day",   zh: "1.2 m³/天" },
+  s8_p2_v: { id: "10 m²/hari",  en: "10 m²/day",    zh: "10 m²/天" },
+  s8_p3_v: { id: "12 m²/hari",  en: "12 m²/day",    zh: "12 m²/天" },
+  s8_p4_v: { id: "25 m²/hari",  en: "25 m²/day",    zh: "25 m²/天" },
+
+  // ── slide 11 (Donut bobot) — money shorthand "jt" (juta) → "m" (million) / "萬" (wan, 10,000)
+  s11_m_a:     { id: "≈ Rp 21 jt",  en: "≈ Rp 21 m",  zh: "≈ Rp 2,100 萬" },
+  s11_m_b:     { id: "≈ Rp 32 jt",  en: "≈ Rp 32 m",  zh: "≈ Rp 3,200 萬" },
+  s11_m_c:     { id: "≈ Rp 75 jt",  en: "≈ Rp 75 m",  zh: "≈ Rp 7,500 萬" },
+  s11_m_d:     { id: "≈ Rp 149 jt", en: "≈ Rp 149 m", zh: "≈ Rp 1.49 億" },
+  s11_m_e:     { id: "≈ Rp 117 jt", en: "≈ Rp 117 m", zh: "≈ Rp 1.17 億" },
+  s11_m_f:     { id: "≈ Rp 43 jt",  en: "≈ Rp 43 m",  zh: "≈ Rp 4,300 萬" },
+  s11_m_g:     { id: "≈ Rp 53 jt",  en: "≈ Rp 53 m",  zh: "≈ Rp 5,300 萬" },
+  s11_m_h:     { id: "≈ Rp 43 jt",  en: "≈ Rp 43 m",  zh: "≈ Rp 4,300 萬" },
+  s11_m_total: { id: "Rp 532 jt",   en: "Rp 532 m",   zh: "Rp 5.32 億" },
+
+  // ── slide 12 (Bobot/minggu) — hardcoded "6 mg"
+  s12_ex_dur_val: { id: "6 mg", en: "6 wk", zh: "6 週" },
+
+  // ── unit shorthand (used in WBS table)
+  u_wk:  { id: "mg",   en: "wk",   zh: "週" },
+  u_day: { id: "hari", en: "days", zh: "天" },
+
+  // ── slide 9b · WBS table
+  s9b_eyebrow: { id: "Tahap 3 · Jadwal", en: "Stage 3 · Schedule", zh: "階段 3 · 進度表" },
+  s9b_title:   { id: "Paket Pekerjaan (WBS): Tabel Lengkap",
+                 en: "Work Breakdown Structure (WBS): Full Table",
+                 zh: "工程包 (WBS):完整表格" },
+  s9b_sub:     { id: "Delapan paket pekerjaan beserta durasi, kapan mulai, kapan selesai, dan pekerjaan yang harus selesai dulu (predecessor).",
+                 en: "Eight work packages with duration, start week, finish week, and the predecessors that must be done first.",
+                 zh: "八個工程包,包括工期、開始週、結束週,以及必須先完成的前置作業 (predecessor)。" },
+  s9b_card_t:  { id: "Paket Pekerjaan (WBS)", en: "Work Packages (WBS)", zh: "工程包 (WBS)" },
+  s9b_col_uraian: { id: "URAIAN",      en: "DESCRIPTION", zh: "項目" },
+  s9b_col_dur:    { id: "DURASI",      en: "DURATION",    zh: "工期" },
+  s9b_col_start:  { id: "MULAI",       en: "START",       zh: "開始" },
+  s9b_col_end:    { id: "SELESAI",     en: "FINISH",      zh: "結束" },
+  s9b_col_pred:   { id: "PREDECESSOR", en: "PREDECESSOR", zh: "前置作業" },
+  s9b_r1: { id: "Pekerjaan Persiapan",        en: "Preparation",                 zh: "準備工程" },
+  s9b_r2: { id: "Pekerjaan Tanah & Galian",   en: "Earthworks & Excavation",     zh: "土方與開挖" },
+  s9b_r3: { id: "Pekerjaan Pondasi",          en: "Foundation Works",            zh: "基礎工程" },
+  s9b_r4: { id: "Struktur Beton & Tulangan",  en: "Concrete & Rebar Structure",  zh: "混凝土與鋼筋結構" },
+  s9b_r5: { id: "Pekerjaan Arsitektur",       en: "Architectural Works",         zh: "裝修工程" },
+  s9b_r6: { id: "Pekerjaan Atap",             en: "Roof Works",                  zh: "屋頂工程" },
+  s9b_r7: { id: "Pekerjaan MEP",              en: "MEP Works",                   zh: "機電工程" },
+  s9b_r8: { id: "Finishing & Pengecatan",     en: "Finishing & Painting",        zh: "收尾與油漆" },
+  s9b_total: { id: "Total Durasi Proyek", en: "Total Project Duration", zh: "專案總工期" },
+  s9b_tag: { id: "WBS Lengkap", en: "Full WBS", zh: "完整 WBS" },
+  s9b_cap: { id: "\"M\" = minggu kalender. Beberapa pekerjaan <strong>mulai sebelum predecessor selesai</strong> (start-to-start) — itu sebabnya total proyek 16 mg, bukan jumlah semua durasi (33 mg).",
+             en: "\"M\" = calendar week. Several tasks <strong>start before their predecessor finishes</strong> (start-to-start) — that's why total project is 16 wk, not the sum of every duration (33 wk).",
+             zh: "「M」= 行事曆週次。部分作業<strong>在前置作業結束前就開始</strong>(start-to-start)— 因此專案總期程是 16 週,而非所有工期相加 (33 週)。" },
+
+  // ── slide 9c · CPM network
+  s9c_eyebrow: { id: "Tahap 3 · Jadwal", en: "Stage 3 · Schedule", zh: "階段 3 · 進度表" },
+  s9c_title:   { id: "Jaringan Predesesor (CPM): Mana yang Dikerjakan Duluan?",
+                 en: "Precedence Network (CPM): Which Task Comes First?",
+                 zh: "前序網路圖 (CPM):哪些作業先做?" },
+  s9c_sub:     { id: "Setiap kotak = satu pekerjaan. Panah = \"harus selesai dulu\". Lintasan merah = critical path yang menentukan total durasi.",
+                 en: "Each box = one task. Arrow = \"must finish first\". Red path = critical path that drives total duration.",
+                 zh: "每個方塊 = 一項作業。箭頭 = 「必須先完成」。紅色路徑 = 決定總工期的關鍵路徑。" },
+  s9c_anatomy: { id: "ANATOMI KOTAK", en: "BOX ANATOMY", zh: "方塊結構" },
+  s9c_es: { id: "ES", en: "ES", zh: "ES" },
+  s9c_ef: { id: "EF", en: "EF", zh: "EF" },
+  s9c_ls: { id: "LS", en: "LS", zh: "LS" },
+  s9c_lf: { id: "LF", en: "LF", zh: "LF" },
+  s9c_tf: { id: "TF", en: "TF", zh: "TF" },
+  s9c_dur: { id: "Dur", en: "Dur", zh: "工期" },
+  s9c_id: { id: "ID", en: "ID", zh: "代號" },
+  s9c_crit_path: { id: "A → B → D → E → G → H", en: "A → B → D → E → G → H", zh: "A → B → D → E → G → H" },
+  s9c_leg_crit:  { id: "Lintasan Kritis (TF = 0)", en: "Critical Path (TF = 0)", zh: "關鍵路徑 (TF = 0)" },
+  s9c_leg_slack: { id: "Pekerjaan dengan Slack (TF > 0)", en: "Tasks with Slack (TF > 0)", zh: "有浮時的作業 (TF > 0)" },
+  s9c_es_full: { id: "ES", en: "ES", zh: "ES" },
+  s9c_es_desc: { id: "Early Start — paling cepat mulai",   en: "Early Start",   zh: "最早開始時間" },
+  s9c_ef_full: { id: "EF", en: "EF", zh: "EF" },
+  s9c_ef_desc: { id: "Early Finish — paling cepat selesai", en: "Early Finish", zh: "最早完成時間" },
+  s9c_ls_full: { id: "LS", en: "LS", zh: "LS" },
+  s9c_ls_desc: { id: "Late Start — paling lambat mulai",    en: "Late Start",   zh: "最遲開始時間" },
+  s9c_lf_full: { id: "LF", en: "LF", zh: "LF" },
+  s9c_lf_desc: { id: "Late Finish — paling lambat selesai", en: "Late Finish",  zh: "最遲完成時間" },
+  s9c_tf_full: { id: "TF", en: "TF", zh: "TF" },
+  s9c_tf_desc: { id: "Total Float — slack/cadangan waktu",  en: "Total Float (slack)", zh: "總浮時 (緩衝時間)" },
+  s9c_tag: { id: "CPM Network", en: "CPM Network", zh: "CPM 網路圖" },
+  s9c_cap: { id: "Pekerjaan kritis (kotak merah) <strong>tidak boleh terlambat</strong> — kalau mundur 1 minggu, proyek mundur 1 minggu. Pekerjaan slack (kotak putih) punya cadangan waktu.",
+             en: "Critical tasks (red boxes) <strong>cannot slip</strong> — delay one by 1 week, the whole project slips 1 week. Slack tasks (white boxes) have buffer time.",
+             zh: "關鍵作業(紅色方塊)<strong>不能延遲</strong> — 延誤 1 週,整個專案就延誤 1 週。有浮時的作業(白色方塊)則有緩衝。" },
+};
+
+/* ═══════════ language switching ═══════════ */
+function getLang() {
+  const l = localStorage.getItem('bim_lang');
+  return l === 'en' || l === 'zh' ? l : 'id';
+}
+function applyI18n(lang) {
+  document.documentElement.lang = lang;
+  const pick = (e) => lang === 'zh' ? (e.zh || e.en || e.id)
+                    : lang === 'en' ? (e.en || e.id)
+                    : e.id;
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const k = el.getAttribute('data-i18n');
+    const e = T[k];
+    if (!e) return;
+    el.innerHTML = pick(e);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach((el) => {
+    const k = el.getAttribute('data-i18n-title');
+    const e = T[k];
+    if (!e) return;
+    el.setAttribute('title', pick(e));
+    el.setAttribute('aria-label', pick(e));
+  });
+  document.querySelectorAll('.nav-lang-btn').forEach((b) => {
+    b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+  });
+}
+function setLang(lang) {
+  localStorage.setItem('bim_lang', lang);
+  applyI18n(lang);
+}
+
+document.querySelectorAll('.nav-lang-btn').forEach((b) => {
+  b.addEventListener('click', () => setLang(b.getAttribute('data-lang')));
+});
+
+/* ═══════════ stage tab switching (6 jendela) ═══════════ */
+const STAGES = ['intro', 'ahsp', 'rab', 'sched', 'scurve', 'recap'];
+function getStage() {
+  const s = localStorage.getItem('bim_stage');
+  return STAGES.includes(s) ? s : 'intro';
+}
+let dotIO = null;
+function rebuildDotNav() {
+  const dotnav = document.getElementById('dotnav');
+  dotnav.innerHTML = '';
+  if (dotIO) dotIO.disconnect();
+  const visible = document.querySelectorAll('.stage:not([hidden]) .slide');
+  // Hide dotnav when only 1 slide in stage
+  dotnav.style.display = visible.length <= 1 ? 'none' : '';
+  visible.forEach((s) => {
+    const dot = document.createElement('button');
+    dot.className = 'dot';
+    dot.addEventListener('click', () => s.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+    dotnav.appendChild(dot);
+  });
+  const dots = dotnav.querySelectorAll('.dot');
+  dotIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        const idx = Array.from(visible).indexOf(e.target);
+        dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      }
+    });
+  }, { threshold: 0.45 });
+  visible.forEach((s) => dotIO.observe(s));
+}
+function setStage(stage) {
+  if (!STAGES.includes(stage)) stage = 'intro';
+  document.querySelectorAll('.stage').forEach((s) => {
+    s.hidden = s.getAttribute('data-stage') !== stage;
+  });
+  document.querySelectorAll('.stage-btn').forEach((b) => {
+    b.classList.toggle('active', b.getAttribute('data-stage') === stage);
+  });
+  localStorage.setItem('bim_stage', stage);
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  rebuildDotNav();
+}
+document.querySelectorAll('.stage-btn').forEach((b) => {
+  b.addEventListener('click', () => setStage(b.getAttribute('data-stage')));
+});
+
+/* keyboard nav within active stage */
+window.addEventListener('keydown', (e) => {
+  const visible = Array.from(document.querySelectorAll('.stage:not([hidden]) .slide'));
+  if (!visible.length) return;
+  const curr = visible.findIndex((s) => {
+    const r = s.getBoundingClientRect();
+    return r.top >= -100 && r.top < window.innerHeight / 2;
+  });
+  // Next slide → next stage if at last slide
+  if ((e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') && curr < visible.length - 1) {
+    e.preventDefault(); visible[curr + 1].scrollIntoView({ behavior: 'smooth' });
+  } else if ((e.key === 'ArrowDown' || e.key === 'PageDown') && curr === visible.length - 1) {
+    const idx = STAGES.indexOf(getStage());
+    if (idx < STAGES.length - 1) { e.preventDefault(); setStage(STAGES[idx + 1]); }
+  }
+  // Prev slide → prev stage if at first slide
+  if ((e.key === 'ArrowUp' || e.key === 'PageUp') && curr > 0) {
+    e.preventDefault(); visible[curr - 1].scrollIntoView({ behavior: 'smooth' });
+  } else if ((e.key === 'ArrowUp' || e.key === 'PageUp') && curr === 0) {
+    const idx = STAGES.indexOf(getStage());
+    if (idx > 0) { e.preventDefault(); setStage(STAGES[idx - 1]); }
+  }
+  // Number keys 1-6 jump to stage
+  if (/^[1-6]$/.test(e.key)) {
+    e.preventDefault(); setStage(STAGES[parseInt(e.key) - 1]);
+  }
+});
+
+/* ═══════════ auto-number slide-num + slide-progress ═══════════ */
+(function autoNumberSlides() {
+  const slides = document.querySelectorAll('.slide');
+  const total = String(slides.length).padStart(2, '0');
+  slides.forEach((s, i) => {
+    const n = String(i + 1).padStart(2, '0');
+    const numEl = s.querySelector('.slide-num');
+    const progEl = s.querySelector('.slide-progress');
+    if (numEl) numEl.textContent = n;
+    if (progEl) progEl.textContent = n + ' · ' + total;
+  });
+})();
+
+/* ═══════════ splash dismiss + back-to-splash + fullscreen ═══════════ */
+(function splashControl() {
+  const splash = document.getElementById('splash');
+  if (!splash) return;
+  let onAnyKey = null;
+
+  function isOpen() {
+    return !splash.hidden && !splash.classList.contains('is-leaving');
+  }
+  function dismissSplash() {
+    if (!isOpen()) return;
+    splash.classList.add('is-leaving');
+    document.body.classList.remove('splash-open');
+    // After fade completes, fully remove from layout (hidden attribute now
+    // wins because of `#splash[hidden] { display: none !important; }`).
+    // Keep `is-leaving` class so opacity stays 0 even after hidden is toggled.
+    setTimeout(() => { splash.hidden = true; }, 600);
+    if (onAnyKey) { window.removeEventListener('keydown', onAnyKey); onAnyKey = null; }
+  }
+  function showSplash() {
+    splash.hidden = false;
+    // Force layout to flush so the transition restarts from opacity 0.
+    void splash.offsetWidth;
+    splash.classList.remove('is-leaving');
+    document.body.classList.add('splash-open');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    splash.focus();
+    armAnyKey();
+  }
+  function armAnyKey() {
+    if (onAnyKey) return;
+    onAnyKey = () => { if (isOpen()) dismissSplash(); };
+    window.addEventListener('keydown', onAnyKey, { once: true });
+  }
+
+  splash.addEventListener('click', dismissSplash);
+  splash.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape') {
+      e.preventDefault(); dismissSplash();
+    }
+  });
+  armAnyKey();
+
+  // Back-to-splash button
+  const backBtn = document.getElementById('back-to-splash');
+  if (backBtn) backBtn.addEventListener('click', showSplash);
+})();
+
+/* ═══════════ cross-page fullscreen handoff ═══════════ */
+(function fsHandoff() {
+  // Set flag when navigating to Dashboard so it auto-enters FS there.
+  const setFlag = () => { try { sessionStorage.setItem('bim_auto_fs', '1'); } catch (_) {} };
+  document.querySelectorAll('#nav-link-dashboard, .js-link-dashboard').forEach((a) => {
+    a.addEventListener('click', setFlag);
+  });
+
+  // Consume flag if THIS page was reached from a flagged navigation.
+  try {
+    if (sessionStorage.getItem('bim_auto_fs') !== '1') return;
+    sessionStorage.removeItem('bim_auto_fs');
+    const tryEnter = () => {
+      if (document.fullscreenElement || document.webkitFullscreenElement) return;
+      const req = document.documentElement.requestFullscreen
+               || document.documentElement.webkitRequestFullscreen
+               || document.documentElement.msRequestFullscreen;
+      if (req) req.call(document.documentElement).catch(() => {});
+    };
+    tryEnter();
+    const once = () => {
+      tryEnter();
+      window.removeEventListener('pointerdown', once, true);
+      window.removeEventListener('keydown', once, true);
+    };
+    window.addEventListener('pointerdown', once, true);
+    window.addEventListener('keydown', once, true);
+  } catch (_) {}
+})();
+
+/* ═══════════ fullscreen toggle ═══════════ */
+(function fullscreenControl() {
+  const btn = document.getElementById('fs-toggle');
+  const enterIcon = document.getElementById('fs-icon-enter');
+  const exitIcon = document.getElementById('fs-icon-exit');
+  if (!btn) return;
+  function isFs() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement);
+  }
+  function syncIcon() {
+    const on = isFs();
+    if (enterIcon) enterIcon.style.display = on ? 'none' : '';
+    if (exitIcon)  exitIcon.style.display  = on ? '' : 'none';
+    btn.classList.toggle('is-active', on);
+  }
+  btn.addEventListener('click', async () => {
+    try {
+      if (!isFs()) {
+        const req = document.documentElement.requestFullscreen
+                 || document.documentElement.webkitRequestFullscreen
+                 || document.documentElement.msRequestFullscreen;
+        if (req) await req.call(document.documentElement);
+      } else {
+        const exit = document.exitFullscreen
+                  || document.webkitExitFullscreen
+                  || document.msExitFullscreen;
+        if (exit) await exit.call(document);
+      }
+    } catch (e) { console.warn('Fullscreen toggle failed:', e); }
+  });
+  ['fullscreenchange', 'webkitfullscreenchange', 'msfullscreenchange'].forEach((ev) =>
+    document.addEventListener(ev, syncIcon)
+  );
+  // F key shortcut for fullscreen
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'f' || e.key === 'F') {
+      // don't fire if user is typing in an input
+      if (e.target && /^(input|textarea|select)$/i.test(e.target.tagName)) return;
+      e.preventDefault(); btn.click();
+    }
+  });
+  syncIcon();
+})();
+
+/* boot */
+applyI18n(getLang());
+setStage(getStage());
+</script>
+</body>
+</html>
