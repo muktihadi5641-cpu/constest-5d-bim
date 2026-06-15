@@ -555,6 +555,11 @@
     background: oklch(1 0 0 / 0.12);
   }
   .info-btn--dark:hover { background: white; color: var(--amber-ink); }
+  /* Larger variant for title-level placement */
+  .info-btn--lg {
+    width: 30px; height: 30px; font-size: 15px; margin-left: 0;
+    border-width: 2px;
+  }
 
   .modal-scrim {
     position: fixed; inset: 0; z-index: 200;
@@ -2126,7 +2131,11 @@
     <span class="slide-progress">13 · 14</span>
   </div>
   <div>
-    <h2 class="slide-title" data-i18n="s13_title">Langkah 3 — Akumulasi: Inilah Kurva S</h2>
+    <div style="display: flex; align-items: center; gap: 14px; margin-top: 22px;">
+      <h2 class="slide-title" data-i18n="s13_title" style="margin: 0;">Langkah 3 — Akumulasi: Inilah Kurva S</h2>
+      <button type="button" class="info-btn info-btn--lg" id="scurve-info-btn"
+              data-i18n-title="scurve_info_title" title="Penjelasan untuk Owner" aria-label="Info">i</button>
+    </div>
     <p class="slide-sub" data-i18n="s13_sub">Jumlahkan "Rencana per Minggu" secara kumulatif dari minggu 1 → seterusnya.</p>
   </div>
   <div class="slide-body">
@@ -2620,6 +2629,53 @@
 
       <div class="modal-footnote" data-i18n="bobot_concl">
         <b>Inti</b> — Bobot mengubah angka Rupiah "berat" jadi % yang ringan dibaca, tanpa kehilangan informasi proporsi biaya. Item dengan bobot terbesar (D & E = 50%) adalah <b>inti proyek</b> — penundaan di sini paling besar dampaknya ke kurva S dan termijn.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ KURVA S MODAL (slide 13) — for Owner ════════════════════ -->
+<div class="modal-scrim" id="scurve-info-modal" role="dialog" aria-modal="true" aria-labelledby="scurve-info-title">
+  <div class="modal-box" role="document">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-eyebrow" data-i18n="scurve_info_eyebrow">Kurva S — Penjelasan untuk Owner</div>
+        <div class="modal-head-title" id="scurve-info-title" data-i18n="scurve_info_title">Cara Kerja & Fungsi Kurva S dalam Proyek Konstruksi</div>
+      </div>
+      <div class="modal-head-spacer"></div>
+      <button type="button" class="modal-close" id="scurve-info-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="src-card">
+        <div class="src-num">1</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="scurve_src1_t">Apa Itu Kurva S? — "Rapor" Kemajuan Proyek</div>
+          <div class="src-desc" data-i18n="scurve_src1_d">• Kurva S = <b>representasi visual target kemajuan proyek</b> dari waktu ke waktu.<br>• Analogi sederhana: seperti <b>rapor sekolah</b> atau <b>target buku tabungan</b> — tiap minggu kita tahu berapa % yang sudah "ditabung" dan berapa yang masih kurang.<br>• <b>Sumbu X</b> = waktu (minggu proyek). <b>Sumbu Y</b> = persentase bobot penyelesaian (0% di bawah, 100% di atas). Naik terus, tidak pernah turun.</div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">2</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="scurve_src2_t">Mengapa Membentuk Huruf "S"? — 3 Fase Natural Proyek</div>
+          <div class="src-desc" data-i18n="scurve_src2_d">• <b>Fase Awal (Landai)</b> — Persiapan & pembersihan lokasi. Biaya kecil, progres visual belum signifikan. Kurva naik perlahan.<br>• <b>Fase Tengah (Menanjak Tajam)</b> — Struktur utama, atap, arsitektur dikerjakan paralel. Material mahal & tenaga kerja masif dikerahkan. Kurva melompat naik — bagian "S" yang terlihat curam.<br>• <b>Fase Akhir (Melandai)</b> — Finishing dan detail. Butuh ketelitian tinggi & durasi panjang, tetapi bobot biaya kecil. Kurva kembali landai mendekati 100%.</div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">3</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="scurve_src3_t">Fungsi Utama di Lapangan — Plan vs Actual</div>
+          <div class="src-desc" data-i18n="scurve_src3_d">• <b>Membandingkan 2 garis:</b> garis Rencana (Plan, yang sudah disepakati di kontrak) vs garis Realisasi (Actual, hasil pengukuran progres riil tiap minggu).<br>• <b>Indikator keterlambatan:</b> kalau garis Actual <b>di bawah</b> garis Plan → proyek mundur. Selisih (deviasi) bisa langsung dibaca dalam % bobot.<br>• <b>Tindakan korektif</b> bila terlambat: <b>crashing program</b> (lembur 10-12 jam), <b>shift malam</b> (kerja 24 jam), atau <b>menambah tim/regu</b> di item kritis (struktur, arsitektur).<br>• <b>Acuan resmi pembayaran:</b> termijn cair berdasarkan % bobot yang sudah tercapai di garis Actual — bukan janji, bukan progres visual.</div>
+        </div>
+      </div>
+
+      <div class="modal-footnote" data-i18n="scurve_concl">
+        <b>Inti untuk Owner</b> — Kurva S adalah satu grafik yang menjawab tiga pertanyaan paling penting setiap minggu: <b>(1) di mana posisi proyek sekarang?</b> · <b>(2) sesuai jadwal atau tertinggal?</b> · <b>(3) berapa termijn yang boleh dibayar?</b> Tanpa Kurva S, monitoring hanya bergantung pada laporan verbal atau foto lapangan yang bias.
       </div>
     </div>
   </div>
@@ -3313,6 +3369,53 @@ const T = {
     zh: "<b>核心</b> — 權重把沉重的 Rp 金額轉成易讀的 %,且不失成本比例資訊。權重最大的項目 (D 與 E = 50%) 是<b>專案核心</b> — 這裡的延誤對進度曲線與付款排程影響最大。",
   },
 
+  // ── Kurva S modal (slide 13) — simple, owner-friendly explanation
+  scurve_info_eyebrow: {
+    id: "Kurva S — Penjelasan untuk Owner",
+    en: "S-Curve — Owner-Friendly Brief",
+    zh: "進度曲線 — 給業主的簡明說明",
+  },
+  scurve_info_title: {
+    id: "Cara Kerja & Fungsi Kurva S dalam Proyek Konstruksi",
+    en: "How the S-Curve Works in a Construction Project",
+    zh: "進度曲線在建設專案中的運作與功能",
+  },
+  scurve_src1_t: {
+    id: "Apa Itu Kurva S? — \"Rapor\" Kemajuan Proyek",
+    en: "What Is the S-Curve? — A Project \"Report Card\"",
+    zh: "什麼是進度曲線? — 專案的「成績單」",
+  },
+  scurve_src1_d: {
+    id: "• Kurva S = <b>representasi visual target kemajuan proyek</b> dari waktu ke waktu.<br>• Analogi sederhana: seperti <b>rapor sekolah</b> atau <b>target buku tabungan</b> — tiap minggu kita tahu berapa % yang sudah \"ditabung\" dan berapa yang masih kurang.<br>• <b>Sumbu X</b> = waktu (minggu proyek). <b>Sumbu Y</b> = persentase bobot penyelesaian (0% di bawah, 100% di atas). Naik terus, tidak pernah turun.",
+    en: "• The S-Curve = a <b>visual target of project progress</b> over time.<br>• Simple analogy: like a <b>school report card</b> or a <b>savings goal book</b> — every week we can see what % has been \"deposited\" and what's still missing.<br>• <b>X-axis</b> = time (project weeks). <b>Y-axis</b> = completion weight % (0% at the bottom, 100% at the top). It only goes up, never down.",
+    zh: "• 進度曲線 = <b>專案進度目標的視覺化表示</b>。<br>• 簡單類比:像<b>學校成績單</b>或<b>存款目標簿</b> — 每週都能看到已「存入」多少 %,還差多少。<br>• <b>X 軸</b> = 時間 (專案週次)。<b>Y 軸</b> = 完成權重 % (底部 0%、頂部 100%)。只會上升,不會下降。",
+  },
+  scurve_src2_t: {
+    id: "Mengapa Membentuk Huruf \"S\"? — 3 Fase Natural Proyek",
+    en: "Why an \"S\" Shape? — 3 Natural Project Phases",
+    zh: "為什麼是 S 形? — 專案的 3 個自然階段",
+  },
+  scurve_src2_d: {
+    id: "• <b>Fase Awal (Landai)</b> — Persiapan & pembersihan lokasi. Biaya kecil, progres visual belum signifikan. Kurva naik perlahan.<br>• <b>Fase Tengah (Menanjak Tajam)</b> — Struktur utama, atap, arsitektur dikerjakan paralel. Material mahal & tenaga kerja masif dikerahkan. Kurva melompat naik — bagian \"S\" yang terlihat curam.<br>• <b>Fase Akhir (Melandai)</b> — Finishing dan detail. Butuh ketelitian tinggi & durasi panjang, tetapi bobot biaya kecil. Kurva kembali landai mendekati 100%.",
+    en: "• <b>Early Phase (Flat)</b> — Site preparation & clearing. Low cost, no major visual progress yet. The curve rises slowly.<br>• <b>Middle Phase (Steep Climb)</b> — Main structure, roof, and architecture run in parallel. Expensive materials and a large crew get mobilized. The curve jumps — this is the visible steep \"S\" segment.<br>• <b>Final Phase (Flat Again)</b> — Finishing and detailing. Requires precision and long durations, but cost weight is small. The curve flattens again as it approaches 100%.",
+    zh: "• <b>初期 (平緩)</b> — 場地整理與清理。成本低,視覺進度尚未明顯。曲線緩慢上升。<br>• <b>中期 (陡峭上升)</b> — 主結構、屋頂、裝修同步推進。昂貴材料與大量人力投入。曲線急速跳升 — 這就是 S 形中明顯的陡升段。<br>• <b>末期 (再次平緩)</b> — 收尾與細部處理。需要精度與較長工期,但成本權重小。曲線重新平緩,接近 100%。",
+  },
+  scurve_src3_t: {
+    id: "Fungsi Utama di Lapangan — Plan vs Actual",
+    en: "Main Field Function — Plan vs Actual",
+    zh: "現場主要功能 — 計劃 vs 實際",
+  },
+  scurve_src3_d: {
+    id: "• <b>Membandingkan 2 garis:</b> garis Rencana (Plan, yang sudah disepakati di kontrak) vs garis Realisasi (Actual, hasil pengukuran progres riil tiap minggu).<br>• <b>Indikator keterlambatan:</b> kalau garis Actual <b>di bawah</b> garis Plan → proyek mundur. Selisih (deviasi) bisa langsung dibaca dalam % bobot.<br>• <b>Tindakan korektif</b> bila terlambat: <b>crashing program</b> (lembur 10-12 jam), <b>shift malam</b> (kerja 24 jam), atau <b>menambah tim/regu</b> di item kritis (struktur, arsitektur).<br>• <b>Acuan resmi pembayaran:</b> termijn cair berdasarkan % bobot yang sudah tercapai di garis Actual — bukan janji, bukan progres visual.",
+    en: "• <b>Two lines compared:</b> the Plan line (contractually agreed) vs the Actual line (measured real progress each week).<br>• <b>Lateness indicator:</b> if the Actual line sits <b>below</b> the Plan line → the project is slipping. The gap (deviation) is read directly in weight %.<br>• <b>Corrective actions</b> if behind: <b>crashing</b> (10-12 hr overtime), <b>night shifts</b> (24 hr operation), or <b>adding crews</b> on critical items (structure, architecture).<br>• <b>Formal payment basis:</b> payment termijn releases according to the weight % actually achieved on the Actual line — not on promises, not on visual progress.",
+    zh: "• <b>兩條曲線比較:</b>計劃線 (合約議定) vs 實際線 (每週實測進度)。<br>• <b>落後指標:</b>如果實際線位於計劃線<b>下方</b> → 專案落後。落差 (偏差) 可直接以權重 % 讀出。<br>• <b>糾正措施</b>若落後:<b>趕工 (Crashing)</b> (加班 10-12 小時)、<b>夜班</b> (24 小時運作),或在關鍵項目 (結構、裝修) <b>增加班組</b>。<br>• <b>正式付款依據:</b>付款依實際線達成的權重 % 撥付 — 不依承諾、不依視覺進度。",
+  },
+  scurve_concl: {
+    id: "<b>Inti untuk Owner</b> — Kurva S adalah satu grafik yang menjawab tiga pertanyaan paling penting setiap minggu: <b>(1) di mana posisi proyek sekarang?</b> · <b>(2) sesuai jadwal atau tertinggal?</b> · <b>(3) berapa termijn yang boleh dibayar?</b> Tanpa Kurva S, monitoring hanya bergantung pada laporan verbal atau foto lapangan yang bias.",
+    en: "<b>Owner's takeaway</b> — The S-Curve is one chart that answers the three most important weekly questions: <b>(1) where is the project right now?</b> · <b>(2) on schedule or behind?</b> · <b>(3) how much payment can be released?</b> Without it, monitoring depends on verbal reports or biased field photos.",
+    zh: "<b>業主必懂</b> — 進度曲線是一張圖即可回答每週最重要的三個問題:<b>(1) 專案現在到哪裡?</b> · <b>(2) 是否按計劃進行?</b> · <b>(3) 可以撥款多少?</b> 沒有它,監督就只能依賴口頭回報或有偏差的工地照片。",
+  },
+
   // ── unit shorthand (used in WBS table)
   u_wk:  { id: "mg",   en: "wk",   zh: "週" },
   u_day: { id: "hari", en: "days", zh: "天" },
@@ -3558,10 +3661,11 @@ window.addEventListener('keydown', (e) => {
  */
 (function infoModals() {
   const PAIRS = [
-    { open: 'prod-info-btn',  modal: 'prod-info-modal',  close: 'prod-info-close',  layer: 1 },
-    { open: 'dur-info-btn',   modal: 'dur-info-modal',   close: 'dur-info-close',   layer: 1 },
-    { open: 'bobot-info-btn', modal: 'bobot-info-modal', close: 'bobot-info-close', layer: 1 },
-    { open: 'math-info-btn',  modal: 'math-info-modal',  close: 'math-info-close',  layer: 2 },
+    { open: 'prod-info-btn',   modal: 'prod-info-modal',   close: 'prod-info-close',   layer: 1 },
+    { open: 'dur-info-btn',    modal: 'dur-info-modal',    close: 'dur-info-close',    layer: 1 },
+    { open: 'bobot-info-btn',  modal: 'bobot-info-modal',  close: 'bobot-info-close',  layer: 1 },
+    { open: 'scurve-info-btn', modal: 'scurve-info-modal', close: 'scurve-info-close', layer: 1 },
+    { open: 'math-info-btn',   modal: 'math-info-modal',   close: 'math-info-close',   layer: 2 },
   ];
 
   function openModal(m) {
