@@ -1596,12 +1596,14 @@
         <path d="M 640,181 L 680,181" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
         <!-- D → F (branch, slack) -->
         <path d="M 575,232 C 600,290 660,341 680,341" stroke="oklch(0.55 0.02 240)" stroke-width="1.5" fill="none" marker-end="url(#cpmArr)" stroke-dasharray="4,3"/>
-        <!-- E → G (critical, diagonal down) -->
-        <path d="M 745,232 C 745,310 820,341 840,341" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+        <!-- E → G (critical, smooth diagonal down) -->
+        <path d="M 810,210 Q 830,260 855,290" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
         <!-- F → G (horizontal, slack) -->
         <path d="M 810,341 L 840,341" stroke="oklch(0.55 0.02 240)" stroke-width="1.5" fill="none" marker-end="url(#cpmArr)" stroke-dasharray="4,3"/>
-        <!-- G → H (critical, diagonal up) -->
-        <path d="M 970,341 C 1010,341 1030,232 1070,232" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+        <!-- E → H (critical, straight horizontal at top row — both E and H are at y=181) -->
+        <path d="M 810,181 L 1070,181" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
+        <!-- G → H (critical, smooth diagonal up, lands at H bottom-left corner so it doesn't collide with E→H) -->
+        <path d="M 970,341 C 1010,341 1030,232 1070,222" stroke="oklch(0.62 0.15 25)" stroke-width="2.5" fill="none" marker-end="url(#cpmArrCrit)"/>
       </svg>
 
       <!-- legend below -->
