@@ -635,6 +635,37 @@
   }
   .modal-footnote b { color: var(--amber-ink); font-weight: 600; }
 
+  /* Stacked modal sits ABOVE the parent productivity/duration modals */
+  .modal-scrim--stack { z-index: 220; }
+
+  /* src-formula becomes a flex line so the nested info button aligns inline */
+  .src-formula {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  }
+  .src-formula > span { flex: 1; min-width: 0; }
+  .src-formula .info-btn { flex: none; width: 20px; height: 20px; font-size: 11px; margin: 0; }
+
+  /* Compact table used in the math modal (3 worker scenarios) */
+  .math-table {
+    width: 100%; border-collapse: collapse; margin-top: 10px;
+    font-size: 12px; color: var(--ink-2);
+  }
+  .math-table th, .math-table td {
+    padding: 8px 10px; border-bottom: 1px solid var(--line-2);
+    text-align: left; vertical-align: middle;
+  }
+  .math-table thead th {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--line);
+  }
+  .math-table tbody td.num,
+  .math-table tbody td.dur {
+    font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: center;
+  }
+  .math-table tbody td.dur { font-weight: 700; color: var(--amber-ink); }
+  .math-table tbody tr:last-child td { border-bottom: none; }
+
   /* ──── recap radial ─────────────────────────────────────────── */
   .recap-wrap { position: relative; width: 100%; max-width: 1040px; aspect-ratio: 2.4; }
 
@@ -2299,7 +2330,11 @@
         <div class="src-body">
           <div class="src-title" data-i18n="prod_src1_t">Kebalikan dari Koefisien AHSP / SNI</div>
           <div class="src-desc" data-i18n="prod_src1_d">Kementerian PUPR merilis koefisien tenaga kerja per unit volume (Orang-Hari/m³). Produktivitas = 1 ÷ koefisien.</div>
-          <div class="src-formula" data-i18n="prod_src1_f">Contoh: koef Pekerja Cor Beton = 0,833 OH/m³ → Produktivitas = 1 ÷ 0,833 ≈ <b>1,2 m³/hari</b></div>
+          <div class="src-formula">
+            <span data-i18n="prod_src1_f">Contoh: koef Pekerja Cor Beton = 0,833 OH/m³ → Produktivitas = 1 ÷ 0,833 ≈ <b>1,2 m³/hari</b></span>
+            <button type="button" class="info-btn" id="math-info-btn"
+                    data-i18n-title="math_info_title" title="Arti angka 1 dan jumlah pekerja" aria-label="Math detail">i</button>
+          </div>
         </div>
       </div>
 
@@ -2387,6 +2422,84 @@
 
       <div class="modal-footnote" data-i18n="dur_adj">
         <b>Hari Kerja ≠ Hari Kalender</b> — angka durasi murni di atas adalah <b>hari kerja efektif</b>. Untuk masuk ke jadwal kalender, kalikan faktor: 5 hari kerja/minggu (standar Indonesia), libur nasional, cuaca, dan waktu curing material (beton butuh 7–28 hari curing meskipun bukan "pekerjaan aktif").
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ MATH (1/coef) STACKED MODAL ════════════ -->
+<div class="modal-scrim modal-scrim--stack" id="math-info-modal" role="dialog" aria-modal="true" aria-labelledby="math-info-title">
+  <div class="modal-box" role="document">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-eyebrow" data-i18n="math_info_eyebrow">Arti angka 1 di 1 ÷ koefisien</div>
+        <div class="modal-head-title" id="math-info-title" data-i18n="math_info_title">Analisis Matematis Koefisien & Jumlah Pekerja</div>
+      </div>
+      <div class="modal-head-spacer"></div>
+      <button type="button" class="modal-close" id="math-info-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="src-card">
+        <div class="src-num">1</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="math_src1_t">Bukan jumlah orang — itu 1 Hari Kerja</div>
+          <div class="src-desc" data-i18n="math_src1_d">Miskonsepsi umum: angka <b>1</b> di rumus <code>1 ÷ koefisien</code> sering disangka = 1 orang tukang. Faktanya angka 1 adalah konstanta pembilang yang mewakili <b>1 Satuan Waktu Penuh (1 Hari Kerja)</b>. Rumusnya cuma operasi <b>inversi matematika</b> untuk membalik arah satuan.</div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">2</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="math_src2_t">Analisis Satuan: OH/m³ = Orang-Hari per m³</div>
+          <div class="src-desc" data-i18n="math_src2_d">Koefisien AHSP <b>0,833 OH/m³</b> artinya butuh durasi <b>0,833 hari</b> jika dikerjakan <b>1 orang</b> untuk menghasilkan tepat <b>1 m³</b> beton. Untuk pindah sudut pandang ke "berapa volume yang didapat dalam 1 hari?", bagi dengan 1 Hari Kerja:</div>
+          <div class="src-formula"><span data-i18n="math_src2_f">Produktivitas = 1 Hari Kerja ÷ 0,833 Hari/m³ = <b>1,2 m³/hari</b> — output 1 orang per 1 hari.</span></div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">3</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="math_src3_t">Jumlah Pekerja = Pengali Kelompok (Resource Multiplier)</div>
+          <div class="src-desc" data-i18n="math_src3_d">Jumlah tukang masuk <b>setelah</b> produktivitas individu didapat:<br>Produktivitas Tim = Produktivitas Individu × Jumlah Pekerja.</div>
+          <table class="math-table" aria-label="Worker count vs duration scenarios">
+            <thead>
+              <tr>
+                <th data-i18n="math_tbl_h1">Skenario</th>
+                <th data-i18n="math_tbl_h2" style="text-align:center;">Pekerja</th>
+                <th data-i18n="math_tbl_h3" style="text-align:center;">Output Tim/Hari</th>
+                <th data-i18n="math_tbl_h4" style="text-align:center;">Durasi (24 m³)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b data-i18n="math_tbl_a">A · Sendirian</b></td>
+                <td class="num">1</td>
+                <td class="num">1,2 m³/hari</td>
+                <td class="dur">20 hari</td>
+              </tr>
+              <tr>
+                <td><b data-i18n="math_tbl_b">B · Grup Kecil</b></td>
+                <td class="num">2</td>
+                <td class="num">2,4 m³/hari</td>
+                <td class="dur">10 hari</td>
+              </tr>
+              <tr>
+                <td><b data-i18n="math_tbl_c">C · Grup Standar</b></td>
+                <td class="num">5</td>
+                <td class="num">6,0 m³/hari</td>
+                <td class="dur">4 hari</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footnote" data-i18n="math_concl">
+        <b>Kesimpulan</b> — Angka 1 di pembilang murni mengubah orientasi waktu (dari "waktu per volume" jadi "volume per waktu"). Jumlah tenaga kerja adalah <b>pengali langsung</b> terhadap produktivitas individu, jadi 3 tukang ≠ 1 tukang × 3 hari — melainkan menyelesaikan volume yang sama dalam ⅓ durasi.
       </div>
     </div>
   </div>
@@ -2956,6 +3069,65 @@ const T = {
     zh: "<b>工作日 ≠ 日曆日</b> — 上述純工期是<b>有效工作日</b>。要轉換到日曆排程,需考慮:每週 5 個工作日 (印尼標準)、國定假日、天候,以及材料養護時間 (混凝土需要 7-28 天養護,雖非「實際施工」)。",
   },
 
+  // ── math modal (stacked on top of productivity modal)
+  math_info_eyebrow: {
+    id: "Arti angka 1 di 1 ÷ koefisien",
+    en: "What the \"1\" in 1 ÷ coef means",
+    zh: "1 ÷ 係數 中的「1」是什麼意思?",
+  },
+  math_info_title: {
+    id: "Analisis Matematis Koefisien & Jumlah Pekerja",
+    en: "Math Behind the Coefficient & Worker Count",
+    zh: "係數倒數與工人數的數學分析",
+  },
+  math_src1_t: {
+    id: "Bukan jumlah orang — itu 1 Hari Kerja",
+    en: "Not a worker count — it's 1 Working Day",
+    zh: "不是工人數 — 是 1 個工作日",
+  },
+  math_src1_d: {
+    id: "Miskonsepsi umum: angka <b>1</b> di rumus <code>1 ÷ koefisien</code> sering disangka = 1 orang tukang. Faktanya angka 1 adalah konstanta pembilang yang mewakili <b>1 Satuan Waktu Penuh (1 Hari Kerja)</b>. Rumusnya cuma operasi <b>inversi matematika</b> untuk membalik arah satuan.",
+    en: "Common misconception: the <b>1</b> in <code>1 ÷ coefficient</code> gets read as \"1 worker\". In reality the 1 is a numerator constant representing <b>1 full Time Unit (1 Working Day)</b>. The formula is simply a <b>mathematical inversion</b> that flips the direction of the unit.",
+    zh: "常見誤解:<code>1 ÷ 係數</code>中的 <b>1</b> 常被誤認為「1 個工人」。事實上,這個 1 是分子上的常數,代表<b>1 個完整時間單位 (1 個工作日)</b>。整條公式只是<b>數學上的反運算</b>,將單位方向翻轉。",
+  },
+  math_src2_t: {
+    id: "Analisis Satuan: OH/m³ = Orang-Hari per m³",
+    en: "Dimensional Analysis: MD/m³ = Man-Day per m³",
+    zh: "單位分析:人日/m³ = 每立方米所需的人日",
+  },
+  math_src2_d: {
+    id: "Koefisien AHSP <b>0,833 OH/m³</b> artinya butuh durasi <b>0,833 hari</b> jika dikerjakan <b>1 orang</b> untuk menghasilkan tepat <b>1 m³</b> beton. Untuk pindah sudut pandang ke \"berapa volume yang didapat dalam 1 hari?\", bagi dengan 1 Hari Kerja:",
+    en: "An AHSP coefficient of <b>0.833 MD/m³</b> means it takes <b>0.833 days</b> for <b>1 worker</b> to produce exactly <b>1 m³</b> of concrete. To flip the question into \"how much volume per 1 day?\", divide 1 Working Day by the coefficient:",
+    zh: "AHSP 係數 <b>0.833 人日/m³</b> 表示:由 <b>1 個工人</b>產出 <b>1 m³</b> 混凝土需要 <b>0.833 天</b>。若要換成「1 天能做多少體積?」,只需用 1 個工作日除以該係數:",
+  },
+  math_src2_f: {
+    id: "Produktivitas = 1 Hari Kerja ÷ 0,833 Hari/m³ = <b>1,2 m³/hari</b> — output 1 orang per 1 hari.",
+    en: "Productivity = 1 Working Day ÷ 0.833 Day/m³ = <b>1.2 m³/day</b> — 1 worker's output per 1 day.",
+    zh: "生產率 = 1 工作日 ÷ 0.833 天/m³ = <b>1.2 m³/天</b> — 1 個工人在 1 天的產出。",
+  },
+  math_src3_t: {
+    id: "Jumlah Pekerja = Pengali Kelompok (Resource Multiplier)",
+    en: "Worker Count = Crew Multiplier (Resource Multiplier)",
+    zh: "工人數 = 班組乘數 (Resource Multiplier)",
+  },
+  math_src3_d: {
+    id: "Jumlah tukang masuk <b>setelah</b> produktivitas individu didapat:<br>Produktivitas Tim = Produktivitas Individu × Jumlah Pekerja.",
+    en: "Worker count enters <b>after</b> we know individual productivity:<br>Crew Productivity = Individual Productivity × Worker Count.",
+    zh: "工人數要在<b>取得個人生產率之後</b>才代入:<br>班組生產率 = 個人生產率 × 工人數。",
+  },
+  math_tbl_h1: { id: "Skenario",         en: "Scenario",      zh: "情境" },
+  math_tbl_h2: { id: "Pekerja",          en: "Workers",       zh: "工人數" },
+  math_tbl_h3: { id: "Output Tim/Hari",  en: "Crew Output/Day", zh: "班組日產出" },
+  math_tbl_h4: { id: "Durasi (24 m³)",   en: "Duration (24 m³)", zh: "工期 (24 m³)" },
+  math_tbl_a: { id: "A · Sendirian",    en: "A · Solo",       zh: "A · 單人" },
+  math_tbl_b: { id: "B · Grup Kecil",   en: "B · Small Crew", zh: "B · 小組" },
+  math_tbl_c: { id: "C · Grup Standar", en: "C · Standard Crew", zh: "C · 標準班組" },
+  math_concl: {
+    id: "<b>Kesimpulan</b> — Angka 1 di pembilang murni mengubah orientasi waktu (dari \"waktu per volume\" jadi \"volume per waktu\"). Jumlah tenaga kerja adalah <b>pengali langsung</b> terhadap produktivitas individu, jadi 3 tukang ≠ 1 tukang × 3 hari — melainkan menyelesaikan volume yang sama dalam ⅓ durasi.",
+    en: "<b>Takeaway</b> — The 1 in the numerator purely flips the time orientation (from \"time per volume\" to \"volume per time\"). Worker count is a <b>direct multiplier</b> on individual productivity, so 3 workers ≠ 1 worker × 3 days — they finish the same volume in ⅓ the time.",
+    zh: "<b>結論</b> — 分子上的 1 純粹翻轉時間方向 (從「每體積花費的時間」變成「每時間做出的體積」)。工人數是<b>個人生產率的直接乘數</b>,所以 3 個工人 ≠ 1 個工人 × 3 天 — 而是用 ⅓ 的時間完成相同體積。",
+  },
+
   // ── unit shorthand (used in WBS table)
   u_wk:  { id: "mg",   en: "wk",   zh: "週" },
   u_day: { id: "hari", en: "days", zh: "天" },
@@ -3195,33 +3367,55 @@ window.addEventListener('keydown', (e) => {
   if (backBtn) backBtn.addEventListener('click', showSplash);
 })();
 
-/* ═══════════ info modals (productivity + duration) ═══════════ */
+/* ═══════════ info modals (productivity + duration + math) ═══════════
+ * layer 1 = sibling modals (replace each other when opened)
+ * layer 2 = stacked modal — opens ON TOP without closing layer-1 parent
+ */
 (function infoModals() {
   const PAIRS = [
-    { open: 'prod-info-btn', modal: 'prod-info-modal', close: 'prod-info-close' },
-    { open: 'dur-info-btn',  modal: 'dur-info-modal',  close: 'dur-info-close'  },
+    { open: 'prod-info-btn', modal: 'prod-info-modal', close: 'prod-info-close', layer: 1 },
+    { open: 'dur-info-btn',  modal: 'dur-info-modal',  close: 'dur-info-close',  layer: 1 },
+    { open: 'math-info-btn', modal: 'math-info-modal', close: 'math-info-close', layer: 2 },
   ];
-  const all = [];
-  function closeAll() {
-    all.forEach((m) => m.classList.remove('is-open'));
-    document.body.style.overflow = '';
+
+  function openModal(m) {
+    m.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
   }
-  PAIRS.forEach(({ open, modal, close }) => {
+  function closeModal(m) {
+    m.classList.remove('is-open');
+    if (!document.querySelector('.modal-scrim.is-open')) {
+      document.body.style.overflow = '';
+    }
+  }
+  function topmost() {
+    const open = Array.from(document.querySelectorAll('.modal-scrim.is-open'));
+    return open.sort((a, b) => (parseInt(b.dataset.layer || '1')) - (parseInt(a.dataset.layer || '1')))[0] || null;
+  }
+
+  PAIRS.forEach(({ open, modal, close, layer }) => {
     const m = document.getElementById(modal);
     const ob = document.getElementById(open);
     const cb = document.getElementById(close);
-    if (!m || !ob) return;
-    all.push(m);
-    ob.addEventListener('click', () => {
-      closeAll();
-      m.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
+    if (!m) return;
+    m.dataset.layer = String(layer);
+    if (ob) ob.addEventListener('click', () => {
+      // Close peers at same or higher layer; preserve lower-layer parents
+      document.querySelectorAll('.modal-scrim.is-open').forEach((other) => {
+        if (other === m) return;
+        if (parseInt(other.dataset.layer || '1') >= layer) closeModal(other);
+      });
+      openModal(m);
     });
-    cb && cb.addEventListener('click', closeAll);
-    m.addEventListener('click', (e) => { if (e.target === m) closeAll(); });
+    if (cb) cb.addEventListener('click', () => closeModal(m));
+    m.addEventListener('click', (e) => { if (e.target === m) closeModal(m); });
   });
+
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && all.some((m) => m.classList.contains('is-open'))) closeAll();
+    if (e.key === 'Escape') {
+      const top = topmost();
+      if (top) closeModal(top);
+    }
   });
 })();
 
