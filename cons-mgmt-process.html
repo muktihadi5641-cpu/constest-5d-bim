@@ -1935,6 +1935,8 @@
         </div>
         <div class="eq-op">×</div>
         <div style="font-size: 22px; font-weight: 600;">100</div>
+        <button type="button" class="info-btn" id="bobot-info-btn"
+                data-i18n-title="bobot_info_title" title="Dari mana bobot %?" aria-label="Info">i</button>
       </div>
 
       <!-- Donut + Legend -->
@@ -2500,6 +2502,84 @@
 
       <div class="modal-footnote" data-i18n="math_concl">
         <b>Kesimpulan</b> — Angka 1 di pembilang murni mengubah orientasi waktu (dari "waktu per volume" jadi "volume per waktu"). Jumlah tenaga kerja adalah <b>pengali langsung</b> terhadap produktivitas individu, jadi 3 tukang ≠ 1 tukang × 3 hari — melainkan menyelesaikan volume yang sama dalam ⅓ durasi.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════ BOBOT % MODAL (slide 11) ════════════════════ -->
+<div class="modal-scrim" id="bobot-info-modal" role="dialog" aria-modal="true" aria-labelledby="bobot-info-title">
+  <div class="modal-box" role="document">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-eyebrow" data-i18n="bobot_info_eyebrow">Dari mana angka bobot %?</div>
+        <div class="modal-head-title" id="bobot-info-title" data-i18n="bobot_info_title">Asal-Usul & Pembuktian Bobot Pekerjaan</div>
+      </div>
+      <div class="modal-head-spacer"></div>
+      <button type="button" class="modal-close" id="bobot-info-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="src-card">
+        <div class="src-num">1</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="bobot_src1_t">Asal-Usul "Total Item" (dalam Rupiah)</div>
+          <div class="src-desc" data-i18n="bobot_src1_d">Nilai Rupiah per item bukan tebakan — diperoleh murni dari perhitungan <b>RAB (Rencana Anggaran Biaya)</b>. Volume dihitung dari gambar kerja (Quantity Take-Off), sedangkan Harga Satuan didapat dari AHSP (bahan + alat + upah tukang).</div>
+          <div class="src-formula"><span data-i18n="bobot_src1_f">Total Item (Rp) = Volume Pekerjaan × Harga Satuan (AHSP)</span></div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">2</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="bobot_src2_t">Pembuktian Perhitungan Bobot (%)</div>
+          <div class="src-desc" data-i18n="bobot_src2_d">Bagi tiap Total Item dengan Total Proyek, kalikan 100. <b>Syarat mutlak:</b> kalau semua bobot dijumlahkan, hasilnya wajib tepat <b>100%</b>.</div>
+          <table class="math-table" aria-label="Bobot verification — Total Proyek Rp 532 jt">
+            <thead>
+              <tr>
+                <th data-i18n="bobot_tbl_h1">Item</th>
+                <th data-i18n="bobot_tbl_h2" style="text-align:center;">Total (Rp)</th>
+                <th data-i18n="bobot_tbl_h3" style="text-align:center;">Hitung</th>
+                <th data-i18n="bobot_tbl_h4" style="text-align:center;">Bobot</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b data-i18n="bobot_tbl_a_lbl">A · Persiapan</b></td>
+                <td class="num">21 jt</td>
+                <td class="num">21 ÷ 532 × 100</td>
+                <td class="dur">≈ 4%</td>
+              </tr>
+              <tr>
+                <td><b data-i18n="bobot_tbl_d_lbl">D · Struktur</b></td>
+                <td class="num">149 jt</td>
+                <td class="num">149 ÷ 532 × 100</td>
+                <td class="dur">≈ 28%</td>
+              </tr>
+              <tr>
+                <td><b data-i18n="bobot_tbl_e_lbl">E · Arsitektur</b></td>
+                <td class="num">117 jt</td>
+                <td class="num">117 ÷ 532 × 100</td>
+                <td class="dur">≈ 22%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">3</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="bobot_src3_t">3 Tujuan Menghitung Bobot %</div>
+          <div class="src-desc" data-i18n="bobot_src3_d">• <b>Dasar Kurva S</b> — bobot dibagi ke setiap minggu sepanjang durasi proyek (input akumulasi progres).<br>• <b>Monitoring Lapangan</b> — pengawas mengukur kemajuan dalam % bobot, lebih mudah dari pada baca angka Rp miliaran.<br>• <b>Acuan Termijn (Pembayaran)</b> — kontraktor mengajukan klaim pembayaran berdasarkan % bobot prestasi yang sudah selesai (legal basis kontrak).</div>
+        </div>
+      </div>
+
+      <div class="modal-footnote" data-i18n="bobot_concl">
+        <b>Inti</b> — Bobot mengubah angka Rupiah "berat" jadi % yang ringan dibaca, tanpa kehilangan informasi proporsi biaya. Item dengan bobot terbesar (D & E = 50%) adalah <b>inti proyek</b> — penundaan di sini paling besar dampaknya ke kurva S dan termijn.
       </div>
     </div>
   </div>
@@ -3128,6 +3208,65 @@ const T = {
     zh: "<b>結論</b> — 分子上的 1 純粹翻轉時間方向 (從「每體積花費的時間」變成「每時間做出的體積」)。工人數是<b>個人生產率的直接乘數</b>,所以 3 個工人 ≠ 1 個工人 × 3 天 — 而是用 ⅓ 的時間完成相同體積。",
   },
 
+  // ── bobot % modal (slide 11)
+  bobot_info_eyebrow: {
+    id: "Dari mana angka bobot %?",
+    en: "Where do the weight % come from?",
+    zh: "權重 % 從哪裡來?",
+  },
+  bobot_info_title: {
+    id: "Asal-Usul & Pembuktian Bobot Pekerjaan",
+    en: "Origin & Verification of Item Weights",
+    zh: "工項權重的來源與驗算",
+  },
+  bobot_src1_t: {
+    id: "Asal-Usul \"Total Item\" (dalam Rupiah)",
+    en: "Where \"Item Total\" (Rp) Comes From",
+    zh: "「項目總價」(Rp) 的來源",
+  },
+  bobot_src1_d: {
+    id: "Nilai Rupiah per item bukan tebakan — diperoleh murni dari perhitungan <b>RAB (Rencana Anggaran Biaya)</b>. Volume dihitung dari gambar kerja (Quantity Take-Off), sedangkan Harga Satuan didapat dari AHSP (bahan + alat + upah tukang).",
+    en: "Each item's Rupiah value isn't a guess — it comes directly from the <b>BoQ (Bill of Quantities)</b> calculation. Volume is from the drawings via Quantity Take-Off; unit price is from AHSP (materials + equipment + labor).",
+    zh: "每項目的 Rp 金額並非猜測,而是直接來自 <b>RAB (預算書)</b> 的計算。工程量由施工圖透過 QTO 取得;單價來自 AHSP (材料 + 設備 + 工資)。",
+  },
+  bobot_src1_f: {
+    id: "Total Item (Rp) = Volume Pekerjaan × Harga Satuan (AHSP)",
+    en: "Item Total (Rp) = Work Volume × Unit Price (AHSP)",
+    zh: "項目總價 (Rp) = 工程量 × 單價 (AHSP)",
+  },
+  bobot_src2_t: {
+    id: "Pembuktian Perhitungan Bobot (%)",
+    en: "Verifying the Weight (%) Calculation",
+    zh: "權重 (%) 計算的驗算",
+  },
+  bobot_src2_d: {
+    id: "Bagi tiap Total Item dengan Total Proyek, kalikan 100. <b>Syarat mutlak:</b> kalau semua bobot dijumlahkan, hasilnya wajib tepat <b>100%</b>.",
+    en: "Divide each Item Total by the Project Total, multiply by 100. <b>Hard rule:</b> all weights summed must come out to exactly <b>100%</b>.",
+    zh: "用每個項目總價除以專案總額,再乘以 100。<b>硬性規則:</b>所有權重相加必須剛好等於 <b>100%</b>。",
+  },
+  bobot_tbl_h1: { id: "Item",          en: "Item",          zh: "項目" },
+  bobot_tbl_h2: { id: "Total (Rp)",    en: "Total (Rp)",    zh: "總價 (Rp)" },
+  bobot_tbl_h3: { id: "Hitung",        en: "Calculation",   zh: "計算" },
+  bobot_tbl_h4: { id: "Bobot",         en: "Weight",        zh: "權重" },
+  bobot_tbl_a_lbl: { id: "A · Persiapan",  en: "A · Preparation",   zh: "A · 準備" },
+  bobot_tbl_d_lbl: { id: "D · Struktur",   en: "D · Structure",     zh: "D · 結構" },
+  bobot_tbl_e_lbl: { id: "E · Arsitektur", en: "E · Architectural", zh: "E · 裝修" },
+  bobot_src3_t: {
+    id: "3 Tujuan Menghitung Bobot %",
+    en: "3 Reasons to Compute Weight %",
+    zh: "計算權重 % 的 3 個目的",
+  },
+  bobot_src3_d: {
+    id: "• <b>Dasar Kurva S</b> — bobot dibagi ke setiap minggu sepanjang durasi proyek (input akumulasi progres).<br>• <b>Monitoring Lapangan</b> — pengawas mengukur kemajuan dalam % bobot, lebih mudah dari pada baca angka Rp miliaran.<br>• <b>Acuan Termijn (Pembayaran)</b> — kontraktor mengajukan klaim pembayaran berdasarkan % bobot prestasi yang sudah selesai (legal basis kontrak).",
+    en: "• <b>Foundation of the S-Curve</b> — weight is distributed across every week of the project (input for cumulative progress).<br>• <b>Field Monitoring</b> — site supervisors track progress as a weight %, much easier than reading billions of Rp.<br>• <b>Payment Termijn Basis</b> — contractors claim payments based on the % weight of completed work (contractual legal basis).",
+    zh: "• <b>進度曲線 (S-Curve) 的根基</b> — 權重被分配到專案每一週 (累積進度的輸入)。<br>• <b>現場監督</b> — 監工以權重 % 衡量進度,比讀數十億 Rp 數字容易得多。<br>• <b>付款請款 (Termijn) 依據</b> — 承包商按已完成工作的權重 % 申請付款 (合約法律基礎)。",
+  },
+  bobot_concl: {
+    id: "<b>Inti</b> — Bobot mengubah angka Rupiah \"berat\" jadi % yang ringan dibaca, tanpa kehilangan informasi proporsi biaya. Item dengan bobot terbesar (D & E = 50%) adalah <b>inti proyek</b> — penundaan di sini paling besar dampaknya ke kurva S dan termijn.",
+    en: "<b>Bottom line</b> — Weights turn heavy Rupiah numbers into lightweight %s without losing the cost proportions. The items with the largest weight (D & E = 50%) are the <b>project's core</b> — slippage here hits the S-curve and payment schedule the hardest.",
+    zh: "<b>核心</b> — 權重把沉重的 Rp 金額轉成易讀的 %,且不失成本比例資訊。權重最大的項目 (D 與 E = 50%) 是<b>專案核心</b> — 這裡的延誤對進度曲線與付款排程影響最大。",
+  },
+
   // ── unit shorthand (used in WBS table)
   u_wk:  { id: "mg",   en: "wk",   zh: "週" },
   u_day: { id: "hari", en: "days", zh: "天" },
@@ -3373,9 +3512,10 @@ window.addEventListener('keydown', (e) => {
  */
 (function infoModals() {
   const PAIRS = [
-    { open: 'prod-info-btn', modal: 'prod-info-modal', close: 'prod-info-close', layer: 1 },
-    { open: 'dur-info-btn',  modal: 'dur-info-modal',  close: 'dur-info-close',  layer: 1 },
-    { open: 'math-info-btn', modal: 'math-info-modal', close: 'math-info-close', layer: 2 },
+    { open: 'prod-info-btn',  modal: 'prod-info-modal',  close: 'prod-info-close',  layer: 1 },
+    { open: 'dur-info-btn',   modal: 'dur-info-modal',   close: 'dur-info-close',   layer: 1 },
+    { open: 'bobot-info-btn', modal: 'bobot-info-modal', close: 'bobot-info-close', layer: 1 },
+    { open: 'math-info-btn',  modal: 'math-info-modal',  close: 'math-info-close',  layer: 2 },
   ];
 
   function openModal(m) {
