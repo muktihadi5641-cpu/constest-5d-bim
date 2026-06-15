@@ -549,6 +549,12 @@
   }
   .info-btn:hover { background: var(--amber-ink); color: white; transform: scale(1.1); }
   .info-btn:active { transform: scale(0.95); }
+  /* Variant for dark-background cards (e.g. the solid-amber Durasi card) */
+  .info-btn--dark {
+    border-color: oklch(1 0 0 / 0.75); color: oklch(1 0 0 / 0.95);
+    background: oklch(1 0 0 / 0.12);
+  }
+  .info-btn--dark:hover { background: white; color: var(--amber-ink); }
 
   .modal-scrim {
     position: fixed; inset: 0; z-index: 200;
@@ -1307,7 +1313,11 @@
           <div style="font-family: var(--mono); font-size: 22px; color: var(--muted);">=</div>
           <div class="card" style="padding: 16px 18px; text-align: center; background: var(--amber); border-color: transparent; color: white; box-shadow: var(--shadow-md);">
             <div style="font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1px; color: oklch(1 0 0 / 0.85);" data-i18n="s8_ex_d">Durasi</div>
-            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 6px;" data-i18n="s8_ex_d_val">≈ 27 hari = 6 mg</div>
+            <div style="display: inline-flex; align-items: center; justify-content: center; margin-top: 6px;">
+              <span style="font-family: var(--mono); font-size: 22px; font-weight: 700;" data-i18n="s8_ex_d_val">≈ 27 hari = 6 mg</span>
+              <button type="button" class="info-btn info-btn--dark" id="dur-info-btn"
+                      data-i18n-title="dur_info_title" title="Bagaimana durasi dihitung?" aria-label="Info">i</button>
+            </div>
           </div>
         </div>
       </div>
@@ -2291,6 +2301,64 @@
   </div>
 </div>
 
+<!-- ════════════════════ DURATION CALCULATION MODAL ════════════════════ -->
+<div class="modal-scrim" id="dur-info-modal" role="dialog" aria-modal="true" aria-labelledby="dur-info-title">
+  <div class="modal-box" role="document">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-eyebrow" data-i18n="dur_info_eyebrow">Bagaimana durasi dihitung?</div>
+        <div class="modal-head-title" id="dur-info-title" data-i18n="dur_info_title">Rumus Durasi Per Item Pekerjaan</div>
+      </div>
+      <div class="modal-head-spacer"></div>
+      <button type="button" class="modal-close" id="dur-info-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="src-card">
+        <div class="src-num">1</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="dur_src1_t">Rumus Dasar Durasi</div>
+          <div class="src-desc" data-i18n="dur_src1_d">Durasi = total volume pekerjaan dibagi <b>kapasitas total produksi harian</b> seluruh sumber daya yang dikerahkan. Tiga variabel penentu: Volume (dari QTO/BIM), Produktivitas (dari AHSP/historis), Jumlah Tim (resource allocation).</div>
+          <div class="src-formula" data-i18n="dur_src1_f">Durasi (Hari) = Volume Pekerjaan ÷ (Produktivitas Harian × Jumlah Tim/Tukang/Alat)</div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">2</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="dur_src2_t">Simulasi Lapangan — Galian Tanah (Item B)</div>
+          <div class="src-desc" data-i18n="dur_src2_d">Volume galian <b>180 m³</b>, produktivitas standar 1 tim manual <b>12 m³/hari</b>, dikerahkan <b>1 tim</b>. Durasi murni = 180 ÷ (12 × 1) = <b>15 hari kerja</b>. Bila 5 hari kerja/minggu → <b>3 minggu</b>. Angka inilah yang masuk ke tabel WBS untuk Item B sebelum dihubungkan dengan predecessor.</div>
+          <div class="src-formula" data-i18n="dur_src2_f">180 m³ ÷ (12 m³/hari × 1 Tim) = 15 hari ≈ <b>3 minggu</b></div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">3</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="dur_src3_t">Optimasi A — Tambah Tim (Crashing)</div>
+          <div class="src-desc" data-i18n="dur_src3_d">Bila galian ditarget selesai <b>5 hari</b> (1 minggu), tambah jumlah tim paralel di area berbeda. Jumlah Tim = 180 ÷ (12 × 5) = <b>3 tim</b>. Tiga tim sekaligus → selesai 3× lebih cepat. Risikonya biaya tenaga & akomodasi naik linear.</div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">4</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="dur_src4_t">Optimasi B — Mekanisasi (Ganti Metode)</div>
+          <div class="src-desc" data-i18n="dur_src4_d">Bila tambah tenaga manual tidak efisien biaya, ganti metode ke alat berat. Excavator mini ≈ <b>150 m³/hari</b>. Durasi = 180 ÷ (150 × 1) = <b>1,2 hari</b>. Yang awalnya 3 minggu manual cukup <b>1–2 hari</b> dengan alat berat.</div>
+          <div class="src-formula" data-i18n="dur_src4_f">180 m³ ÷ (150 m³/hari × 1 Excavator) ≈ <b>1,2 hari</b></div>
+        </div>
+      </div>
+
+      <div class="modal-footnote" data-i18n="dur_adj">
+        <b>Hari Kerja ≠ Hari Kalender</b> — angka durasi murni di atas adalah <b>hari kerja efektif</b>. Untuk masuk ke jadwal kalender, kalikan faktor: 5 hari kerja/minggu (standar Indonesia), libur nasional, cuaca, dan waktu curing material (beton butuh 7–28 hari curing meskipun bukan "pekerjaan aktif").
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
 
 <script>
@@ -2783,6 +2851,78 @@ const T = {
     zh: "<b>現場調整係數</b> — 基準值需乘以效率係數:高程/樓層越高 (下降 15-30%)、極端天氣、結構複雜度、施工方法/設備 (混凝土泵 + 預拌可將生產率從 1.2 m³/天 提升至數十 m³/小時)。",
   },
 
+  // ── duration calculation modal (slide 8 — Durasi card)
+  dur_info_eyebrow: {
+    id: "Bagaimana durasi dihitung?",
+    en: "How is the duration computed?",
+    zh: "工期是怎麼算出來的?",
+  },
+  dur_info_title: {
+    id: "Rumus Durasi Per Item Pekerjaan",
+    en: "Per-Item Duration Formula",
+    zh: "單項作業工期公式",
+  },
+  dur_src1_t: {
+    id: "Rumus Dasar Durasi",
+    en: "Base Duration Formula",
+    zh: "基本工期公式",
+  },
+  dur_src1_d: {
+    id: "Durasi = total volume pekerjaan dibagi <b>kapasitas total produksi harian</b> seluruh sumber daya yang dikerahkan. Tiga variabel penentu: Volume (dari QTO/BIM), Produktivitas (dari AHSP/historis), Jumlah Tim (resource allocation).",
+    en: "Duration = total work volume divided by the <b>total daily production capacity</b> of all deployed resources. Three driving variables: Volume (from QTO/BIM), Productivity (from AHSP/historical data), Number of Crews (resource allocation).",
+    zh: "工期 = 總工程量 ÷ 全部投入資源的<b>每日總產能</b>。三個決定變數:工程量 (來自 QTO/BIM)、生產率 (來自 AHSP/歷史數據)、班組數 (資源分配)。",
+  },
+  dur_src1_f: {
+    id: "Durasi (Hari) = Volume Pekerjaan ÷ (Produktivitas Harian × Jumlah Tim/Tukang/Alat)",
+    en: "Duration (Days) = Work Volume ÷ (Daily Productivity × Number of Crews/Workers/Equipment)",
+    zh: "工期 (天) = 工程量 ÷ (每日生產率 × 班組/工人/設備數)",
+  },
+  dur_src2_t: {
+    id: "Simulasi Lapangan — Galian Tanah (Item B)",
+    en: "Field Simulation — Earthworks (Item B)",
+    zh: "現場模擬 — 土方開挖 (項目 B)",
+  },
+  dur_src2_d: {
+    id: "Volume galian <b>180 m³</b>, produktivitas standar 1 tim manual <b>12 m³/hari</b>, dikerahkan <b>1 tim</b>. Durasi murni = 180 ÷ (12 × 1) = <b>15 hari kerja</b>. Bila 5 hari kerja/minggu → <b>3 minggu</b>. Angka inilah yang masuk ke tabel WBS untuk Item B sebelum dihubungkan dengan predecessor.",
+    en: "Excavation volume <b>180 m³</b>, standard manual-crew productivity <b>12 m³/day</b>, deployed <b>1 crew</b>. Pure duration = 180 ÷ (12 × 1) = <b>15 working days</b>. At 5 working days/week → <b>3 weeks</b>. This is the figure that goes into the WBS table for Item B before predecessor linking.",
+    zh: "開挖工程量 <b>180 m³</b>,1 個人工班組標準生產率 <b>12 m³/天</b>,投入 <b>1 班組</b>。純工期 = 180 ÷ (12 × 1) = <b>15 工作天</b>。若每週工作 5 天 → <b>3 週</b>。這就是 WBS 表中 B 項目在連結前置作業前所填入的工期。",
+  },
+  dur_src2_f: {
+    id: "180 m³ ÷ (12 m³/hari × 1 Tim) = 15 hari ≈ <b>3 minggu</b>",
+    en: "180 m³ ÷ (12 m³/day × 1 Crew) = 15 days ≈ <b>3 weeks</b>",
+    zh: "180 m³ ÷ (12 m³/天 × 1 班組) = 15 天 ≈ <b>3 週</b>",
+  },
+  dur_src3_t: {
+    id: "Optimasi A — Tambah Tim (Crashing)",
+    en: "Optimization A — Add Crews (Crashing)",
+    zh: "優化方案 A — 增加班組 (Crashing)",
+  },
+  dur_src3_d: {
+    id: "Bila galian ditarget selesai <b>5 hari</b> (1 minggu), tambah jumlah tim paralel di area berbeda. Jumlah Tim = 180 ÷ (12 × 5) = <b>3 tim</b>. Tiga tim sekaligus → selesai 3× lebih cepat. Risikonya biaya tenaga & akomodasi naik linear.",
+    en: "If the excavation must finish in <b>5 days</b> (1 week), add parallel crews working different sub-areas. Crews = 180 ÷ (12 × 5) = <b>3 crews</b>. Three crews at once → finished 3× faster. Trade-off: labor and accommodation costs rise linearly.",
+    zh: "若開挖必須在 <b>5 天</b> (1 週) 內完成,增加多班組在不同區域平行作業。班組數 = 180 ÷ (12 × 5) = <b>3 班組</b>。三個班組同步 → 速度提升 3 倍。代價:人工與住宿費用同比例增加。",
+  },
+  dur_src4_t: {
+    id: "Optimasi B — Mekanisasi (Ganti Metode)",
+    en: "Optimization B — Mechanization (Change Method)",
+    zh: "優化方案 B — 機械化 (改變施工方法)",
+  },
+  dur_src4_d: {
+    id: "Bila tambah tenaga manual tidak efisien biaya, ganti metode ke alat berat. Excavator mini ≈ <b>150 m³/hari</b>. Durasi = 180 ÷ (150 × 1) = <b>1,2 hari</b>. Yang awalnya 3 minggu manual cukup <b>1–2 hari</b> dengan alat berat.",
+    en: "If hiring more manual labor isn't cost-effective, swap the method to mechanized equipment. Mini excavator ≈ <b>150 m³/day</b>. Duration = 180 ÷ (150 × 1) = <b>1.2 days</b>. What took 3 weeks manually now finishes in <b>1–2 days</b>.",
+    zh: "若增加人力不符經濟效益,改採機械化施工。小型挖掘機 ≈ <b>150 m³/天</b>。工期 = 180 ÷ (150 × 1) = <b>1.2 天</b>。原本人工 3 週的工作,改用機械後僅需 <b>1–2 天</b>。",
+  },
+  dur_src4_f: {
+    id: "180 m³ ÷ (150 m³/hari × 1 Excavator) ≈ <b>1,2 hari</b>",
+    en: "180 m³ ÷ (150 m³/day × 1 Excavator) ≈ <b>1.2 days</b>",
+    zh: "180 m³ ÷ (150 m³/天 × 1 部挖掘機) ≈ <b>1.2 天</b>",
+  },
+  dur_adj: {
+    id: "<b>Hari Kerja ≠ Hari Kalender</b> — angka durasi murni di atas adalah <b>hari kerja efektif</b>. Untuk masuk ke jadwal kalender, kalikan faktor: 5 hari kerja/minggu (standar Indonesia), libur nasional, cuaca, dan waktu curing material (beton butuh 7–28 hari curing meskipun bukan \"pekerjaan aktif\").",
+    en: "<b>Working Days ≠ Calendar Days</b> — the pure-duration figures above are <b>effective working days</b>. To project onto a calendar, factor in: 5 working days/week (Indonesia standard), public holidays, weather, and material curing time (concrete needs 7–28 curing days even when not \"active work\").",
+    zh: "<b>工作日 ≠ 日曆日</b> — 上述純工期是<b>有效工作日</b>。要轉換到日曆排程,需考慮:每週 5 個工作日 (印尼標準)、國定假日、天候,以及材料養護時間 (混凝土需要 7-28 天養護,雖非「實際施工」)。",
+  },
+
   // ── unit shorthand (used in WBS table)
   u_wk:  { id: "mg",   en: "wk",   zh: "週" },
   u_day: { id: "hari", en: "days", zh: "天" },
@@ -3022,19 +3162,33 @@ window.addEventListener('keydown', (e) => {
   if (backBtn) backBtn.addEventListener('click', showSplash);
 })();
 
-/* ═══════════ productivity info modal ═══════════ */
-(function prodInfoModal() {
-  const modal = document.getElementById('prod-info-modal');
-  const openBtn = document.getElementById('prod-info-btn');
-  const closeBtn = document.getElementById('prod-info-close');
-  if (!modal || !openBtn) return;
-  function open() { modal.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
-  function close() { modal.classList.remove('is-open'); document.body.style.overflow = ''; }
-  openBtn.addEventListener('click', open);
-  closeBtn && closeBtn.addEventListener('click', close);
-  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+/* ═══════════ info modals (productivity + duration) ═══════════ */
+(function infoModals() {
+  const PAIRS = [
+    { open: 'prod-info-btn', modal: 'prod-info-modal', close: 'prod-info-close' },
+    { open: 'dur-info-btn',  modal: 'dur-info-modal',  close: 'dur-info-close'  },
+  ];
+  const all = [];
+  function closeAll() {
+    all.forEach((m) => m.classList.remove('is-open'));
+    document.body.style.overflow = '';
+  }
+  PAIRS.forEach(({ open, modal, close }) => {
+    const m = document.getElementById(modal);
+    const ob = document.getElementById(open);
+    const cb = document.getElementById(close);
+    if (!m || !ob) return;
+    all.push(m);
+    ob.addEventListener('click', () => {
+      closeAll();
+      m.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    });
+    cb && cb.addEventListener('click', closeAll);
+    m.addEventListener('click', (e) => { if (e.target === m) closeAll(); });
+  });
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    if (e.key === 'Escape' && all.some((m) => m.classList.contains('is-open'))) closeAll();
   });
 })();
 
