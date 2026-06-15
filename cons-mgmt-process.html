@@ -471,6 +471,26 @@
     background: var(--surface-2); border-top: 1.5px solid var(--ink);
   }
 
+  /* ──── NT$ side conversion (Rp → NT$, opacity ~70%) ─────────── */
+  /* Rate: 1 NT$ ≈ 500 IDR. Shown next to every Rp price; visually
+     subordinate so the Rp value stays primary. */
+  .nt-conv {
+    display: inline-block;
+    margin-left: 7px;
+    opacity: 0.72;
+    font-size: 0.78em;
+    color: var(--ink-2);
+    font-family: var(--mono);
+    font-weight: 500;
+    letter-spacing: -0.1px;
+    white-space: nowrap;
+  }
+  /* Slight contrast bump on dark/colored backgrounds */
+  .rab-step-row .nt-conv,
+  .stair-step .nt-conv { opacity: 0.78; }
+  .stair-step[data-fill="solid"] .nt-conv,
+  .heatmap-cell.on .nt-conv { color: oklch(1 0 0 / 0.85); opacity: 0.9; }
+
   /* ──── WBS table (Paket Pekerjaan) ──────────────────────────── */
   .wbs-card {
     background: var(--surface); border: 1px solid var(--line);
@@ -1102,6 +1122,7 @@
           <text x="110" y="86" text-anchor="middle" font-size="28" font-weight="700" fill="white" font-family="Source Serif 4, Times New Roman, Georgia, serif">Rp / m³</text>
           <text x="110" y="118" text-anchor="middle" font-size="13" fill="oklch(0.95 0.04 248)" data-i18n="s4_hs_for">untuk 1 m³ beton K-225</text>
           <text x="110" y="144" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="14" font-weight="600" fill="white">≈ Rp 1.320.259</text>
+          <text x="110" y="160" text-anchor="middle" font-family="Source Serif 4, Times New Roman, Georgia, serif" font-size="11" font-weight="500" fill="oklch(1 0 0 / 0.7)">≈ NT$ 2.641</text>
         </g>
 
         <!-- Bottom: koefisien explainer -->
@@ -1143,18 +1164,18 @@
         </thead>
         <tbody>
           <tr class="group-head"><td colspan="5" data-i18n="s5_g_mat">A · Bahan (Material)</td></tr>
-          <tr><td data-i18n="s5_mat1">Semen Portland</td><td class="num">371</td><td>kg</td><td class="num">Rp 1.500</td><td class="num">Rp 556.500</td></tr>
-          <tr><td data-i18n="s5_mat2">Pasir beton</td><td class="num">0,499</td><td>m³</td><td class="num">Rp 285.000</td><td class="num">Rp 142.215</td></tr>
-          <tr><td data-i18n="s5_mat3">Kerikil / split</td><td class="num">0,776</td><td>m³</td><td class="num">Rp 320.000</td><td class="num">Rp 248.320</td></tr>
-          <tr><td data-i18n="s5_mat4">Air</td><td class="num">215</td><td>L</td><td class="num">Rp 50</td><td class="num">Rp 10.750</td></tr>
+          <tr><td data-i18n="s5_mat1">Semen Portland</td><td class="num">371</td><td>kg</td><td class="num">Rp 1.500 <span class="nt-conv">NT$ 3</span></td><td class="num">Rp 556.500 <span class="nt-conv">NT$ 1.113</span></td></tr>
+          <tr><td data-i18n="s5_mat2">Pasir beton</td><td class="num">0,499</td><td>m³</td><td class="num">Rp 285.000 <span class="nt-conv">NT$ 570</span></td><td class="num">Rp 142.215 <span class="nt-conv">NT$ 284</span></td></tr>
+          <tr><td data-i18n="s5_mat3">Kerikil / split</td><td class="num">0,776</td><td>m³</td><td class="num">Rp 320.000 <span class="nt-conv">NT$ 640</span></td><td class="num">Rp 248.320 <span class="nt-conv">NT$ 497</span></td></tr>
+          <tr><td data-i18n="s5_mat4">Air</td><td class="num">215</td><td>L</td><td class="num">Rp 50</td><td class="num">Rp 10.750 <span class="nt-conv">NT$ 22</span></td></tr>
           <tr class="group-head is-labour"><td colspan="5" data-i18n="s5_g_lab">B · Upah (Labour)</td></tr>
-          <tr><td data-i18n="s5_lab1">Pekerja</td><td class="num">1,650</td><td>OH</td><td class="num">Rp 110.000</td><td class="num">Rp 181.500</td></tr>
-          <tr><td data-i18n="s5_lab2">Tukang batu</td><td class="num">0,275</td><td>OH</td><td class="num">Rp 150.000</td><td class="num">Rp 41.250</td></tr>
-          <tr><td data-i18n="s5_lab3">Kepala tukang</td><td class="num">0,028</td><td>OH</td><td class="num">Rp 170.000</td><td class="num">Rp 4.760</td></tr>
-          <tr><td data-i18n="s5_lab4">Mandor</td><td class="num">0,083</td><td>OH</td><td class="num">Rp 180.000</td><td class="num">Rp 14.940</td></tr>
-          <tr class="sub"><td colspan="4" data-i18n="s5_sub">Subtotal langsung</td><td class="num">Rp 1.200.235</td></tr>
-          <tr><td colspan="4" data-i18n="s5_ohp">Overhead & Profit (10%)</td><td class="num" style="color: var(--blue-ink); font-family: var(--mono);">+ Rp 120.024</td></tr>
-          <tr class="total"><td colspan="4" data-i18n="s5_total">HARGA SATUAN per m³</td><td class="num">Rp 1.320.259</td></tr>
+          <tr><td data-i18n="s5_lab1">Pekerja</td><td class="num">1,650</td><td>OH</td><td class="num">Rp 110.000 <span class="nt-conv">NT$ 220</span></td><td class="num">Rp 181.500 <span class="nt-conv">NT$ 363</span></td></tr>
+          <tr><td data-i18n="s5_lab2">Tukang batu</td><td class="num">0,275</td><td>OH</td><td class="num">Rp 150.000 <span class="nt-conv">NT$ 300</span></td><td class="num">Rp 41.250 <span class="nt-conv">NT$ 83</span></td></tr>
+          <tr><td data-i18n="s5_lab3">Kepala tukang</td><td class="num">0,028</td><td>OH</td><td class="num">Rp 170.000 <span class="nt-conv">NT$ 340</span></td><td class="num">Rp 4.760 <span class="nt-conv">NT$ 10</span></td></tr>
+          <tr><td data-i18n="s5_lab4">Mandor</td><td class="num">0,083</td><td>OH</td><td class="num">Rp 180.000 <span class="nt-conv">NT$ 360</span></td><td class="num">Rp 14.940 <span class="nt-conv">NT$ 30</span></td></tr>
+          <tr class="sub"><td colspan="4" data-i18n="s5_sub">Subtotal langsung</td><td class="num">Rp 1.200.235 <span class="nt-conv">NT$ 2.400</span></td></tr>
+          <tr><td colspan="4" data-i18n="s5_ohp">Overhead & Profit (10%)</td><td class="num" style="color: var(--blue-ink); font-family: var(--mono);">+ Rp 120.024 <span class="nt-conv">+ NT$ 240</span></td></tr>
+          <tr class="total"><td colspan="4" data-i18n="s5_total">HARGA SATUAN per m³</td><td class="num">Rp 1.320.259 <span class="nt-conv">NT$ 2.641</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -1211,30 +1232,30 @@
           <div class="lbl" data-i18n="s6_r1">D.1 Beton struktur K-225</div>
           <div class="vol">32,40 m³</div>
           <div class="op">×</div>
-          <div class="hs">Rp 1.320.259</div>
+          <div class="hs">Rp 1.320.259 <span class="nt-conv">NT$ 2.641</span></div>
           <div class="op">=</div>
-          <div class="tot">Rp 42.776.392</div>
+          <div class="tot">Rp 42.776.392 <span class="nt-conv">NT$ 85.553</span></div>
         </div>
         <div class="rab-step-row">
           <div class="lbl" data-i18n="s6_r2">E.1 Dinding bata merah ½ bata</div>
           <div class="vol">218,00 m²</div>
           <div class="op">×</div>
-          <div class="hs">Rp 160.000</div>
+          <div class="hs">Rp 160.000 <span class="nt-conv">NT$ 320</span></div>
           <div class="op">=</div>
-          <div class="tot">Rp 34.880.000</div>
+          <div class="tot">Rp 34.880.000 <span class="nt-conv">NT$ 69.760</span></div>
         </div>
         <div class="rab-step-row">
           <div class="lbl" data-i18n="s6_r3">H.1 Pengecatan dinding interior</div>
           <div class="vol">434,00 m²</div>
           <div class="op">×</div>
-          <div class="hs">Rp 45.000</div>
+          <div class="hs">Rp 45.000 <span class="nt-conv">NT$ 90</span></div>
           <div class="op">=</div>
-          <div class="tot">Rp 19.530.000</div>
+          <div class="tot">Rp 19.530.000 <span class="nt-conv">NT$ 39.060</span></div>
         </div>
 
         <div class="rab-sum">
           <div class="rab-sum-lbl" data-i18n="s6_grand">Σ semua item + PPN 11% → Total Anggaran Proyek</div>
-          <div class="rab-sum-val">Rp 532.755.000</div>
+          <div class="rab-sum-val">Rp 532.755.000 <span class="nt-conv">NT$ 1.065.510</span></div>
         </div>
       </div>
     </div>
@@ -1264,7 +1285,7 @@
           <div class="stair-eyebrow" data-i18n="s7_s1_eb">Langkah 1</div>
           <div class="stair-name" data-i18n="s7_s1_t">Jumlah Biaya Langsung</div>
           <div class="stair-sub" data-i18n="s7_s1_s">Σ (Volume × Harga Satuan)</div>
-          <div class="stair-val">Rp 480.000.000</div>
+          <div class="stair-val">Rp 480.000.000 <span class="nt-conv">NT$ 960.000</span></div>
         </div>
 
         <div class="stair-op" style="--cat: var(--teal);">+ 11%</div>
@@ -1273,7 +1294,7 @@
           <div class="stair-eyebrow" data-i18n="s7_s2_eb">Langkah 2</div>
           <div class="stair-name" data-i18n="s7_s2_t">+ PPN 11%</div>
           <div class="stair-sub" data-i18n="s7_s2_s">Pajak Pertambahan Nilai</div>
-          <div class="stair-val">+ Rp 52.800.000</div>
+          <div class="stair-val">+ Rp 52.800.000 <span class="nt-conv">+ NT$ 105.600</span></div>
         </div>
 
         <div class="stair-op" style="--cat: var(--teal);">=</div>
@@ -2598,19 +2619,19 @@
             <tbody>
               <tr>
                 <td><b data-i18n="bobot_tbl_a_lbl">A · Persiapan</b></td>
-                <td class="num">21 jt</td>
+                <td class="num">21 jt <span class="nt-conv">NT$ 42 rb</span></td>
                 <td class="num">21 ÷ 532 × 100</td>
                 <td class="dur">≈ 4%</td>
               </tr>
               <tr>
                 <td><b data-i18n="bobot_tbl_d_lbl">D · Struktur</b></td>
-                <td class="num">149 jt</td>
+                <td class="num">149 jt <span class="nt-conv">NT$ 298 rb</span></td>
                 <td class="num">149 ÷ 532 × 100</td>
                 <td class="dur">≈ 28%</td>
               </tr>
               <tr>
                 <td><b data-i18n="bobot_tbl_e_lbl">E · Arsitektur</b></td>
-                <td class="num">117 jt</td>
+                <td class="num">117 jt <span class="nt-conv">NT$ 234 rb</span></td>
                 <td class="num">117 ÷ 532 × 100</td>
                 <td class="dur">≈ 22%</td>
               </tr>
@@ -2839,9 +2860,9 @@ const T = {
   s5_ohp:  { id: "Overhead & Profit (10%)", en: "Overhead & Profit (10%)", zh: "管理費與利潤 (10%)" },
   s5_total:{ id: "HARGA SATUAN per m³", en: "UNIT PRICE per m³", zh: "每立方公尺單價" },
   s5_tag:  { id: "Studi Kasus", en: "Case Study", zh: "案例" },
-  s5_cap:  { id: "Angka ini dipakai di seluruh RAB. Volume 32 m³ dari Revit × Rp 1.320.259 = <strong>Rp 42,2 juta</strong> untuk beton struktur.",
-             en: "This number is used throughout the BoQ. Volume 32 m³ from Revit × Rp 1,320,259 = <strong>Rp 42.2 m</strong> for structural concrete.",
-             zh: "此數字將用於整個預算書。Revit 工程量 32 m³ × Rp 1,320,259 = 結構混凝土 <strong>Rp 42.2 百萬</strong>。" },
+  s5_cap:  { id: "Angka ini dipakai di seluruh RAB. Volume 32 m³ dari Revit × Rp 1.320.259 <span class='nt-conv'>NT$ 2.641</span> = <strong>Rp 42,2 jt <span class='nt-conv'>NT$ 84 rb</span></strong> untuk beton struktur.",
+             en: "This number is used throughout the BoQ. Volume 32 m³ from Revit × Rp 1,320,259 <span class='nt-conv'>NT$ 2,641</span> = <strong>Rp 42.2 m <span class='nt-conv'>NT$ 84k</span></strong> for structural concrete.",
+             zh: "此數字將用於整個預算書。Revit 工程量 32 m³ × Rp 1,320,259 <span class='nt-conv'>NT$ 2,641</span> = 結構混凝土 <strong>Rp 42.2 百萬 <span class='nt-conv'>NT$ 8.4 萬</span></strong>。" },
 
   // ── slide 6 rab formula
   s6_eyebrow: { id: "Tahap 2 · RAB", en: "Stage 2 · BoQ", zh: "階段 2 · 預算書" },
@@ -2883,7 +2904,9 @@ const T = {
   s7_s2_t:  { id: "+ PPN 11%", en: "+ 11% VAT", zh: "+ 11% PPN" },
   s7_s2_s:  { id: "Pajak Pertambahan Nilai", en: "Value-Added Tax", zh: "加值型營業稅" },
   s7_s3_eb: { id: "Total Proyek", en: "Project Total", zh: "專案總額" },
-  s7_s3_t:  { id: "Rp 532,8 jt", en: "Rp 532.8 m", zh: "Rp 532.8 百萬" },
+  s7_s3_t:  { id: "Rp 532,8 jt <span class='nt-conv'>NT$ 1,07 jt</span>",
+              en: "Rp 532.8 m <span class='nt-conv'>NT$ 1.07m</span>",
+              zh: "Rp 532.8 百萬 <span class='nt-conv'>NT$ 107 萬</span>" },
   s7_s3_s:  { id: "Yang dibayar pemilik ke kontraktor", en: "Paid by owner to contractor", zh: "業主支付給承包商之金額" },
   s7_tw_t:  { id: "Bagaimana Taiwan?", en: "What About Taiwan?", zh: "臺灣呢?" },
   s7_tw_d:  { id: "Bukan 1 baris PPN — Taiwan memakai <strong>5 lapis markup</strong> (管理費 7% + 利潤 5% + 品管 1% + 環安衛 1,5% + 營業稅 5%) untuk transparansi penuh ke pemilik proyek.",
@@ -3104,15 +3127,33 @@ const T = {
   s8_p4_v: { id: "25 m²/hari",  en: "25 m²/day",    zh: "25 m²/天" },
 
   // ── slide 11 (Donut bobot) — money shorthand "jt" (juta) → "m" (million) / "萬" (wan, 10,000)
-  s11_m_a:     { id: "≈ Rp 21 jt",  en: "≈ Rp 21 m",  zh: "≈ Rp 2,100 萬" },
-  s11_m_b:     { id: "≈ Rp 32 jt",  en: "≈ Rp 32 m",  zh: "≈ Rp 3,200 萬" },
-  s11_m_c:     { id: "≈ Rp 75 jt",  en: "≈ Rp 75 m",  zh: "≈ Rp 7,500 萬" },
-  s11_m_d:     { id: "≈ Rp 149 jt", en: "≈ Rp 149 m", zh: "≈ Rp 1.49 億" },
-  s11_m_e:     { id: "≈ Rp 117 jt", en: "≈ Rp 117 m", zh: "≈ Rp 1.17 億" },
-  s11_m_f:     { id: "≈ Rp 43 jt",  en: "≈ Rp 43 m",  zh: "≈ Rp 4,300 萬" },
-  s11_m_g:     { id: "≈ Rp 53 jt",  en: "≈ Rp 53 m",  zh: "≈ Rp 5,300 萬" },
-  s11_m_h:     { id: "≈ Rp 43 jt",  en: "≈ Rp 43 m",  zh: "≈ Rp 4,300 萬" },
-  s11_m_total: { id: "Rp 532 jt",   en: "Rp 532 m",   zh: "Rp 5.32 億" },
+  s11_m_a:     { id: "≈ Rp 21 jt <span class='nt-conv'>≈ NT$ 42 rb</span>",
+                 en: "≈ Rp 21 m <span class='nt-conv'>≈ NT$ 42k</span>",
+                 zh: "≈ Rp 2,100 萬 <span class='nt-conv'>≈ NT$ 4.2 萬</span>" },
+  s11_m_b:     { id: "≈ Rp 32 jt <span class='nt-conv'>≈ NT$ 64 rb</span>",
+                 en: "≈ Rp 32 m <span class='nt-conv'>≈ NT$ 64k</span>",
+                 zh: "≈ Rp 3,200 萬 <span class='nt-conv'>≈ NT$ 6.4 萬</span>" },
+  s11_m_c:     { id: "≈ Rp 75 jt <span class='nt-conv'>≈ NT$ 150 rb</span>",
+                 en: "≈ Rp 75 m <span class='nt-conv'>≈ NT$ 150k</span>",
+                 zh: "≈ Rp 7,500 萬 <span class='nt-conv'>≈ NT$ 15 萬</span>" },
+  s11_m_d:     { id: "≈ Rp 149 jt <span class='nt-conv'>≈ NT$ 298 rb</span>",
+                 en: "≈ Rp 149 m <span class='nt-conv'>≈ NT$ 298k</span>",
+                 zh: "≈ Rp 1.49 億 <span class='nt-conv'>≈ NT$ 29.8 萬</span>" },
+  s11_m_e:     { id: "≈ Rp 117 jt <span class='nt-conv'>≈ NT$ 234 rb</span>",
+                 en: "≈ Rp 117 m <span class='nt-conv'>≈ NT$ 234k</span>",
+                 zh: "≈ Rp 1.17 億 <span class='nt-conv'>≈ NT$ 23.4 萬</span>" },
+  s11_m_f:     { id: "≈ Rp 43 jt <span class='nt-conv'>≈ NT$ 86 rb</span>",
+                 en: "≈ Rp 43 m <span class='nt-conv'>≈ NT$ 86k</span>",
+                 zh: "≈ Rp 4,300 萬 <span class='nt-conv'>≈ NT$ 8.6 萬</span>" },
+  s11_m_g:     { id: "≈ Rp 53 jt <span class='nt-conv'>≈ NT$ 106 rb</span>",
+                 en: "≈ Rp 53 m <span class='nt-conv'>≈ NT$ 106k</span>",
+                 zh: "≈ Rp 5,300 萬 <span class='nt-conv'>≈ NT$ 10.6 萬</span>" },
+  s11_m_h:     { id: "≈ Rp 43 jt <span class='nt-conv'>≈ NT$ 86 rb</span>",
+                 en: "≈ Rp 43 m <span class='nt-conv'>≈ NT$ 86k</span>",
+                 zh: "≈ Rp 4,300 萬 <span class='nt-conv'>≈ NT$ 8.6 萬</span>" },
+  s11_m_total: { id: "Rp 532 jt <span class='nt-conv'>NT$ 1,06 jt</span>",
+                 en: "Rp 532 m <span class='nt-conv'>NT$ 1.06m</span>",
+                 zh: "Rp 5.32 億 <span class='nt-conv'>NT$ 106 萬</span>" },
 
   // ── slide 12 (Bobot/minggu) — hardcoded "6 mg"
   s12_ex_dur_val: { id: "5 mg", en: "5 wk", zh: "5 週" },
