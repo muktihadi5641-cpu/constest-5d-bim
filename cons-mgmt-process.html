@@ -537,6 +537,98 @@
     font-family: var(--mono); font-weight: 700; color: var(--ink);
   }
 
+  /* ──── info button + modal popup ────────────────────────────── */
+  .info-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; padding: 0; margin-left: 8px;
+    border-radius: 50%; border: 1.5px solid var(--amber-ink);
+    background: var(--surface); color: var(--amber-ink);
+    cursor: pointer; vertical-align: middle;
+    font-family: var(--sans); font-size: 12px; font-weight: 700;
+    line-height: 1; transition: transform .15s, background .15s, color .15s;
+  }
+  .info-btn:hover { background: var(--amber-ink); color: white; transform: scale(1.1); }
+  .info-btn:active { transform: scale(0.95); }
+
+  .modal-scrim {
+    position: fixed; inset: 0; z-index: 200;
+    background: oklch(0.15 0.02 240 / 0.45);
+    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    display: grid; place-items: center; padding: 24px;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .25s, visibility .25s;
+  }
+  .modal-scrim.is-open { opacity: 1; visibility: visible; pointer-events: auto; }
+  .modal-box {
+    background: var(--surface); border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    max-width: 760px; width: 100%; max-height: 88vh;
+    display: flex; flex-direction: column;
+    transform: translateY(12px) scale(0.97);
+    transition: transform .3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+  .modal-scrim.is-open .modal-box { transform: translateY(0) scale(1); }
+  .modal-head {
+    display: flex; align-items: center; gap: 14px;
+    padding: 22px 26px 16px; border-bottom: 1px solid var(--line);
+  }
+  .modal-head-eyebrow {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
+    letter-spacing: 1.4px; text-transform: uppercase; color: var(--amber-ink);
+  }
+  .modal-head-title {
+    font-size: 18px; font-weight: 600; letter-spacing: -0.2px;
+    color: var(--ink); margin-top: 4px;
+  }
+  .modal-head-spacer { flex: 1; }
+  .modal-close {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid var(--line); background: var(--surface);
+    display: grid; place-items: center; cursor: pointer; color: var(--ink-2);
+    transition: background .15s, color .15s, transform .15s;
+  }
+  .modal-close:hover { background: var(--surface-2); color: var(--ink); transform: scale(1.05); }
+  .modal-body {
+    overflow-y: auto; padding: 20px 26px 24px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .src-card {
+    border: 1px solid var(--line); border-radius: 11px;
+    padding: 14px 18px;
+    background: var(--surface-2);
+    display: flex; gap: 14px;
+  }
+  .src-num {
+    flex: none; width: 28px; height: 28px; border-radius: 7px;
+    background: var(--amber); color: white;
+    display: grid; place-items: center;
+    font-family: var(--mono); font-weight: 700; font-size: 13px;
+  }
+  .src-body { flex: 1; min-width: 0; }
+  .src-title {
+    font-weight: 600; font-size: 14px; color: var(--ink);
+    margin-bottom: 6px; letter-spacing: -0.1px;
+  }
+  .src-desc {
+    font-size: 13px; color: var(--ink-2); line-height: 1.6;
+  }
+  .src-desc code, .src-desc b {
+    font-family: var(--mono); color: var(--amber-ink);
+    font-weight: 600; font-size: 12.5px;
+  }
+  .src-formula {
+    margin-top: 8px; padding: 8px 12px;
+    background: var(--surface); border-left: 3px solid var(--amber);
+    border-radius: 6px;
+    font-family: var(--mono); font-size: 12.5px; color: var(--ink);
+  }
+  .modal-footnote {
+    margin-top: 4px; padding: 12px 16px;
+    background: var(--amber-soft); border-radius: 9px;
+    font-size: 12.5px; color: var(--ink-2); line-height: 1.6;
+  }
+  .modal-footnote b { color: var(--amber-ink); font-weight: 600; }
+
   /* ──── recap radial ─────────────────────────────────────────── */
   .recap-wrap { position: relative; width: 100%; max-width: 1040px; aspect-ratio: 2.4; }
 
@@ -1206,7 +1298,11 @@
           <div style="font-family: var(--mono); font-size: 22px; color: var(--muted);">÷</div>
           <div class="card" style="padding: 16px 18px; text-align: center; background: var(--amber-soft); border-color: var(--amber);">
             <div style="font-family: var(--mono); font-size: 9.5px; font-weight: 700; letter-spacing: 1px; color: var(--amber-ink);" data-i18n="s8_ex_p">Produktivitas</div>
-            <div style="font-family: var(--mono); font-size: 22px; font-weight: 700; margin-top: 6px;" data-i18n="s8_ex_p_val">1,2 m³/hari</div>
+            <div style="display: inline-flex; align-items: center; justify-content: center; margin-top: 6px;">
+              <span style="font-family: var(--mono); font-size: 22px; font-weight: 700;" data-i18n="s8_ex_p_val">1,2 m³/hari</span>
+              <button type="button" class="info-btn" id="prod-info-btn"
+                      data-i18n-title="prod_info_title" title="Dari mana angka ini?" aria-label="Info">i</button>
+            </div>
           </div>
           <div style="font-family: var(--mono); font-size: 22px; color: var(--muted);">=</div>
           <div class="card" style="padding: 16px 18px; text-align: center; background: var(--amber); border-color: transparent; color: white; box-shadow: var(--shadow-md);">
@@ -2138,6 +2234,63 @@
 
 </div><!-- /stage recap -->
 
+
+<!-- ════════════════════ PRODUCTIVITY SOURCES MODAL ════════════════════ -->
+<div class="modal-scrim" id="prod-info-modal" role="dialog" aria-modal="true" aria-labelledby="prod-info-title">
+  <div class="modal-box" role="document">
+    <div class="modal-head">
+      <div>
+        <div class="modal-head-eyebrow" data-i18n="prod_info_eyebrow">Dari mana angka 1,2 m³/hari?</div>
+        <div class="modal-head-title" id="prod-info-title" data-i18n="prod_info_title">4 Sumber Angka Produktivitas Konstruksi</div>
+      </div>
+      <div class="modal-head-spacer"></div>
+      <button type="button" class="modal-close" id="prod-info-close" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="src-card">
+        <div class="src-num">1</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="prod_src1_t">Kebalikan dari Koefisien AHSP / SNI</div>
+          <div class="src-desc" data-i18n="prod_src1_d">Kementerian PUPR merilis koefisien tenaga kerja per unit volume (Orang-Hari/m³). Produktivitas = 1 ÷ koefisien.</div>
+          <div class="src-formula" data-i18n="prod_src1_f">Contoh: koef Pekerja Cor Beton = 0,833 OH/m³ → Produktivitas = 1 ÷ 0,833 ≈ <b>1,2 m³/hari</b></div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">2</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="prod_src2_t">Data Historis Perusahaan</div>
+          <div class="src-desc" data-i18n="prod_src2_d">Kontraktor mencatat performa proyek-proyek sebelumnya (daily progress report, ERP, log pengawas). Bila rata-rata 5 proyek terakhir tim pasang bata konsisten <b>10 m²/hari</b>, angka empiris ini diadopsi sebagai baseline internal. Lebih akurat untuk kapabilitas tenaga lokal & alat perusahaan.</div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">3</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="prod_src3_t">Standar Internasional & Buku Referensi Komersial</div>
+          <div class="src-desc" data-i18n="prod_src3_d">Untuk proyek besar / multinasional / Revit-BIM, estimator merujuk database global:<br>• <b>RSMeans Estimating Data (AS)</b> — produktivitas per jam/hari untuk ribuan aktivitas, terintegrasi Revit/BIM.<br>• <b>Spon's Architects' & Builders' Price Book (UK)</b> — standar utama Eropa.<br>• <b>Standar ILO</b> — kapasitas fisik optimal pekerja tanpa kelelahan ekstrem.</div>
+        </div>
+      </div>
+
+      <div class="src-card">
+        <div class="src-num">4</div>
+        <div class="src-body">
+          <div class="src-title" data-i18n="prod_src4_t">Studi Waktu & Gerak (Time and Motion Study)</div>
+          <div class="src-desc" data-i18n="prod_src4_d">Pendekatan Industrial Engineering: tim Methods Engineering mengamati gerak pekerja dengan stopwatch/video, lalu memilah 3 kategori waktu: <b>Effective</b> (kerja produktif), <b>Essential Non-Productive</b> (ambil material, baca gambar), dan <b>Ineffective</b> (mengobrol, menunggu). Eliminasi waktu tidak efektif → ditemukan kapasitas murni pekerja.</div>
+        </div>
+      </div>
+
+      <div class="modal-footnote" data-i18n="prod_adj">
+        <b>Faktor Penyesuaian Lapangan</b> — angka baku selalu dikalikan faktor efisiensi: ketinggian/lantai tinggi (turun 15–30%), cuaca ekstrem, kompleksitas struktur, dan metode/peralatan (pompa beton + ready-mix bisa naikkan produktivitas dari 1,2 m³/hari ke puluhan m³/jam).
+      </div>
+    </div>
+  </div>
+</div>
+
 </main>
 
 <script>
@@ -2568,6 +2721,68 @@ const T = {
   // ── slide 12 (Bobot/minggu) — hardcoded "6 mg"
   s12_ex_dur_val: { id: "6 mg", en: "6 wk", zh: "6 週" },
 
+  // ── productivity info modal (slide 8)
+  prod_info_eyebrow: {
+    id: "Dari mana angka 1,2 m³/hari?",
+    en: "Where does 1.2 m³/day come from?",
+    zh: "1.2 m³/天 這個數字從哪來?",
+  },
+  prod_info_title: {
+    id: "4 Sumber Angka Produktivitas Konstruksi",
+    en: "4 Sources of Construction Productivity Rates",
+    zh: "建設生產率的 4 個來源",
+  },
+  prod_src1_t: {
+    id: "Kebalikan dari Koefisien AHSP / SNI",
+    en: "Inverse of the AHSP / SNI Coefficient",
+    zh: "AHSP / SNI 係數的倒數",
+  },
+  prod_src1_d: {
+    id: "Kementerian PUPR merilis koefisien tenaga kerja per unit volume (Orang-Hari/m³). Produktivitas = 1 ÷ koefisien.",
+    en: "Indonesia's Ministry of Public Works publishes labor coefficients per unit volume (Man-Day/m³). Productivity = 1 ÷ coefficient.",
+    zh: "印尼公共工程部發布每單位體積的人工係數 (人日/m³)。生產率 = 1 ÷ 係數。",
+  },
+  prod_src1_f: {
+    id: "Contoh: koef Pekerja Cor Beton = 0,833 OH/m³ → Produktivitas = 1 ÷ 0,833 ≈ <b>1,2 m³/hari</b>",
+    en: "Example: Concrete-pour worker coef = 0.833 MD/m³ → Productivity = 1 ÷ 0.833 ≈ <b>1.2 m³/day</b>",
+    zh: "例:混凝土澆築工人係數 = 0.833 人日/m³ → 生產率 = 1 ÷ 0.833 ≈ <b>1.2 m³/天</b>",
+  },
+  prod_src2_t: {
+    id: "Data Historis Perusahaan",
+    en: "Company Historical Data",
+    zh: "公司歷史數據",
+  },
+  prod_src2_d: {
+    id: "Kontraktor mencatat performa proyek-proyek sebelumnya (daily progress report, ERP, log pengawas). Bila rata-rata 5 proyek terakhir tim pasang bata konsisten <b>10 m²/hari</b>, angka empiris ini diadopsi sebagai baseline internal. Lebih akurat untuk kapabilitas tenaga lokal & alat perusahaan.",
+    en: "Contractors log past-project performance (daily progress reports, ERP, supervisor logs). If the average over 5 recent projects shows the brick-laying crew consistently hits <b>10 m²/day</b>, that empirical figure becomes the internal baseline. More accurate for local labor capability and the company's equipment.",
+    zh: "承包商記錄過往專案績效(每日進度報表、ERP、現場日誌)。若近 5 個專案砌磚班組平均穩定達到 <b>10 m²/天</b>,該經驗值即被採用為內部基準。更能反映本地工人能力與公司既有設備。",
+  },
+  prod_src3_t: {
+    id: "Standar Internasional & Buku Referensi Komersial",
+    en: "International Standards & Commercial Reference Books",
+    zh: "國際標準與商業參考書",
+  },
+  prod_src3_d: {
+    id: "Untuk proyek besar / multinasional / Revit-BIM, estimator merujuk database global:<br>• <b>RSMeans Estimating Data (AS)</b> — produktivitas per jam/hari untuk ribuan aktivitas, terintegrasi Revit/BIM.<br>• <b>Spon's Architects' & Builders' Price Book (UK)</b> — standar utama Eropa.<br>• <b>Standar ILO</b> — kapasitas fisik optimal pekerja tanpa kelelahan ekstrem.",
+    en: "For large / multinational / Revit-BIM projects, estimators consult global databases:<br>• <b>RSMeans Estimating Data (US)</b> — hourly/daily productivity for thousands of activities, integrated with Revit/BIM.<br>• <b>Spon's Architects' & Builders' Price Book (UK)</b> — leading European standard.<br>• <b>ILO Standards</b> — worker's optimal physical capacity without extreme fatigue.",
+    zh: "大型 / 跨國 / Revit-BIM 專案,估算師參考全球資料庫:<br>• <b>RSMeans Estimating Data(美國)</b> — 數千項作業的每小時/每日生產率,與 Revit/BIM 整合。<br>• <b>Spon's Architects' & Builders' Price Book(英國)</b> — 歐洲主要標準。<br>• <b>ILO 國際勞工標準</b> — 工人在不過度疲勞下的最佳體能負荷。",
+  },
+  prod_src4_t: {
+    id: "Studi Waktu & Gerak (Time and Motion Study)",
+    en: "Time and Motion Study",
+    zh: "時間與動作研究",
+  },
+  prod_src4_d: {
+    id: "Pendekatan Industrial Engineering: tim Methods Engineering mengamati gerak pekerja dengan stopwatch/video, lalu memilah 3 kategori waktu: <b>Effective</b> (kerja produktif), <b>Essential Non-Productive</b> (ambil material, baca gambar), dan <b>Ineffective</b> (mengobrol, menunggu). Eliminasi waktu tidak efektif → ditemukan kapasitas murni pekerja.",
+    en: "Industrial-engineering approach: Methods Engineering teams observe workers with stopwatch/video and sort time into 3 buckets: <b>Effective</b> (productive work), <b>Essential Non-Productive</b> (fetching materials, reading drawings), and <b>Ineffective</b> (chatting, waiting). Stripping out the ineffective time reveals the worker's pure capacity.",
+    zh: "工業工程方法:方法工程團隊使用碼錶/影片觀察工人,將時間分為三類:<b>有效時間</b>(生產性工作)、<b>必要非生產時間</b>(取料、看圖)及<b>無效時間</b>(閒聊、等待)。剔除無效時間後即得工人純粹的工作能力。",
+  },
+  prod_adj: {
+    id: "<b>Faktor Penyesuaian Lapangan</b> — angka baku selalu dikalikan faktor efisiensi: ketinggian/lantai tinggi (turun 15–30%), cuaca ekstrem, kompleksitas struktur, dan metode/peralatan (pompa beton + ready-mix bisa naikkan produktivitas dari 1,2 m³/hari ke puluhan m³/jam).",
+    en: "<b>Field Adjustment Factors</b> — baseline figures are always multiplied by efficiency factors: elevation/high floor (−15 to 30%), extreme weather, structural complexity, and method/equipment (concrete pump + ready-mix can boost productivity from 1.2 m³/day to tens of m³/hour).",
+    zh: "<b>現場調整係數</b> — 基準值需乘以效率係數:高程/樓層越高 (下降 15-30%)、極端天氣、結構複雜度、施工方法/設備 (混凝土泵 + 預拌可將生產率從 1.2 m³/天 提升至數十 m³/小時)。",
+  },
+
   // ── unit shorthand (used in WBS table)
   u_wk:  { id: "mg",   en: "wk",   zh: "週" },
   u_day: { id: "hari", en: "days", zh: "天" },
@@ -2805,6 +3020,22 @@ window.addEventListener('keydown', (e) => {
   // Back-to-splash button
   const backBtn = document.getElementById('back-to-splash');
   if (backBtn) backBtn.addEventListener('click', showSplash);
+})();
+
+/* ═══════════ productivity info modal ═══════════ */
+(function prodInfoModal() {
+  const modal = document.getElementById('prod-info-modal');
+  const openBtn = document.getElementById('prod-info-btn');
+  const closeBtn = document.getElementById('prod-info-close');
+  if (!modal || !openBtn) return;
+  function open() { modal.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+  function close() { modal.classList.remove('is-open'); document.body.style.overflow = ''; }
+  openBtn.addEventListener('click', open);
+  closeBtn && closeBtn.addEventListener('click', close);
+  modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+  });
 })();
 
 /* ═══════════ cross-page fullscreen handoff ═══════════ */
